@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+<form>
+<input type='text' name='username' id='username' />
+<input type='password' name='password' id='password' />
+<input type='submit' value='Login' id='submit' />
+</form>
+{% endblock%}
+
+
+
+
+
+
+
+
+<script>
+{# block jquery #}
+
+
+
+$("#submit").click(function(e){
+	e.preventDefault();
+	var submitBTN = $(this)
+	submitBTN.attr('disabled', 'disabled')
+	username = $("#username").val()
+	var password = $("#password").val()
+	var encodedString = btoa(username + ":" + password)
+	var endPoint = "http://127.0.0.1:8000/api/v1/login/?format=json"
+	$.ajax({
+		type: "GET",
+		url: endPoint,
+		data: {},
+		success: function(data){
+			userApiKey = data.objects[0].api_key
+			$.mobile.navigate("#two")
+		},
+		error: function(data){
+	
+		},
+		beforeSend: function(xhr){
+			xhr.setRequestHeader("Authorization", "Basic " + encodedString)
+		},
+		complete: function(){
+			submitBTN.prop("disabled", false)
+		}
+	})
+});
+
+
+
+$("#newRecod").click(function(e){
+	e.preventDefault();
+	var newApiString = username + ":" + userApiKey
+	console.log(newApiString)
+	var endPoint = "http://127.0.0.1:8000/api/v1/posting/"
+	var data = JSON.stringify({
+		"post": "'" + $("#postText").val() + "'",
+	})
+	$.ajax({
+		type: "POST",
+		url: endPoint,
+		data: data,
+		contentType: "application/json",
+		success: function(data){
+			console.log(data);
+		},
+		error: function(data){
+			console.log(data);
+		},
+		beforeSend: function(xhr){
+			xhr.setRequestHeader("Authorization", "ApiKey " + newApiString)
+		},
+		complete: function(data){
+			console.log(data);
+		}
+	})
+});
+
+
+
+{# endblock #}
+</script>
+
