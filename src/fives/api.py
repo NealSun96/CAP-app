@@ -1,5 +1,3 @@
-
-
 from django.contrib.auth import get_user_model
 
 
@@ -12,47 +10,23 @@ from tastypie.validation import FormValidation, Validation
 
 from djgap.corsresource import CorsResourceBase
 
-
 User = get_user_model()
 
-
-from .forms import PostingForm
-from .models import Posting
-
-
-class PostingValidation(Validation):
-    def is_valid(self, bundle, request=None):
-        if not bundle.data:
-            return {'__all__': 'Not quite what I had in mind.'}
-
-        errors = {}
-
-        for key, value in bundle.data.items():
-            if not isinstance(value, basestring):
-                continue
-
-            if key == "url":
-            	if not 'youtube.com' in value: #or "vimeo.com" in value:
-            		print "bad request"
-                	errors[key] = ['Submitted URL must be a YouTube URL.']
-
-        return errors
-
+from .models import Five
 
 
 #am1pdGNoZWwzOjEyMw==
-class PostingResource(CorsResourceBase, ModelResource):
+class FiveResource(CorsResourceBase, ModelResource):
 	class Meta:
-		queryset = Posting.objects.all()
-		fields = ["user", "title", "url", "id"]
+		queryset = Five.objects.all()
+		fields = ["user_from", "user_to", "timestamp"]
 		allowed_method = ['get', 'post']
-		resource_name = 'posting'
+		resource_name = 'five'
 		authorization = DjangoAuthorization()
 		authentication = ApiKeyAuthentication()
-		validation = PostingValidation()
 
 	def get_object_list(self, request):
-		return super(PostingResource, self).get_object_list(request).\
+		return super(FiveResource, self).get_object_list(request).\
 					filter(user=request.user)
 
 	#curl -v -X POST -d '{"title": "hello there", "url": "http://google.com/"}' -H "Authorization: ApiKey jmitchel3:82de9803f43fcc875e43ebd10d075ad905fa8c26" -H "Content-Type: application/json" http://127.0.0.1:8000/api/v1/posting/
