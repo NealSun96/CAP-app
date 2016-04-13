@@ -6,10 +6,12 @@ from tastypie.api import Api
 
 from .api import LoginResource
 from postings.api import PostingResource
+from fives.api import FiveResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(LoginResource())
 v1_api.register(PostingResource())
+v1_api.register(FiveResource())
 
 urlpatterns = patterns('',
     # Examples:

@@ -27,19 +27,20 @@ class FiveResource(CorsResourceBase, ModelResource):
 
 	def get_object_list(self, request):
 		return super(FiveResource, self).get_object_list(request).\
-					filter(user=request.user)
+					filter(user_to=request.user)
 
 	#curl -v -X POST -d '{"title": "hello there", "url": "http://google.com/"}' -H "Authorization: ApiKey jmitchel3:82de9803f43fcc875e43ebd10d075ad905fa8c26" -H "Content-Type: application/json" http://127.0.0.1:8000/api/v1/posting/
 	#curl -v -X POST -d '{"post": "hello there"}' -H "Authorization: ApiKey jmitchel3:82de9803f43fcc875e43ebd10d075ad905fa8c26" -H "Content-Type: application/json" http://127.0.0.1:8000/api/v1/posting/ 
 	#curl -v -X POST -d '{"post": "hello there"}' -H "Authorization: ApiKey abc:e3ce77676946d53c6d7b767d1c061426a98f8a2d" -H "Content-Type: application/json" http://127.0.0.1:8000/api/v1/posting/ 
 	def hydrate(self, bundle):
-		bundle.obj.user = bundle.request.user
+		bundle.obj.user_from = bundle.request.user_from
+		bundle.obj.user_to = bundle.request.user_to
 		return bundle
 	
 	# def obj_create(self, bundle, request=None, **kwargs):
 	# 	bundle = super(PostingResource, self).obj_create(bundle, kwargs)
 	# 	try:
-			
+
 	# 		bundle.obj.title = bundle.data.get('title')
 	# 		bundle.obj.url = bundle.data.get('url')
 	# 		bundle.obj.save()
