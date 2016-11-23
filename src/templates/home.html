@@ -51,35 +51,35 @@ $("#submit").click(function(e){
 	})
 });
 
-
-
-$("#newRecod").click(function(e){
-	e.preventDefault();
-	var newApiString = username + ":" + userApiKey
-	console.log(newApiString)
-	var endPoint = "http://127.0.0.1:8000/api/v1/posting/"
-	var data = JSON.stringify({
-		"post": "'" + $("#postText").val() + "'",
-	})
-	$.ajax({
-		type: "POST",
-		url: endPoint,
-		data: data,
-		contentType: "application/json",
-		success: function(data){
-			console.log(data);
-		},
-		error: function(data){
-			console.log(data);
-		},
-		beforeSend: function(xhr){
-			xhr.setRequestHeader("Authorization", "ApiKey " + newApiString)
-		},
-		complete: function(data){
-			console.log(data);
-		}
-	})
-});
+{##}
+{##}
+{#$("#newRecod").click(function(e){#}
+{#	e.preventDefault();#}
+{#	var newApiString = username + ":" + userApiKey#}
+{#	console.log(newApiString)#}
+{#	var endPoint = "http://127.0.0.1:8000/api/v1/posting/"#}
+{#	var data = JSON.stringify({#}
+{#		"post": "'" + $("#postText").val() + "'",#}
+{#	})#}
+{#	$.ajax({#}
+{#		type: "POST",#}
+{#		url: endPoint,#}
+{#		data: data,#}
+{#		contentType: "application/json",#}
+{#		success: function(data){#}
+{#			console.log(data);#}
+{#		},#}
+{#		error: function(data){#}
+{#			console.log(data);#}
+{#		},#}
+{#		beforeSend: function(xhr){#}
+{#			xhr.setRequestHeader("Authorization", "ApiKey " + newApiString)#}
+{#		},#}
+{#		complete: function(data){#}
+{#			console.log(data);#}
+{#		}#}
+{#	})#}
+{# });#}
 
 
 

@@ -10,7 +10,7 @@ $(document).ready(function(){
 		username = $("#username").val()
 		var password = $("#password").val()
 		var encodedString = btoa(username + ":" + password)
-		var endPoint = "http://127.0.0.1:8000/api/v1/login/?format=json"
+		var endPoint = "http://127.0.0.1:8000/api/v1/login/?username=" + username
 		$.ajax({
 			type: "GET",
 			url: endPoint,
@@ -39,7 +39,8 @@ $(document).ready(function(){
 		console.log(newApiString)
 		var endPoint = "http://127.0.0.1:8000/api/v1/posting/"
 		var data = JSON.stringify({
-			"post": $("#postText").val(),
+			"title": "thing"
+{#                    $("#postText").val()#}
 		})
 		$.ajax({
 			type: "POST",

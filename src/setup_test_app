@@ -1,0 +1,4 @@
+export DATABASE_NAME=f_one_db
+export DATABASE_PASSWORD=edpp
+export DATABASE_USER=admin
+mysql.server start

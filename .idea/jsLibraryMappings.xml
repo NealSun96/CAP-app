@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$/dova/platforms/browser/cordova" libraries="{test_app/dova/platforms/browser/cordova/node_modules}" />
+  </component>
+</project>

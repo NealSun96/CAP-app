@@ -39,6 +39,13 @@ INSTALLED_APPS = (
     'tastypie',
     'postings',
     'fives',
+    'answer',
+    'assignment',
+    'course',
+    'employee_title',
+    'enrollment',
+    'question',
+    'question_ordered'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -59,10 +66,24 @@ WSGI_APPLICATION = 'djgap.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
+from django.core.exceptions import ImproperlyConfigured
+
+
+def get_env_variable(var_name):
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Set the %s environment variable" % var_name
+        raise ImproperlyConfigured(error_msg)
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': get_env_variable('DATABASE_NAME'),
+        'USER': get_env_variable('DATABASE_USER'),
+        'PASSWORD': get_env_variable('DATABASE_PASSWORD'),
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 
