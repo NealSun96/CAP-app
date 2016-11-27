@@ -20,9 +20,9 @@ class LoginResource(CorsResourceBase, ModelResource):
         resource_name = 'login'
         authorization = DjangoAuthorization()
         authentication = BasicAuthentication()
-        filtering = {
-            "username": ALL
-        }
+        # filtering = {
+        #     "username": ALL
+        # }
 
     def dehydrate(self, bundle):
         username = bundle.data.get('username')
