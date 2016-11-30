@@ -7,12 +7,14 @@ from tastypie.api import Api
 from .api import LoginResource, RegisterResource
 from postings.api import PostingResource
 from fives.api import FiveResource
+from enrollment.api import EnrollmentResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(LoginResource())
 v1_api.register(RegisterResource())
 v1_api.register(PostingResource())
 v1_api.register(FiveResource())
+v1_api.register(EnrollmentResource())
 
 urlpatterns = patterns('',
     # Examples:
