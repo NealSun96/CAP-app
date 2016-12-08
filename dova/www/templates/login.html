@@ -4,46 +4,16 @@
       <ion-list id="login-list5">
         <label class="item item-input" id="login-input4">
           <span class="input-label">Username</span>
-          <input type="text" placeholder="">
+          <input type="text" placeholder="" ng-model="$parent.username">
         </label>
         <label class="item item-input" id="login-input5">
           <span class="input-label">Password</span>
-          <input type="password" placeholder="">
+          <input type="password" placeholder="" ng-model="$parent.password">
         </label>
       </ion-list>
       <div class="spacer" style="height: 40px;"></div>
-      <a ui-sref="dashboard" id="login-button2" class="button button-stable  button-block">Log in</a>
+      <a id="login-button2" class="button button-stable  button-block" ng-click="login()">Log in</a>
       <a ui-sref="signup" id="login-button3" class="button button-positive  button-block button-clear">Or create an account</a>
     </form>
   </ion-content>
 </ion-view>
-
-<script>
-$("#login-button2").click(function(e){
-	e.preventDefault();
-	var submitBTN = $(this);
-	submitBTN.attr('disabled', 'disabled')
-	username = $("#username").val()
-	var password = $("#password").val()
-	var encodedString = btoa(username + ":" + password)
-	var endPoint = "http://127.0.0.1:8000/api/v1/login/?format=json"
-	$.ajax({
-		type: "GET",
-		url: endPoint,
-		data: {},
-		success: function(data){
-			userApiKey = data.objects[0].api_key
-			$.mobile.navigate("#two")
-		},
-		error: function(data){
-
-		},
-		beforeSend: function(xhr){
-			xhr.setRequestHeader("Authorization", "Basic " + encodedString)
-		},
-		complete: function(){
-			submitBTN.prop("disabled", false)
-		}
-	})
-});
-</script>

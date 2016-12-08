@@ -20,11 +20,16 @@ class LoginResource(CorsResourceBase, ModelResource):
         resource_name = 'login'
         authorization = DjangoAuthorization()
         authentication = BasicAuthentication()
+        always_return_data = True
         # filtering = {
         #     "username": ALL
         # }
 
+    def authorized_read_list(self, object_list, bundle):
+        return object_list.filter(username=bundle.request.user.username)
+
     def dehydrate(self, bundle):
+        print "dehydrate" + str(bundle.data.get('username'))
         username = bundle.data.get('username')
         user = User.objects.get(username=username)
         #instance, created = ApiKey.objects.get_or_create(user=user)
