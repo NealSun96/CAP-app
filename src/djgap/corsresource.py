@@ -16,16 +16,16 @@ class CorsResourceBase(ModelResource):
         
     def add_cors_headers(self, response, expose_headers=False):
         response['Access-Control-Allow-Origin'] = '*'
-        response['Access-Control-Allow-Headers'] = 'content-type, authorization'
+        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
         if expose_headers:
             response['Access-Control-Expose-Headers'] = 'Location'
-        return response    
+        return response
     
     def create_response(self, *args, **kwargs):
         """
         Create the response for a resource. Note this will only
         be called on a GET, POST, PUT request if 
-        always_return_data is True
+        always_return_data eis True
         """
         response = super(CorsResourceBase, self).create_response(*args, **kwargs)
         return self.add_cors_headers(response)
@@ -73,11 +73,11 @@ class CorsResourceBase(ModelResource):
         if request_method == 'options':
             response = HttpResponse(allows)
             response['Access-Control-Allow-Origin'] = '*'
-            response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+            response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
             response['Access-Control-Allow-Methods'] = "GET, PUT, POST, PATCH"
             response['Allow'] = allows
             raise ImmediateHttpResponse(response=response)
- 
+
         if not request_method in allowed:
             response = HttpMethodNotAllowed(allows)
             response['Allow'] = allows

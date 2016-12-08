@@ -39,11 +39,17 @@ INSTALLED_APPS = (
     'tastypie',
     'postings',
     'fives',
+    'action_plan',
+    'action_plan_answer',
     'answer',
     'assignment',
     'course',
+    'diagnosis',
     'employee_title',
     'enrollment',
+    'feedback',
+    'knowledge_test',
+    'knowledge_test_answer',
     'question',
     'question_ordered'
 )
@@ -105,6 +111,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
