@@ -8,6 +8,9 @@ def get_image_path(instance, filename):
 
 
 class Course(models.Model):
+    KNOWLEDGE_TEST_OPEN_DAYS = 30
+    DIAGNOSIS_OPEN_DAYS = 90
+
     course_name = models.CharField(max_length=100)
     start_time = models.DateTimeField()
     done = models.BooleanField(default=False)

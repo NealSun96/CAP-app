@@ -4,6 +4,8 @@ from course.models import Course
 
 
 class Enrollment(models.Model):
+    OPEN_DATE_FORMAT = "%Y-%m-%d %X"
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     course = models.ForeignKey(Course)
     # assignments_completed = models.IntegerField(default=0)

@@ -27,7 +27,7 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
         };
 
         $http.get("https://nealsun.ngrok.io/api/v1/login/", config).then(function successCallback(response) {
-            $rootScope.api_key = response.data.objects[0].api_key;
+            $rootScope.api_auth = $scope.username + ":" + response.data.objects[0].api_key;
             $state.go('dashboard');
         }, function errorCallback(response) {
             $scope.username = "ERROR";
@@ -59,11 +59,27 @@ function ($scope, $stateParams) {
 
 }])
    
-.controller('dashboardCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+.controller('dashboardCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+function ($scope, $stateParams, $http, $rootScope, $state) {
+    $scope.loadEnrollments = function() {
+        // $rootScope.api_auth = "test2:7cab15440caceb2ff35099994ae4610cd39cb810";
+        var config = {headers:  {
+            'Authorization': 'Apikey ' + $rootScope.api_auth
+        }
+        };
 
+        $http.get("https://nealsun.ngrok.io/api/v1/enrollment/enrollments/", config)
+            .then(function successCallback(response) {
+            $scope.enrollments = response.data.objects;
+            console.log($scope.enrollments);
 
+        }, function errorCallback(response) {
+            $scope.enrollments = [];
+        });
+    }
+
+    $scope.toAssignments = function(e_id) {
+        $rootScope.enrollment_in_handle = e_id;
+        $state.go("courseOne");
+    }
 }])
- 

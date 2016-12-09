@@ -1,16 +1,20 @@
-<ion-view title="Dashboard" hide-back-button="true" id="page10">
+<ion-view title="Dashboard" hide-back-button="true" id="page10" ng-init="loadEnrollments()">
   <ion-content padding="true" class="has-header">
-    <ion-list id="dashboard-list9">
-      <ion-item class="item-thumbnail-left item-icon-right  course" id="dashboard-list-item45" ui-sref="courseOne">
+    <ion-list id="dashboard-list9" ng-repeat="enrollment in enrollments">
+
+      <ion-item class="item-thumbnail-left item-icon-right  course" id="dashboard-list-item45" ng-click="toAssignments(enrollment.id)">
         <img src="img/nature-02.jpg">
-        <h2>Self Motivation</h2>
-        <p style="white-space:normal;">Graig Wenzel</p>
-        <i class="icon ion-ios-arrow-right icon-accessory"></i>
-      </ion-item>
-      <ion-item class="item-thumbnail-left item-icon-right  course" id="dashboard-list-item46" ui-sref="courseOne">
-        <img src="img/nature-forest-industry-rails.jpg">
-        <h2>Effective Communication</h2>
-        <p>Josefina Dreiling</p>
+        <div style="float: left;"> 
+          <h2 >{{ enrollment.course_name }}</h2>
+          <p style="white-space:normal;">{{ enrollment.teacher_name }}</p>
+        </div>
+
+        <div style="float: right; font-size: 9px;">
+          <div >Feedback: {{ enrollment.feedback_status }}</div>
+          <div >Action Plan: {{ enrollment.action_plan_status }}</div>
+          <div >Knowledge Test: {{ enrollment.knowledge_test_status }}</div>
+          <div>Diagnosis: {{ enrollment.diagnosis_status }}</div>
+        </div>
         <i class="icon ion-ios-arrow-right icon-accessory"></i>
       </ion-item>
     </ion-list>
