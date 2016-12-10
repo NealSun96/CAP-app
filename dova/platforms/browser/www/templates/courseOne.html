@@ -1,25 +1,25 @@
-<ion-view title="Course one" id="page5">
+<ion-view title="Course one" id="page5" ng-init="loadAssignments()">
   <ion-content padding="true" class="has-header">
-    <h2 id="courseOne-heading1" style="color:#000000;">Class Name</h2>
+    <h2 id="courseOne-heading1" style="color:#000000;">{{ enrollment.course_name }}</h2>
     <div id="courseOne-markdown6" class="show-list-numbers-and-dots">
-      <p style="color:#000000;">Some notes</p>
+      <p style="color:#000000;">{{ enrollment.teacher_name }}</p>
     </div>
     <div class="spacer" style="width: 748px; height: 35px;"></div>
     <ion-list id="courseOne-list6">
-      <ion-item class="item-icon-right  task" id="courseOne-list-item25" ui-sref="taskPage">Task 1
-        <span class="item-note">Due Date</span>
+      <ion-item class="item-icon-right" id="courseOne-list-item25" ng-click="feedback()">Feedback
+        <span class="item-note">{{ enrollment.feedback_status }}</span>
         <i class="icon ion-ios-arrow-forward icon-accessory"></i>
       </ion-item>
-      <ion-item class="item-icon-right  task" id="courseOne-list-item26" ui-sref="taskPage">Task 2
-        <span class="item-note">Due Date</span>
+      <ion-item class="item-icon-right" id="courseOne-list-item26" ng-click="action_plan()">Action Plan
+        <span class="item-note">{{ enrollment.action_plan_status }}</span>
         <i class="icon ion-ios-arrow-forward icon-accessory"></i>
       </ion-item>
-      <ion-item class="item-icon-right  quiz" id="courseOne-list-item39" ui-sref="quizPage">Quiz 1
-        <span class="item-note">Due Date</span>
+      <ion-item class="item-icon-right" id="courseOne-list-item39" ng-click="k_test()">Knowledge Test
+        <span class="item-note">{{ enrollment.knowledge_test_status }}</span>
         <i class="icon ion-ios-arrow-forward icon-accessory"></i>
       </ion-item>
-      <ion-item class="item-icon-right  quiz" id="courseOne-list-item40" ui-sref="quizPage">Quiz 2
-        <span class="item-note">Due Date</span>
+      <ion-item class="item-icon-right" id="courseOne-list-item40" ng-click="diagnosis()">Diagnosis
+        <span class="item-note">{{ enrollment.diagnosis_status }}</span>
         <i class="icon ion-ios-arrow-forward icon-accessory"></i>
       </ion-item>
     </ion-list>

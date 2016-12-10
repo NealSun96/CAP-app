@@ -35,12 +35,32 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
     }
 }])
 
-.controller('courseOneCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+.controller('courseOneCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+function ($scope, $stateParams, $http, $rootScope, $state) {
+    $scope.loadAssignments = function() {
+        var len = $rootScope.enrollments.length;
+        for (var i = 0; i < len; i++) {
+            if ($rootScope.enrollments[i].id == $rootScope.enrollment_in_handle) {
+                $scope.enrollment = $rootScope.enrollments[i];
+            }
+        }
+    };
 
+    $scope.feedback = function() {
 
+    };
+
+    $scope.action_plan = function() {
+
+    };
+
+    $scope.k_test = function() {
+
+    };
+
+    $scope.diagnosis = function() {
+
+    }
 }])
    
 .controller('quizPageCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -70,13 +90,12 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
         $http.get("https://nealsun.ngrok.io/api/v1/enrollment/enrollments/", config)
             .then(function successCallback(response) {
-            $scope.enrollments = response.data.objects;
-            console.log($scope.enrollments);
+            $rootScope.enrollments = response.data.objects;
 
         }, function errorCallback(response) {
-            $scope.enrollments = [];
+            $rootScope.enrollments = [];
         });
-    }
+    };
 
     $scope.toAssignments = function(e_id) {
         $rootScope.enrollment_in_handle = e_id;
