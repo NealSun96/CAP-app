@@ -1,10 +1,11 @@
 # from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from tastypie.authentication import BasicAuthentication, Authentication
 from tastypie.authorization import DjangoAuthorization, Authorization
-from tastypie.constants import ALL
 from tastypie.models import ApiKey
 from tastypie.resources import ModelResource
+from tastypie.exceptions import BadRequest
 
 from employee_title.models import EmployeeTitle
 from .corsresource import CorsResourceBase
@@ -32,7 +33,7 @@ class LoginResource(CorsResourceBase, ModelResource):
         print "dehydrate" + str(bundle.data.get('username'))
         username = bundle.data.get('username')
         user = User.objects.get(username=username)
-        #instance, created = ApiKey.objects.get_or_create(user=user)
+        # instance, created = ApiKey.objects.get_or_create(user=user)
         bundle.data['api_key'] = ApiKey.objects.get_or_create(user=user)[0].key
         print bundle.data['api_key']
         return bundle
@@ -41,21 +42,20 @@ class LoginResource(CorsResourceBase, ModelResource):
 class RegisterResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
-        fields = ["username"]
+        fields = ["username", "first_name", "last_name"]
         allowed_method = ['post']
         resource_name = 'register'
         authorization = Authorization()
         authentication = Authentication()
 
     def obj_create(self, bundle, request=None, **kwargs):
-        bundle = super(RegisterResource, self).obj_create(bundle, **kwargs)
-        # if bundle.data.get('username') == 'test_teacher':
-        #     EmployeeTitle.objects.create(username='test_teacher', title='teacher')
-        # else:
-        #     EmployeeTitle.objects.create(username=bundle.data.get('username'), title='manager')
-        bundle.obj.set_password(bundle.data.get('password'))
-        bundle.obj.save()
-        RegisterResource.assign_to_group(bundle.obj)
+        try:
+            bundle = super(RegisterResource, self).obj_create(bundle, **kwargs)
+            bundle.obj.set_password(bundle.data.get('password'))
+            bundle.obj.save()
+            RegisterResource.assign_to_group(bundle.obj)
+        except IntegrityError:
+            raise BadRequest('That username already exists')
         return bundle
 
     @staticmethod

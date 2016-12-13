@@ -1,11 +1,21 @@
 angular.module('app.controllers', [])
   
-.controller('signupCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
-
-
+.controller('signupCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
+function ($scope, $stateParams, $http, $state, $rootScope) {
+    $scope.signup = function() {
+        data = {
+            username: $scope.reg_username,
+            first_name: $scope.reg_firstname,
+            last_name: $scope.reg_lastname,
+            password: $scope.reg_password
+        };
+        $http.post("https://nealsun.ngrok.io/api/v1/register/", data).then(function successCallback(response) {
+            $rootScope.register_success = true;
+            $state.go('login');
+        }, function errorCallback(response) {
+            $rootScope.register_success = false;
+        });
+    }
 }])
    
 .controller('signUpCompleteCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -37,6 +47,11 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
 
 .controller('courseOneCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
+    $scope.f_disabled = false;
+    $scope.ap_disabled = false;
+    $scope.kt_disabled = false;
+    $scope.d_disabled = false;
+
     $scope.loadAssignments = function() {
         var len = $rootScope.enrollments.length;
         for (var i = 0; i < len; i++) {
@@ -44,7 +59,13 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
                 $scope.enrollment = $rootScope.enrollments[i];
             }
         }
+
+        $scope.f_disabled = $scope.enrollment.feedback_status != 'Available';
+        $scope.ap_disabled = $scope.enrollment.action_plan_status != 'Available';
+        $scope.kt_disabled = $scope.enrollment.knowledge_test_status != 'Available';
+        $scope.d_disabled = $scope.enrollment.diagnosis_status != 'Available';
     };
+
 
     $scope.feedback = function() {
 
