@@ -1,3 +1,4 @@
+import pytz
 from datetime import datetime, timedelta
 
 from django.conf.urls import url
@@ -46,24 +47,38 @@ class EnrollmentResource(ModelResource):
 
             has_feedback = len(enrollment.feedback_set.all()) > 0
             bundle.data['feedback_status'] = "Completed" if has_feedback else "Available"
+            bundle.data['feedback_color'] = "{color: 'green'}" if has_feedback else "{color: 'red'}"
 
             user_group = request.user.groups.all()[0].name
             has_action_plan = len(enrollment.course.actionplan_set.filter(level=user_group).all()) > 0
             has_action_plan_answer = len(enrollment.actionplananswer_set.all()) > 0
             bundle.data['action_plan_status'] = "Completed" if has_action_plan_answer else "Available" \
                 if has_action_plan else "Unavailable"
-            knowledge_test_open = (enrollment.course.start_time
-                                   + timedelta(enrollment.course.KNOWLEDGE_TEST_OPEN_DAYS))\
-                .strftime(enrollment.OPEN_DATE_FORMAT)
+            bundle.data['action_plan_color'] = "{color: 'green'}" if has_action_plan_answer else "{color: 'red'}" \
+                if has_action_plan else "{color: 'black'}"
+
+            current_date = datetime.now(pytz.timezone('Asia/Shanghai'))
+            knowledge_test_open_date = (enrollment.course.start_time
+                                       + timedelta(enrollment.course.KNOWLEDGE_TEST_OPEN_DAYS))
+            knowledge_test_open_string = knowledge_test_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_knowledge_test = len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) > 0
             has_knowledge_test_answer = len(enrollment.knowledgetestanswer_set.all()) > 0
             bundle.data['knowledge_test_status'] = 'Completed' if has_knowledge_test_answer else \
-                ('Open at %s' % knowledge_test_open) if has_knowledge_test else 'Unavailable'
-            diagnosis_open = (enrollment.course.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS)) \
-                .strftime(enrollment.OPEN_DATE_FORMAT)
+                'Available' if has_knowledge_test and current_date >= knowledge_test_open_date else \
+                ('Open at %s' % knowledge_test_open_string) if has_knowledge_test else 'Unavailable'
+            bundle.data['knowledge_test_color'] = "{color: 'green'}" if has_knowledge_test_answer else \
+                "{color: 'red'}" if has_knowledge_test and current_date >= knowledge_test_open_date else \
+                "{color: 'black'}"
+
+            diagnosis_open_date = (enrollment.course.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS))
+            diagnosis_open_string = diagnosis_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_diagnosis = len(enrollment.diagnosis_set.all()) > 0
-            bundle.data['diagnosis_status'] = 'Completed' if has_diagnosis else 'Open at %s' % diagnosis_open \
-                if has_action_plan_answer else 'Unavailable'
+            bundle.data['diagnosis_status'] = 'Completed' if has_diagnosis else \
+                'Available' if has_action_plan_answer and current_date >= diagnosis_open_date else \
+                'Open at %s' % diagnosis_open_string if has_action_plan_answer else 'Unavailable'
+            bundle.data['diagnosis_color'] = "{color: 'green'}" if has_diagnosis else \
+                "{color: 'red'}" if has_action_plan_answer and current_date >= diagnosis_open_date else \
+                "{color: 'black'}"
             objects.append(bundle)
 
         object_list = {
