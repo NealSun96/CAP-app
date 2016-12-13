@@ -8,19 +8,19 @@
     <ion-list id="courseOne-list6">
       <ion-item class="item-icon-right" id="courseOne-list-item25" ng-disabled="f_disabled" ng-click="feedback()">Feedback
         <span class="item-note">{{ enrollment.feedback_status }}</span>
-        <i class="icon ion-ios-arrow-forward icon-accessory"></i>
+        <i ng-show="!f_disabled" class="icon ion-ios-arrow-forward icon-accessory"></i>
       </ion-item>
       <ion-item class="item-icon-right" id="courseOne-list-item26" ng-disabled="ap_disabled" ng-click="action_plan()">Action Plan
         <span class="item-note">{{ enrollment.action_plan_status }}</span>
-        <i class="icon ion-ios-arrow-forward icon-accessory"></i>
+        <i ng-show="!ap_disabled" class="icon ion-ios-arrow-forward icon-accessory"></i>
       </ion-item>
       <ion-item class="item-icon-right" id="courseOne-list-item39" ng-disabled="kt_disabled" ng-click="k_test()">Knowledge Test
         <span class="item-note">{{ enrollment.knowledge_test_status }}</span>
-        <i class="icon ion-ios-arrow-forward icon-accessory"></i>
+        <i ng-show="!kt_disabled" class="icon ion-ios-arrow-forward icon-accessory"></i>
       </ion-item>
       <ion-item class="item-icon-right" id="courseOne-list-item40" ng-disabled="d_disabled" ng-click="diagnosis()">Diagnosis
         <span class="item-note">{{ enrollment.diagnosis_status }}</span>
-        <i class="icon ion-ios-arrow-forward icon-accessory"></i>
+        <i ng-show="!d_disabled" class="icon ion-ios-arrow-forward icon-accessory"></i>
       </ion-item>
     </ion-list>
   </ion-content>
