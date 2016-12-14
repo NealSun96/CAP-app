@@ -1,9 +1,13 @@
+import json
 import pytz
 from datetime import datetime, timedelta
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.conf.urls import url
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.authorization import DjangoAuthorization
+from tastypie.exceptions import ImmediateHttpResponse
+from tastypie.http import HttpNotFound, HttpBadRequest
 from tastypie.resources import ModelResource
 from tastypie.utils import trailing_slash
 
@@ -25,7 +29,7 @@ class EnrollmentResource(ModelResource):
     def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/enrollments%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_enrollments'), name="api_get_enrollments"),
-            url(r"^(?P<resource_name>%s)/assignments/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
+            url(r"^(?P<resource_name>%s)/assignments/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
         ]
 
     def get_enrollments(self, request, **kwargs):
@@ -91,20 +95,58 @@ class EnrollmentResource(ModelResource):
         self.method_check(request, allowed=['get'])
         self.is_authenticated(request)
 
-        # Do the query.
-        enrollments = Enrollment.objects.filter(id=kwargs['id'])
-        enrollment = enrollments[0]
+        try:
+            enrollment = Enrollment.objects.get(id=kwargs['id'])
+        except ObjectDoesNotExist:
+            raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
+
+        a_type = kwargs['type']
+        if a_type not in ['action_plan', 'knowledge_test', 'diagnosis']:
+            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment type'))
         objects = []
 
-        bundle = self.build_bundle(obj=enrollment, request=request)
-        bundle.data['course_name'] = enrollment.course.course_name
-        bundle.data['teacher_name'] = enrollment.course.teacher.get_full_name()
-        if enrollment.course.picture:
-            bundle.data['picture_path'] = enrollment.course.picture.url
-        complete_count = request.user.answer_set.filter(enrollment=enrollment).count()
-        bundle.data['complete_count'] = complete_count
-        bundle.data['latest_assignment_name'] = enrollment.course.assignment_set.all()[complete_count].title
-        objects.append(bundle)
+        user_group = request.user.groups.all()[0].name
+        if a_type == 'action_plan':
+            if len(enrollment.course.actionplan_set.filter(level=user_group).all()) <= 0:
+                raise ImmediateHttpResponse(HttpNotFound('Action plan does not exist'))
+
+            if len(enrollment.actionplananswer_set.all()) > 0:
+                raise ImmediateHttpResponse(HttpBadRequest('Action plan already submitted'))
+
+            action_plan = enrollment.course.actionplan_set.filter(level=user_group).all()[0]
+            bundle = self.build_bundle(obj=action_plan, request=request)
+            bundle.data['action_plan_id'] = action_plan.id
+            print action_plan.action_points
+            bundle.data['action_points'] = json.loads(action_plan.action_points)
+            objects.append(bundle)
+        elif a_type == 'knowledge_test':
+            if len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) <= 0:
+                raise ImmediateHttpResponse(HttpNotFound('Knowledge test does not exist'))
+
+            if len(enrollment.knowledgetestanswer_set.all()) > 0:
+                raise ImmediateHttpResponse(HttpBadRequest('Knowledge test already submitted'))
+
+            knowledge_test = enrollment.course.knowledgetest_set.filter(level=user_group).all()[0]
+            bundle = self.build_bundle(obj=knowledge_test, request=request)
+            bundle.data['knowledge_test_id'] = knowledge_test.id
+            bundle.data['questions'] = [{
+                'question': question.question.question_body,
+                'answer_keys': [answer for answer in json.loads(question.question.answer_keys)],
+                'score': question.score
+            } for question in knowledge_test.questionordered_set.all()]
+            bundle.data['timespan'] = knowledge_test.time_span
+            objects.append(bundle)
+        else:
+            if len(enrollment.actionplananswer_set.all()) <= 0:
+                raise ImmediateHttpResponse(HttpNotFound('Diagnosis does not exist'))
+
+            if len(enrollment.diagnosis_set.all()) > 0:
+                raise ImmediateHttpResponse(HttpBadRequest('Diagnosis already submitted'))
+
+            diagnosis = enrollment.actionplananswer_set.all()[0]
+            bundle = self.build_bundle(obj=diagnosis, request=request)
+            bundle.data['diagnosis_points'] = json.loads(diagnosis.answers)
+            objects.append(bundle)
 
         object_list = {
             'objects': objects,
