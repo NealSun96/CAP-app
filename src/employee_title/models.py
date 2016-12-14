@@ -21,7 +21,8 @@ class EmployeeTitle(models.Model):
     ACCEPTED_NAMES = (
         (TITLE_TEACHER, 'trainer'),
         (TITLE_STUDENT_MANAGER, 'manager'),
-        (TITLE_STUDENT_NON_MANAGER, 'non-manager')
+        (TITLE_STUDENT_NON_MANAGER, 'non-manager'),
+        ('discarded', 'DISCARDED')
     )
 
     @staticmethod
