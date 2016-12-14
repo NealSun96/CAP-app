@@ -52,6 +52,18 @@ angular.module('app.routes', [])
     controller: 'dashboardCtrl'
   })
 
+  .state('feedback', {
+    url: '/feedback',
+    templateUrl: 'templates/feedback.html',
+    controller: 'feedbackCtrl'
+  })
+
+  .state('behavior', {
+    url: '/behavior',
+    templateUrl: 'templates/behavior.html',
+    controller: 'feedbackCtrl'
+  })
+
 $urlRouterProvider.otherwise('/login')
 
   
