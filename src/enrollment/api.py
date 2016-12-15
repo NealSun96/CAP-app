@@ -12,7 +12,6 @@ from tastypie.resources import ModelResource
 from tastypie.utils import trailing_slash
 
 from .models import Enrollment
-from feedback.models import Feedback
 
 
 class EnrollmentResource(ModelResource):
@@ -115,7 +114,7 @@ class EnrollmentResource(ModelResource):
 
             action_plan = enrollment.course.actionplan_set.filter(level=user_group).all()[0]
             bundle = self.build_bundle(obj=action_plan, request=request)
-            bundle.data['action_plan_id'] = action_plan.id
+            # bundle.data['action_plan_id'] = action_plan.id
             print action_plan.action_points
             bundle.data['action_points'] = json.loads(action_plan.action_points)
             objects.append(bundle)
@@ -128,7 +127,7 @@ class EnrollmentResource(ModelResource):
 
             knowledge_test = enrollment.course.knowledgetest_set.filter(level=user_group).all()[0]
             bundle = self.build_bundle(obj=knowledge_test, request=request)
-            bundle.data['knowledge_test_id'] = knowledge_test.id
+            # bundle.data['knowledge_test_id'] = knowledge_test.id
             bundle.data['questions'] = [{
                 'question': question.question.question_body,
                 'answer_keys': [answer for answer in json.loads(question.question.answer_keys)],

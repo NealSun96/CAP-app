@@ -48,6 +48,9 @@ class RegisterResource(ModelResource):
         authorization = Authorization()
         authentication = Authentication()
 
+    def get_object_list(self, request):
+        return User.objects.none()
+
     def obj_create(self, bundle, request=None, **kwargs):
         try:
             bundle = super(RegisterResource, self).obj_create(bundle, **kwargs)
