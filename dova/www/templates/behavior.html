@@ -1,32 +1,33 @@
 <ion-view title="behavior" id="behavior_page">
-  <ion-content padding="true" class="has-header"></ion-content>
-  <ion-header-bar class="bar-stable">
-        <h1 class="title">behavior</h1>
-    </ion-header-bar>
-    <ion-content>
 
-    <div class="row header">
-      <div class="col col-80"></div>
-      <div class="col">Answer</div>
-    </div>
+    <ion-nav-buttons class="has-header" side="right">
+        <button ui-sref="dashboard" class="button button-icon icon No Icon"> Submit</button>
+    </ion-nav-buttons>
 
-    <ol type="1">
-      <li class="row">
-        <ion-checkbox class="item-checkbox-right col" ng-model="isChecked1">Question</ion-checkbox>
-      </li>
+    <ion-content padding="true" class="has-header">
 
-      <li class="row">
-        <ion-checkbox class="item-checkbox-right col" ng-model="isChecked2">Question</ion-checkbox>
-      </li>
+      <div class="row header">
+        <div class="col col-80"></div>
+        <div class="col">Answer</div> <!-- this isn't necessary, can be taken out -->
+      </div>
 
-      <li class="row">
-        <ion-checkbox class="item-checkbox-right col" ng-model="isChecked3">Question</ion-checkbox>
-      </li>
+      <ol type="1">
+        <li class="row">
+          <ion-checkbox class="item-checkbox-right col" ng-model="isChecked1">Question</ion-checkbox>
+        </li>
 
-      <li class="row">
-        <ion-checkbox class="item-checkbox-right col" ng-model="isChecked4">Question</ion-checkbox>
-      </li>
-    </ol>
+        <li class="row">
+          <ion-checkbox class="item-checkbox-right col" ng-model="isChecked2">Question</ion-checkbox>
+        </li>
+
+        <li class="row">
+          <ion-checkbox class="item-checkbox-right col" ng-model="isChecked3">Question</ion-checkbox>
+        </li>
+
+        <li class="row">
+          <ion-checkbox class="item-checkbox-right col" ng-model="isChecked4">Question</ion-checkbox>
+        </li>
+      </ol>
 
     
 
@@ -49,17 +50,4 @@
 
 
     </ion-content>
-
-
 </ion-view>
-
-<style type="text/css">
-
-    /*grid*/
-    /*.col {
-        border: solid 1px grey;
-        border-bottom-style: none;
-        border-right-style: none;
-    }*/
-
-</style>
