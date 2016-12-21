@@ -5,6 +5,55 @@
     </ion-header-bar>
     <ion-content>
 
+
+        <!-- categories  -->
+        <div ng-repeat="categorie in categories">
+
+          <!-- top labels of chart -->
+          <div class="row header">
+            <label class="col col-50">
+                <span class="input-label"> {{ categorie.name }} </span>
+            </label>
+            <label class="col col-15">
+                <span class="input-label"> {{ categorie.answer1 }} </span>
+            </label>
+            <label class="col col-15">
+                <span class="input-label"> {{ categorie.answer2 }} </span>
+            </label>
+            <label class="col col-15">
+                <span class="input-label"> {{ categorie.answer3 }} </span>
+            </label>
+          </div>
+
+
+          <!-- all other rows -->
+          <div class="row" ng-repeat="question in categorie.questions"> <!-- not sure about this syntax for repeat -->
+            <label class="col col-50">
+                <span class="input-label"> {{ question.text }} </span>
+            </label>
+
+            <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
+            <ion-radio class="col col-15" ng-model="choice0" ng-value="2"></ion-radio>
+            <ion-radio class="col col-15" ng-model="choice0" ng-value="3"></ion-radio>
+          </div>
+
+           <!-- text input -->
+          <form id="quizPage-form12" class="list">
+            <label class="item item-input" id="login-input5">
+              <span class="input-label">Some text</span>
+              <input type="text" placeholder="" ng-model="feedback_page_text_area">
+            </label>
+          </form>
+
+        </div>
+
+
+
+              <!-- DUMMY DATA -->
+
+
+
+        <!-- top labels of chart -->
         <div class="row header">
           <label class="col col-50">
               <span class="input-label">Category</span>
@@ -20,6 +69,8 @@
           </label>
         </div>
 
+
+        <!-- all other rows -->
         <div class="row">
           <!-- <div class="col col-60">Question</div> -->
           <label class="col col-50">
@@ -28,13 +79,12 @@
 
           <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
 
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
+          <ion-radio class="col col-15" ng-model="choice0" ng-value="2"></ion-radio>
 
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
+          <ion-radio class="col col-15" ng-model="choice0" ng-value="3"></ion-radio>
         </div>
 
         <div class="row">
-          <!-- <div class="col col-60">Question</div> -->
           <label class="col col-50">
               <span class="input-label">Question</span>
           </label>
@@ -147,8 +197,9 @@
 
         <!-- text input -->
         <form id="quizPage-form12" class="list">
-        <label class="item item-input" id="feedback-input">
-          Some text: <input type="text" placeholder="">
+        <label class="item item-input" id="login-input5">
+          <span class="input-label">Some text</span>
+          <input type="text" placeholder="" ng-model="feedback_page_text_area">
         </label>
       </form>
     </ion-content>
