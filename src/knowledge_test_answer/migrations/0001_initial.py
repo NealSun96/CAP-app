@@ -2,14 +2,13 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('enrollment', '__first__'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('knowledge_test', '0001_initial'),
+        ('enrollment', '0001_initial'),
     ]
 
     operations = [
@@ -23,7 +22,7 @@ class Migration(migrations.Migration):
                 ('final_score', models.IntegerField()),
                 ('completion_date', models.DateTimeField()),
                 ('enrollment', models.ForeignKey(to='enrollment.Enrollment')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('knowledge_test', models.ForeignKey(to='knowledge_test.KnowledgeTest')),
             ],
             options={
                 'abstract': False,

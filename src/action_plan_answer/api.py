@@ -11,7 +11,7 @@ class ActionPlanAnswerResource(ModelResource):
         queryset = ActionPlanAnswer.objects.all()
         fields = ["answers", "action_plan", "enrollment"]
         allowed_method = ['post']
-        resource_name = 'feedback'
+        resource_name = 'actionplan'
         authorization = DjangoAuthorization()
         authentication = ApiKeyAuthentication()
 

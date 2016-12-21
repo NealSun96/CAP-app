@@ -9,9 +9,13 @@ from tastypie.authorization import DjangoAuthorization
 from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.http import HttpNotFound, HttpBadRequest
 from tastypie.resources import ModelResource
-from tastypie.utils import trailing_slash
+from tastypie.utils import trailing_slash, dict_strip_unicode_keys
 
 from .models import Enrollment
+from feedback.models import Feedback
+from action_plan_answer.models import ActionPlanAnswer
+from knowledge_test_answer.models import KnowledgeTestAnswer
+from diagnosis.models import Diagnosis
 
 
 class EnrollmentResource(ModelResource):
@@ -29,6 +33,7 @@ class EnrollmentResource(ModelResource):
         return [
             url(r"^(?P<resource_name>%s)/enrollments%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_enrollments'), name="api_get_enrollments"),
             url(r"^(?P<resource_name>%s)/assignments/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
+            url(r"^(?P<resource_name>%s)/upload/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('upload_feedback'), name="api_upload_feedback"),
         ]
 
     def get_enrollments(self, request, **kwargs):
@@ -95,7 +100,7 @@ class EnrollmentResource(ModelResource):
         self.is_authenticated(request)
 
         try:
-            enrollment = Enrollment.objects.get(id=kwargs['id'])
+            enrollment = Enrollment.objects.get(id=kwargs['id'], user=request.user, course__done=False)
         except ObjectDoesNotExist:
             raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
 
@@ -137,7 +142,7 @@ class EnrollmentResource(ModelResource):
             objects.append(bundle)
         else:
             if len(enrollment.actionplananswer_set.all()) <= 0:
-                raise ImmediateHttpResponse(HttpNotFound('Diagnosis does not exist'))
+                raise ImmediateHttpResponse(HttpNotFound('Diagnosis form does not exist'))
 
             if len(enrollment.diagnosis_set.all()) > 0:
                 raise ImmediateHttpResponse(HttpBadRequest('Diagnosis already submitted'))
@@ -152,3 +157,53 @@ class EnrollmentResource(ModelResource):
         }
 
         return self.create_response(request, object_list)
+
+    def upload_feedback(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+
+        try:
+            enrollment = Enrollment.objects.get(id=kwargs['id'], user=request.user)
+        except ObjectDoesNotExist:
+            raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
+
+        a_type = kwargs['type']
+        if a_type not in ['feedback', 'action_plan', 'knowledge_test', 'diagnosis']:
+            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment type'))
+
+        deserialized = self.deserialize(request, request.body,
+                                        format=request.META.get('CONTENT_TYPE', 'application/json'))
+        deserialized = self.alter_deserialized_detail_data(request, deserialized)
+        bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
+
+        user_group = request.user.groups.all()[0].name
+        if a_type == 'feedback':
+            if len(enrollment.feedback_set.all()) > 0:
+                raise ImmediateHttpResponse(HttpBadRequest('Feedback already exists'))
+            Feedback(enrollment=enrollment, feedbacks=bundle.data.get('feedbacks')).save()
+        elif a_type == 'action_plan':
+            if len(enrollment.actionplananswer_set.all()) > 0:
+                raise ImmediateHttpResponse(HttpBadRequest('Action plan answer already exists'))
+            if len(enrollment.course.actionplan_set.filter(level=user_group).all()) <= 0:
+                raise ImmediateHttpResponse(HttpNotFound('Action plan does not exist'))
+            action_plan = enrollment.course.actionplan_set.filter(level=user_group).first()
+            ActionPlanAnswer(enrollment=enrollment, action_plan=action_plan, answers=bundle.data.get('answers')).save()
+        elif a_type == 'knowledge_test':
+            if len(enrollment.knowledgetestanswer_set.all()) > 0:
+                raise ImmediateHttpResponse(HttpBadRequest('Knowledge test answer already exists'))
+            if len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) <= 0:
+                raise ImmediateHttpResponse(HttpNotFound('Knowledge test does not exist'))
+            knowledge_test = enrollment.course.knowledgetest_set.filter(level=user_group).first()
+            KnowledgeTestAnswer(enrollment=enrollment, knowledge_test=knowledge_test, answers=bundle.data.get('answers'),
+                                time_taken=bundle.data.get('time_taken'), first_score=bundle.data.get('first_score'),
+                                final_score=bundle.data.get('final_score'), completion_date=datetime.now(pytz.timezone('Asia/Shanghai'))).save()
+        elif a_type == 'diagnosis':
+            if len(enrollment.diagnosis_set.all()) > 0:
+                raise ImmediateHttpResponse(HttpBadRequest('Diagnosis already exists'))
+            if len(enrollment.actionplananswer_set.all()) <= 0:
+                raise ImmediateHttpResponse(HttpNotFound('Diagnosis form does not exist'))
+            Diagnosis(enrollment=enrollment, self_diagnosis=bundle.data.get('self_diagnosis'),
+                      other_diagnosis=bundle.data.get('other_diagnosis'),
+                      completion_date=datetime.now(pytz.timezone('Asia/Shanghai'))).save()
+
+        return self.create_response(request, {})
