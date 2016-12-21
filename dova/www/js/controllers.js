@@ -18,6 +18,8 @@ function ($scope, $stateParams) {
    
 .controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
 function ($scope, $stateParams, $http, $state, $rootScope) {
+    $scope.signin_fail = false;
+
     $scope.login = function() {
         var auth = btoa($scope.username + ":" + $scope.password);
         var config = {headers:  {
@@ -31,6 +33,7 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
             $state.go('dashboard');
         }, function errorCallback(response) {
             $scope.username = "ERROR";
+            $scope.signin_fail = true;
         });
     }
 }])
