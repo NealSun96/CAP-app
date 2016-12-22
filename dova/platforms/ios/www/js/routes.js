@@ -7,8 +7,6 @@ angular.module('app.routes', [])
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
-    
-  
 
       .state('signup', {
     url: '/signup',
@@ -50,6 +48,30 @@ angular.module('app.routes', [])
     url: '/dash',
     templateUrl: 'templates/dashboard.html',
     controller: 'dashboardCtrl'
+  })
+
+  .state('feedback', {
+    url: '/feedback',
+    templateUrl: 'templates/feedback.html',
+    controller: 'feedbackCtrl'
+  })
+
+  .state('behavior', {
+    url: '/behavior',
+    templateUrl: 'templates/behavior.html',
+    controller: 'feedbackCtrl'
+  })
+
+  .state('knowledge_test', {
+    url: '/knowledge_test',
+    templateUrl: 'templates/knowledge_test.html',
+    controller: 'knowledge_testCtrl'
+  })
+  
+.state('diagnosis', {
+    url: '/diagnosis',
+    templateUrl: 'templates/diagnosis.html',
+    controller: 'diagnosisCtrl'
   })
 
 $urlRouterProvider.otherwise('/login')
