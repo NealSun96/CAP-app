@@ -12,18 +12,8 @@
     <img src=img/logo.png alt="can't display img" style="display:block; margin: 0 auto;">
 
       <ion-list id="signup-list4">
-<!-- <<<<<<< HEAD
+
         <label class="item item-input top-input" id="signup-input1">
-          <span class="input-label">Name</span>
-          <input type="text" placeholder="">
-        </label>
-        <label class="item item-input" id="signup-input2">
-          <span class="input-label">Email</span>
-          <input type="text" placeholder="">
-        </label>
-        <label class="item item-input bottom-input" id="signup-input3">
-======= -->
-        <label class="item item-input" id="signup-input1">
           <span class="input-label">First Name</span>
           <input type="text" placeholder="" ng-model="$parent.reg_firstname">
         </label>
@@ -35,19 +25,15 @@
           <span class="input-label">Username</span>
           <input type="text" placeholder="" ng-model="$parent.reg_username">
         </label>
-        <label class="item item-input" id="signup-input4">
-<!-- >>>>>>> 4744ab73658b20d15bb560d0fe7ed95216212cfe -->
+        <label class="item item-input bottom-input" id="signup-input4">
           <span class="input-label">Password</span>
           <input type="password" placeholder="" ng-model="$parent.reg_password">
         </label>
       </ion-list>
-<!-- <<<<<<< HEAD -->
-<!--       <a ui-sref="signUpComplete" id="signup-button1" class="button button-positive  button-block">Sign up</a>
-      <a ui-sref="login" id="signup-button4" class="button button-positive  button-block button-clear">Already have an account?</a> -->
-<!-- ======= -->
+
       <a ng-click="signup()" id="signup-button1" class="button button-stable  button-block">Sign up</a>
       <a ui-sref="login" id="signup-button4" class="button button-positive  button-block button-clear">Already have an account?</a>
-<!-- >>>>>>> 4744ab73658b20d15bb560d0fe7ed95216212cfe -->
+
     </form>
   </ion-content>
 </ion-view>
