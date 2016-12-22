@@ -30,12 +30,10 @@ class LoginResource(CorsResourceBase, ModelResource):
         return object_list.filter(username=bundle.request.user.username)
 
     def dehydrate(self, bundle):
-        print "dehydrate" + str(bundle.data.get('username'))
         username = bundle.data.get('username')
         user = User.objects.get(username=username)
         # instance, created = ApiKey.objects.get_or_create(user=user)
         bundle.data['api_key'] = ApiKey.objects.get_or_create(user=user)[0].key
-        print bundle.data['api_key']
         return bundle
 
 
@@ -47,6 +45,9 @@ class RegisterResource(ModelResource):
         resource_name = 'register'
         authorization = Authorization()
         authentication = Authentication()
+
+    def get_object_list(self, request):
+        return User.objects.none()
 
     def obj_create(self, bundle, request=None, **kwargs):
         try:

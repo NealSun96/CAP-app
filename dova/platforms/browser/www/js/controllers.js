@@ -9,7 +9,7 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
             last_name: $scope.reg_lastname,
             password: $scope.reg_password
         };
-        $http.post("https://nealsun.ngrok.io/api/v1/register/", data).then(function successCallback(response) {
+        $http.post("https://21574e51.ngrok.io/api/v1/register/", data).then(function successCallback(response) {
             $rootScope.register_success = true;
             $state.go('login');
         }, function errorCallback(response) {
@@ -36,7 +36,7 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
             }
         };
 
-        $http.get("https://nealsun.ngrok.io/api/v1/login/", config).then(function successCallback(response) {
+        $http.get("https://21574e51.ngrok.io/api/v1/login/", config).then(function successCallback(response) {
             $rootScope.api_auth = $scope.username + ":" + response.data.objects[0].api_key;
             $state.go('dashboard');
         }, function errorCallback(response) {
@@ -109,7 +109,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
         }
         };
 
-        $http.get("https://nealsun.ngrok.io/api/v1/enrollment/enrollments/", config)
+        $http.get("https://21574e51.ngrok.io/api/v1/enrollment/enrollments/", config)
             .then(function successCallback(response) {
             $rootScope.enrollments = response.data.objects;
 
