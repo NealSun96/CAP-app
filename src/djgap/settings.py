@@ -37,8 +37,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tastypie',
-    'postings',
-    'fives',
     'action_plan',
     'action_plan_answer',
     'answer',

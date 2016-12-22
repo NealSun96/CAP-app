@@ -3,19 +3,23 @@
     <form id="signup-form3" class="list">
       <ion-list id="signup-list4">
         <label class="item item-input" id="signup-input1">
-          <span class="input-label">Name</span>
-          <input type="text" placeholder="">
+          <span class="input-label">First Name</span>
+          <input type="text" placeholder="" ng-model="$parent.reg_firstname">
         </label>
         <label class="item item-input" id="signup-input2">
-          <span class="input-label">Username</span>
-          <input type="text" placeholder="">
+          <span class="input-label">Last Name</span>
+          <input type="text" placeholder="" ng-model="$parent.reg_lastname">
         </label>
         <label class="item item-input" id="signup-input3">
+          <span class="input-label">Username</span>
+          <input type="text" placeholder="" ng-model="$parent.reg_username">
+        </label>
+        <label class="item item-input" id="signup-input4">
           <span class="input-label">Password</span>
-          <input type="password" placeholder="">
+          <input type="password" placeholder="" ng-model="$parent.reg_password">
         </label>
       </ion-list>
-      <a ui-sref="signUpComplete" id="signup-button1" class="button button-stable  button-block">Sign up</a>
+      <a ng-click="signup()" id="signup-button1" class="button button-stable  button-block">Sign up</a>
       <a ui-sref="login" id="signup-button4" class="button button-positive  button-block button-clear">Or Login</a>
     </form>
   </ion-content>

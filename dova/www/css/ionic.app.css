@@ -9800,8 +9800,7 @@ a.button {
   transition-duration: 0s; }
 
 .quiz {
-  border-color: #CC4D33;
-  border-radius: 6px; }
+  color: #CC4D33; }
 
 .task {
   border-radius: 6px; }

@@ -7,20 +7,22 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('course', '__first__'),
+        ('knowledge_test', '0001_initial'),
+        ('question', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ActionPlan',
+            name='QuestionOrdered',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('level', models.CharField(max_length=100, choices=[(b'teacher', b'trainer'), (b'manager', b'manager'), (b'non-manager', b'non-manager'), (b'discarded', b'DISCARDED')])),
-                ('action_points', models.TextField()),
-                ('course', models.ForeignKey(to='course.Course')),
+                ('ordering', models.IntegerField()),
+                ('score', models.IntegerField()),
+                ('question', models.ForeignKey(to='question.Question')),
+                ('test', models.ForeignKey(to='knowledge_test.KnowledgeTest')),
             ],
             options={
-                'abstract': False,
+                'ordering': ['ordering'],
             },
             bases=(models.Model,),
         ),

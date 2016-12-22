@@ -9,11 +9,23 @@
           <p style="white-space:normal;">{{ enrollment.teacher_name }}</p>
         </div>
 
+<!-- <<<<<<< HEAD -->
         <div style="float: right; font-size: 9px; width: 250px;">
           <div >Feedback: {{ enrollment.feedback_status }}</div>
           <div >Action Plan: {{ enrollment.action_plan_status }}</div>
           <div >Knowledge Test: {{ enrollment.knowledge_test_status }}</div>
           <div>Diagnosis: {{ enrollment.diagnosis_status }}</div>
+<!-- ======= -->
+        <div style="float: right; font-size: 9px; width: 250px;">
+          <div ng-style="{ color: enrollment.feedback_status == 'Completed' ? 'green' : enrollment.feedback_status == 'Available' ? 'red' : 'black' }">
+              Feedback: {{ enrollment.feedback_status }}</div>
+          <div ng-style="{ color: enrollment.action_plan_status == 'Completed' ? 'green' : enrollment.action_plan_status == 'Available' ? 'red' : 'black' }">
+              Action Plan: {{ enrollment.action_plan_status }}</div>
+          <div ng-style="{ color: enrollment.knowledge_test_status == 'Completed' ? 'green' : enrollment.knowledge_test_status == 'Available' ? 'red' : 'black' }">
+              Knowledge Test: {{ enrollment.knowledge_test_status }}</div>
+          <div ng-style="{ color: enrollment.diagnosis_status == 'Completed' ? 'green' : enrollment.diagnosis_status == 'Available' ? 'red' : 'black' }">
+              Diagnosis: {{ enrollment.diagnosis_status }}</div>
+<!-- >>>>>>> 4744ab73658b20d15bb560d0fe7ed95216212cfe -->
         </div>
         <i class="icon ion-ios-arrow-right icon-accessory"></i>
       </ion-item>

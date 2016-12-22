@@ -1,3 +1,4 @@
 from django.contrib import admin
+from .models import QuestionOrdered
 
-# Register your models here.
+admin.site.register(QuestionOrdered)
