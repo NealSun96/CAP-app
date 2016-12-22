@@ -34,6 +34,8 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
         }, function errorCallback(response) {
             $scope.username = "ERROR";
             $scope.signin_fail = true;
+            var element = document.getElementById("login_error_message");
+            setTimeout(function() { element.parentNode.removeChild(element).fadeOut(); }, 2500);
         });
     }
 }])
