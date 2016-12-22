@@ -7,53 +7,122 @@
 
     <ion-content padding="true" class="has-header">
 
-
-        <!-- categories  -->
-        <div ng-repeat="categorie in categories">
-
-          <!-- top labels of chart -->
-          <div class="row header">
-            <label class="col col-50">
-                <span class="input-label"> {{ categorie.name }} </span>
-            </label>
-            <label class="col col-15">
-                <span class="input-label"> {{ categorie.answer1 }} </span>
-            </label>
-            <label class="col col-15">
-                <span class="input-label"> {{ categorie.answer2 }} </span>
-            </label>
-            <label class="col col-15">
-                <span class="input-label"> {{ categorie.answer3 }} </span>
-            </label>
-          </div>
-
-
-          <!-- all other rows -->
-          <div class="row" ng-repeat="question in categorie.questions"> <!-- not sure about this syntax for repeat -->
-            <label class="col col-50">
-                <span class="input-label"> {{ question.text }} </span>
-            </label>
-
-            <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-            <ion-radio class="col col-15" ng-model="choice0" ng-value="2"></ion-radio>
-            <ion-radio class="col col-15" ng-model="choice0" ng-value="3"></ion-radio>
-          </div>
-
-           <!-- text input -->
-          <form id="quizPage-form12" class="list">
-            <label class="item item-input" id="login-input5">
-              <span class="input-label">Some text</span>
-              <input type="text" placeholder="" ng-model="feedback_page_text_area">
-            </label>
-          </form>
-
+        <!-- top labels of chart -->
+        <div class="row header">
+          <label class="col col-50">
+              <span class="input-label">Category</span>
+          </label>
+          <label class="col col-15">
+              <span class="input-label">Answer 1</span>
+          </label>
+          <label class="col col-15">
+              <span class="input-label">Answer 2</span>
+          </label>
+          <label class="col col-15">
+              <span class="input-label">Answer 3</span>
+          </label>
         </div>
 
 
+        <!-- all other rows -->
+        <div class="row">
+          <label class="col col-50">
+              <span class="input-label">Question</span>
+          </label>
 
-              <!-- DUMMY DATA -->
+          <ion-radio class="col col-15" name="q1"></ion-radio>
+          <ion-radio class="col col-15" name="q1"></ion-radio>
+          <ion-radio class="col col-15" name="q1"></ion-radio>
+        </div>
+
+        <div class="row">
+          <label class="col col-50">
+              <span class="input-label">Question</span>
+          </label>
+
+          <ion-radio class="col col-15" name="q2"></ion-radio>
+          <ion-radio class="col col-15" name="q2"></ion-radio>
+          <ion-radio class="col col-15" name="q2"></ion-radio>
+        </div>
+
+        <div class="row">
+          <label class="col col-50">
+              <span class="input-label">Question</span>
+          </label>
+
+          <ion-radio class="col col-15" name="q3"></ion-radio>
+          <ion-radio class="col col-15" name="q3"></ion-radio>
+          <ion-radio class="col col-15" name="q3"></ion-radio>
+        </div>
+
+        <div class="row">
+          <label class="col col-50">
+              <span class="input-label">Question</span>
+          </label>
+
+          <ion-radio class="col col-15" name="q4"></ion-radio>
+          <ion-radio class="col col-15" name="q4"></ion-radio>
+          <ion-radio class="col col-15" name="q4"></ion-radio>
+        </div>
+      
+
+      <!-- top labels of chart -->
+        <div class="row header">
+          <label class="col col-50">
+              <span class="input-label">Category</span>
+          </label>
+          <label class="col col-15">
+              <span class="input-label">Answer 1</span>
+          </label>
+          <label class="col col-15">
+              <span class="input-label">Answer 2</span>
+          </label>
+          <label class="col col-15">
+              <span class="input-label">Answer 3</span>
+          </label>
+        </div>
 
 
+        <!-- all other rows -->
+        <div class="row">
+          <label class="col col-50">
+              <span class="input-label">Question</span>
+          </label>
+
+          <ion-radio class="col col-15" name="q5"></ion-radio>
+          <ion-radio class="col col-15" name="q5"></ion-radio>
+          <ion-radio class="col col-15" name="q5"></ion-radio>
+        </div>
+
+        <div class="row">
+          <label class="col col-50">
+              <span class="input-label">Question</span>
+          </label>
+
+          <ion-radio class="col col-15" name="q6"></ion-radio>
+          <ion-radio class="col col-15" name="q6"></ion-radio>
+          <ion-radio class="col col-15" name="q6"></ion-radio>
+        </div>
+
+        <div class="row">
+          <label class="col col-50">
+              <span class="input-label">Question</span>
+          </label>
+
+          <ion-radio class="col col-15" name="q7"></ion-radio>
+          <ion-radio class="col col-15" name="q7"></ion-radio>
+          <ion-radio class="col col-15" name="q7"></ion-radio>
+        </div>
+
+        <div class="row">
+          <label class="col col-50">
+              <span class="input-label">Question</span>
+          </label>
+
+          <ion-radio class="col col-15" name="q8"></ion-radio>
+          <ion-radio class="col col-15" name="q8"></ion-radio>
+          <ion-radio class="col col-15" name="q8"></ion-radio>
+        </div>
 
         <!-- top labels of chart -->
         <div class="row header">
@@ -74,16 +143,13 @@
 
         <!-- all other rows -->
         <div class="row">
-          <!-- <div class="col col-60">Question</div> -->
           <label class="col col-50">
               <span class="input-label">Question</span>
           </label>
 
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="2"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="3"></ion-radio>
+          <ion-radio class="col col-15" name="q9"></ion-radio>
+          <ion-radio class="col col-15" name="q9"></ion-radio>
+          <ion-radio class="col col-15" name="q9"></ion-radio>
         </div>
 
         <div class="row">
@@ -91,40 +157,12 @@
               <span class="input-label">Question</span>
           </label>
 
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
+          <ion-radio class="col col-15" name="q10"></ion-radio>
+          <ion-radio class="col col-15" name="q10"></ion-radio>
+          <ion-radio class="col col-15" name="q10"></ion-radio>
         </div>
 
-        <div class="row">
-          <!-- <div class="col col-60">Question</div> -->
-          <label class="col col-50">
-              <span class="input-label">Question</span>
-          </label>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-        </div>
-
-        <div class="row">
-          <!-- <div class="col col-60">Question</div> -->
-          <label class="col col-50">
-              <span class="input-label">Question</span>
-          </label>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-        </div>
-
-
+        <!-- top labels of chart -->
         <div class="row header">
           <label class="col col-50">
               <span class="input-label">Category</span>
@@ -140,58 +178,17 @@
           </label>
         </div>
 
+
+        <!-- all other rows -->
         <div class="row">
-          <!-- <div class="col col-60">Question</div> -->
           <label class="col col-50">
               <span class="input-label">Question</span>
           </label>
 
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
+          <ion-radio class="col col-15" name="q11"></ion-radio>
+          <ion-radio class="col col-15" name="q11"></ion-radio>
+          <ion-radio class="col col-15" name="q11"></ion-radio>
         </div>
-
-        <div class="row">
-          <!-- <div class="col col-60">Question</div> -->
-          <label class="col col-50">
-              <span class="input-label">Question</span>
-          </label>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-        </div>
-
-        <div class="row">
-          <!-- <div class="col col-60">Question</div> -->
-          <label class="col col-50">
-              <span class="input-label">Question</span>
-          </label>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-        </div>
-
-        <div class="row">
-          <!-- <div class="col col-60">Question</div> -->
-          <label class="col col-50">
-              <span class="input-label">Question</span>
-          </label>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-
-          <ion-radio class="col col-15" ng-model="choice0" ng-value="1"></ion-radio>
-        </div>
-
 
 
 
