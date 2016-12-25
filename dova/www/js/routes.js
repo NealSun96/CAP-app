@@ -59,7 +59,7 @@ angular.module('app.routes', [])
   .state('behavior', {
     url: '/behavior',
     templateUrl: 'templates/behavior.html',
-    controller: 'feedbackCtrl'
+    controller: 'behaviorCtrl'
   })
 
   .state('knowledge_test', {
