@@ -73,19 +73,27 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
 
     $scope.feedback = function() {
-        $state.go("feedback");
+        if (!$scope.f_disabled) {
+            $state.go("feedback");
+        }
     };
 
     $scope.action_plan = function() {
-        $state.go("behavior");
+        if (!$scope.ap_disabled) {
+            $state.go("behavior");
+         }
     };
 
     $scope.k_test = function() {
-        $state.go("knowledge_test");
+        if (!$scope.kt_disabled) {
+            $state.go("knowledge_test");
+        }
     };
 
     $scope.diagnosis = function() {
-        $state.go("diagnosis");
+        if (!$scope.d_disabled) {
+            $state.go("diagnosis");
+        }
     }
 }])
    
@@ -108,7 +116,6 @@ function ($scope, $stateParams) {
 .controller('dashboardCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
     $scope.loadEnrollments = function() {
-        // $rootScope.api_auth = "test2:7cab15440caceb2ff35099994ae4610cd39cb810";
         var config = {headers:  {
             'Authorization': 'Apikey ' + $rootScope.api_auth
         }
@@ -143,7 +150,6 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
     $scope.loadActions = function() {
         $scope.checked = 0;
-        $scope.selected = [];
         var config = {headers:  {
             'Authorization': 'Apikey ' + $rootScope.api_auth
         }
@@ -165,19 +171,26 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
     };
 
     $scope.onClick = function(point) {
-        if(this.point.selected) $scope.checked++;
+        if(point.selected) $scope.checked++;
         else $scope.checked--;
-        console.log($scope.checked);
        }
-
 }])
 
-.controller('knowledge_testCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+.controller('knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+function ($scope, $stateParams, $http, $rootScope, $state) {
+    $scope.loadQuestions = function() {
+        var config = {headers:  {
+            'Authorization': 'Apikey ' + $rootScope.api_auth
+        }
+        };
 
-
+        var url = "https://21574e51.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
+        $http.get(url, config).then(function successCallback(response) {
+            $scope.questions = response.data.objects[0].questions;
+        }, function errorCallback(response) {
+            $scope.questions = [];
+        });
+    };
 }])
 
 .controller('diagnosisCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
