@@ -25,15 +25,13 @@ class EnrollmentResource(ModelResource):
         resource_name = 'enrollment'
         authorization = DjangoAuthorization()
         authentication = ApiKeyAuthentication()
-        # filtering = {
-        #     "username": ALL
-        # }
 
     def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/enrollments%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_enrollments'), name="api_get_enrollments"),
             url(r"^(?P<resource_name>%s)/assignments/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
-            url(r"^(?P<resource_name>%s)/upload/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('upload_feedback'), name="api_upload_feedback"),
+            url(r"^(?P<resource_name>%s)/upload/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('upload_answers'), name="api_upload_answers"),
+            url(r"^(?P<resource_name>%s)/check_mark/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('check_mark'), name="api_check_mark"),
         ]
 
     def get_enrollments(self, request, **kwargs):
@@ -156,7 +154,7 @@ class EnrollmentResource(ModelResource):
 
         return self.create_response(request, object_list)
 
-    def upload_feedback(self, request, **kwargs):
+    def upload_answers(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
         self.is_authenticated(request)
 
@@ -205,3 +203,40 @@ class EnrollmentResource(ModelResource):
                       completion_date=datetime.now(pytz.timezone('Asia/Shanghai'))).save()
 
         return self.create_response(request, {})
+
+    def check_mark(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+
+        try:
+            enrollment = Enrollment.objects.get(id=kwargs['id'], user=request.user)
+        except ObjectDoesNotExist:
+            raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
+
+        deserialized = self.deserialize(request, request.body,
+                                        format=request.META.get('CONTENT_TYPE', 'application/json'))
+        deserialized = self.alter_deserialized_detail_data(request, deserialized)
+        bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
+
+        # answers = json.loads(bundle.data.get("answers"))
+        answers = bundle.data.get("answers")
+        print answers
+        user_group = request.user.groups.all()[0].name
+        if len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) <= 0:
+            raise ImmediateHttpResponse(HttpNotFound('Knowledge test does not exist'))
+        knowledge_test = enrollment.course.knowledgetest_set.filter(level=user_group).first()
+        if not answers or answers and len(knowledge_test.questionordered_set.all()) != len(answers):
+            print len(knowledge_test.questionordered_set.all())
+            if answers:
+                print len(answers)
+            raise ImmediateHttpResponse(HttpNotFound('Bad answers'))
+
+        score = 0
+        total_score = 0
+        for question, answer in zip(knowledge_test.questionordered_set.all(), answers):
+            score += question.score if question.question.right_answer == answer else 0
+            total_score += question.score
+
+        return self.create_response(request, {
+            'objects': '%s/%s' % (score, total_score)
+        })
