@@ -137,7 +137,6 @@ class EnrollmentResource(ModelResource):
                 'answer_keys': [answer for answer in json.loads(question.question.answer_keys)],
                 'score': question.score
             } for question in knowledge_test.questionordered_set.all()]
-            bundle.data['timespan'] = knowledge_test.time_span
             objects.append(bundle)
         else:
             if len(enrollment.actionplananswer_set.all()) <= 0:
