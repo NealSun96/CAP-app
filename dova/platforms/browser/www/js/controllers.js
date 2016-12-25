@@ -73,19 +73,19 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
 
     $scope.feedback = function() {
-
+        $state.go("feedback");
     };
 
     $scope.action_plan = function() {
-
+        $state.go("behavior");
     };
 
     $scope.k_test = function() {
-
+        $state.go("knowledge_test");
     };
 
     $scope.diagnosis = function() {
-
+        $state.go("diagnosis");
     }
 }])
    
@@ -137,11 +137,38 @@ function ($scope, $stateParams) {
 
 }])
 
-.controller('behaviorCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+.controller('behaviorCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+function ($scope, $stateParams, $http, $rootScope, $state) {
+    $scope.limit = 3;
 
+    $scope.loadActions = function() {
+        $scope.checked = 0;
+        $scope.selected = [];
+        var config = {headers:  {
+            'Authorization': 'Apikey ' + $rootScope.api_auth
+        }
+        };
+
+        var url = "https://21574e51.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/action_plan/";
+        $http.get(url, config).then(function successCallback(response) {
+            $scope.action_points = [];
+            var action_points = response.data.objects[0].action_points;
+            for (var i = 0; i < action_points.length; i++) {
+                $scope.action_points.push({
+                    point: action_points[i],
+                    selected: false
+                });
+                };
+        }, function errorCallback(response) {
+            $scope.action_points = [];
+        });
+    };
+
+    $scope.onClick = function(point) {
+        if(this.point.selected) $scope.checked++;
+        else $scope.checked--;
+        console.log($scope.checked);
+       }
 
 }])
 

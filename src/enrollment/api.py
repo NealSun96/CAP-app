@@ -120,7 +120,6 @@ class EnrollmentResource(ModelResource):
             action_plan = enrollment.course.actionplan_set.filter(level=user_group).all()[0]
             bundle = self.build_bundle(obj=action_plan, request=request)
             # bundle.data['action_plan_id'] = action_plan.id
-            print action_plan.action_points
             bundle.data['action_points'] = json.loads(action_plan.action_points)
             objects.append(bundle)
         elif a_type == 'knowledge_test':
