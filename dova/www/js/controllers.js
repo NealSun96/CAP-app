@@ -162,7 +162,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
                     point: action_points[i],
                     selected: false
                 });
-                };
+            };
         }, function errorCallback(response) {
             $scope.action_points = [];
         });
@@ -187,6 +187,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
             var questions = response.data.objects[0].questions;
             for (var i = 0; i < questions.length; i++) {
                 questions[i]['id'] = i;
+                questions[i]['display_id'] = i + 1;
             };
             $scope.questions = questions;
         }, function errorCallback(response) {
@@ -195,12 +196,34 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
     };
 }])
 
-.controller('diagnosisCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+.controller('diagnosisCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+function ($scope, $stateParams, $http, $rootScope, $state) {
+    $scope.options = ["明显进步", "稍有改善", "没有变化"];
+//    $scope.options = ["good", "ok", "bad"];
 
+    $scope.loadDiagnosis = function() {
+        var config = {headers:  {
+            'Authorization': 'Apikey ' + $rootScope.api_auth
+        }
+        };
 
+        var url = "https://21574e51.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/diagnosis/";
+        $http.get(url, config).then(function successCallback(response) {
+            $scope.diagnosis_points = [];
+            var diagnosis_points = response.data.objects[0].diagnosis_points;
+            for (var i = 0; i < diagnosis_points.length; i++) {
+                $scope.diagnosis_points.push({
+                    point: diagnosis_points[i],
+                    id: i,
+                    display_id: i + 1,
+                    self_id: "self" + parseInt(i),
+                    other_id: "other" + parseInt(i)
+                });
+            };
+        }, function errorCallback(response) {
+            $scope.diagnosis_points = [];
+        });
+    };
 }])
 
 .controller('check_knowledge_testCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller

@@ -10,10 +10,10 @@
     <ion-list ng-repeat="question in questions"> <!-- ng-repeat here -->
         <div>
             <label>
-                <span class="input-label">{{ question.question }}</span>
+                <span class="input-label">{{ question.display_id }}. {{ question.question }}</span>
             </label>
             <ion-list ng-repeat="choice in question.answer_keys">
-                <ion-radio name="{{ question.id }}">{{ question.id }}</ion-radio>
+                <ion-radio name="{{ question.id }}">{{ choice }}</ion-radio>
                 <!--ng-model="choice0" ng-value="1"-->
             </ion-list>
         </div>
