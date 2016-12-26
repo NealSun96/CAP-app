@@ -28,7 +28,6 @@ function ($scope, $stateParams) {
    
 .controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
 function ($scope, $stateParams, $http, $state, $rootScope) {
-    $scope.signin_fail = false;
 
     $scope.login = function() {
         var auth = btoa($scope.username + ":" + $scope.password);
@@ -43,9 +42,9 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
             $state.go('dashboard');
         }, function errorCallback(response) {
             $scope.username = "ERROR";
-            $scope.signin_fail = true;
-            var element = document.getElementById("login_error_message");
-            setTimeout(function() { element.parentNode.removeChild(element).fadeOut(); }, 2500);
+            var ERRelement = document.getElementById("login_error_message");
+            ERRelement.style.visibility = "visible";
+            setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
         });
     }
 }])
@@ -194,6 +193,14 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 }])
 
 .controller('diagnosisCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $stateParams) {
+
+
+}])
+
+.controller('check_knowledge_testCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams) {
