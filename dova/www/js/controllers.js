@@ -41,7 +41,6 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
             $rootScope.api_auth = $scope.username + ":" + response.data.objects[0].api_key;
             $state.go('dashboard');
         }, function errorCallback(response) {
-            $scope.username = "ERROR";
             var ERRelement = document.getElementById("login_error_message");
             ERRelement.style.visibility = "visible";
             setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
@@ -185,7 +184,11 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
         var url = "https://21574e51.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
         $http.get(url, config).then(function successCallback(response) {
-            $scope.questions = response.data.objects[0].questions;
+            var questions = response.data.objects[0].questions;
+            for (var i = 0; i < questions.length; i++) {
+                questions[i]['id'] = i;
+            };
+            $scope.questions = questions;
         }, function errorCallback(response) {
             $scope.questions = [];
         });
