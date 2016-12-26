@@ -68,10 +68,16 @@ angular.module('app.routes', [])
     controller: 'knowledge_testCtrl'
   })
   
-.state('diagnosis', {
+  .state('diagnosis', {
     url: '/diagnosis',
     templateUrl: 'templates/diagnosis.html',
     controller: 'diagnosisCtrl'
+  })
+
+  .state('check_knowledge_test', {
+    url: '/check_knowledge_test',
+    templateUrl: 'templates/check_knowledge_test.html',
+    controller: 'check_knowledge_testCtrl'
   })
 
 $urlRouterProvider.otherwise('/login')

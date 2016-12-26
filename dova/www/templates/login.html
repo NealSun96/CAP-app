@@ -8,7 +8,7 @@
 
 
     <!-- some error message to display when login fails -->
-    <div class="error-box animate-if" id="login_error_message" ng-show="signin_fail==true">
+    <div class="error-box animate-if" id="login_error_message" style="visibility: hidden;">
       <p> Login Error </p> <!-- should be replaced with proper error message -->
     </div>
 
@@ -27,7 +27,7 @@
       </ion-list>
       <div class="spacer" style="height: 40px;"></div>
       <a id="login-button2" class="button button-positive  button-block" ng-click="login()">Log in</a>
-      <a ui-sref="signup" id="login-button3" class="button button-positive  button-block button-clear">Or create an account</a>
+      <a ui-sref="check_knowledge_test" id="login-button3" class="button button-positive  button-block button-clear">Or create an account</a>
 
     </form>
   </ion-content>

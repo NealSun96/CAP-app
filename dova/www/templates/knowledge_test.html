@@ -1,4 +1,4 @@
-<ion-view title="knowledge_test" id="knowledge_test_page">
+<ion-view title="knowledge_test" id="knowledge_test_page" cache-view="false">
     <!-- <ion-content padding="true" class="has-header"></ion-content> -->
 
     <ion-nav-buttons class="has-header" side="right">
@@ -7,6 +7,7 @@
 
     <ion-content padding="true" class="has-header">
 
+    <ion-list> <!-- ng-repeat here -->
         <div>
             <label>
                 <span class="input-label">Question</span>
@@ -17,7 +18,12 @@
             <ion-radio ng-model="choice0" ng-value="3">Choose C</ion-radio>
             <ion-radio ng-model="choice0" ng-value="4">Choose C</ion-radio>
         </div>
+    </ion-list>
 
+
+
+        <!-- dummy data -->
+        
         <div>
             <label>
                 <span class="input-label">Question</span>
