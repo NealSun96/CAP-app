@@ -8,7 +8,7 @@
 </style>
 
     <ion-nav-buttons class="has-header" side="right">
-        <button ui-sref="dashboard" class="button button-icon icon No Icon">Submit</button>
+        <button ng-click="submit()" class="button button-icon icon No Icon" ng-if="counter==limit">Submit</button>
     </ion-nav-buttons>
 
     <ion-content padding="true" class="has-header">
@@ -16,61 +16,30 @@
     <!-- top labels of chart -->
         <div class="row header">
           <label class="col col-50">
-              <span class="input-label">培训内容综合评价</span>
+              <span class="label">培训内容综合评价</span>
           </label>
           <label class="col col-15">
-              <span class="input-label">优秀／2</span>
+              <span class="label">优秀／2</span>
           </label>
           <label class="col col-15">
-              <span class="input-label">一般／1</span>
+              <span class="label">一般／1</span>
           </label>
           <label class="col col-15">
-              <span class="input-label">差／0</span>
+              <span class="label">差／0</span>
           </label>
         </div>
 
-
+        <ion-list ng-repeat="q in a_questions">
         <!-- all other rows -->
         <div class="row">
           <label class="col col-50">
-              <span class="label">1.本次培训内容和实际需求匹配度如何？</span>
+              <span class="label">{{ q.question }}</span>
           </label>
-
-          <ion-radio class="col col-15" name="q1"></ion-radio>
-          <ion-radio class="col col-15" name="q1"></ion-radio>
-          <ion-radio class="col col-15" name="q1"></ion-radio>
+            <ion-list ng-repeat="key in keys">
+                <ion-radio class="col col-15" name="{{ q.id }}" ng-click="click(q, key)">{{ key }}</ion-radio>
+            </ion-list>
         </div>
-
-        <div class="row">
-          <label class="col col-50">
-              <span class="label">2.本次培训的目标对你的明确程度如何？</span>
-          </label>
-
-          <ion-radio class="col col-15" name="q2"></ion-radio>
-          <ion-radio class="col col-15" name="q2"></ion-radio>
-          <ion-radio class="col col-15" name="q2"></ion-radio>
-        </div>
-
-        <div class="row">
-          <label class="col col-50">
-              <span class="label">3.此次培训对提到的目标的完成度如何？</span>
-          </label>
-
-          <ion-radio class="col col-15" name="q3"></ion-radio>
-          <ion-radio class="col col-15" name="q3"></ion-radio>
-          <ion-radio class="col col-15" name="q3"></ion-radio>
-        </div>
-
-        <div class="row">
-          <label class="col col-50">
-              <span class="label">4.培训时间长度可覆盖所提到的目标么？</span>
-          </label>
-
-          <ion-radio class="col col-15" name="q4"></ion-radio>
-          <ion-radio class="col col-15" name="q4"></ion-radio>
-          <ion-radio class="col col-15" name="q4"></ion-radio>
-        </div>
-      
+        </ion-list>
 
       <!-- top labels of chart -->
         <div class="row header">
@@ -88,47 +57,18 @@
           </label>
         </div>
 
-
+        <ion-list ng-repeat="q in b_questions">
         <!-- all other rows -->
         <div class="row">
           <label class="col col-50">
-              <span class="label">1.讲师讲解的易懂性:</span>
+              <span class="label">{{ q.question }}</span>
           </label>
 
-          <ion-radio class="col col-15" name="q5"></ion-radio>
-          <ion-radio class="col col-15" name="q5"></ion-radio>
-          <ion-radio class="col col-15" name="q5"></ion-radio>
+            <ion-list ng-repeat="key in keys">
+                <ion-radio class="col col-15" name="{{ q.id }}" ng-click="click(q, key)">{{ key }}</ion-radio>
+            </ion-list>
         </div>
-
-        <div class="row">
-          <label class="col col-50">
-              <span class="label">2.讲师能够清楚简明扼要回答问题的能力：</span>
-          </label>
-
-          <ion-radio class="col col-15" name="q6"></ion-radio>
-          <ion-radio class="col col-15" name="q6"></ion-radio>
-          <ion-radio class="col col-15" name="q6"></ion-radio>
-        </div>
-
-        <div class="row">
-          <label class="col col-50">
-              <span class="label">3.讲师能够调整进度适应不同学员的能力：</span>
-          </label>
-
-          <ion-radio class="col col-15" name="q7"></ion-radio>
-          <ion-radio class="col col-15" name="q7"></ion-radio>
-          <ion-radio class="col col-15" name="q7"></ion-radio>
-        </div>
-
-        <div class="row">
-          <label class="col col-50">
-              <span class="label">4.讲师专注在课程目标：</span>
-          </label>
-
-          <ion-radio class="col col-15" name="q8"></ion-radio>
-          <ion-radio class="col col-15" name="q8"></ion-radio>
-          <ion-radio class="col col-15" name="q8"></ion-radio>
-        </div>
+        </ion-list>
 
         <!-- top labels of chart -->
         <div class="row header">
@@ -146,27 +86,18 @@
           </label>
         </div>
 
-
+        <ion-list ng-repeat="q in c_questions">
         <!-- all other rows -->
         <div class="row">
           <label class="col col-50">
-              <span class="label">1.培训教室的舒适程度：</span>
+              <span class="label">{{ q.question }}</span>
           </label>
 
-          <ion-radio class="col col-15" name="q9"></ion-radio>
-          <ion-radio class="col col-15" name="q9"></ion-radio>
-          <ion-radio class="col col-15" name="q9"></ion-radio>
+            <ion-list ng-repeat="key in keys">
+                <ion-radio class="col col-15" name="{{ q.id }}" ng-click="click(q, key)">{{ key }}</ion-radio>
+            </ion-list>
         </div>
-
-        <div class="row">
-          <label class="col col-50">
-              <span class="label">2.培训组织与协调：</span>
-          </label>
-
-          <ion-radio class="col col-15" name="q10"></ion-radio>
-          <ion-radio class="col col-15" name="q10"></ion-radio>
-          <ion-radio class="col col-15" name="q10"></ion-radio>
-        </div>
+        </ion-list>
 
         <!-- top labels of chart -->
         <div class="row header">
@@ -185,23 +116,20 @@
         </div>
 
 
-        <!-- all other rows -->
         <div class="row">
           <label class="col col-50">
-              <span class="label"></span>
+              <span class="label">{{ d_question.question }}</span>
           </label>
 
-          <ion-radio class="col col-15" name="q11"></ion-radio>
-          <ion-radio class="col col-15" name="q11"></ion-radio>
-          <ion-radio class="col col-15" name="q11"></ion-radio>
+            <ion-list ng-repeat="key in keys">
+                <ion-radio class="col col-15" name="{{ d_question.id }}" ng-click="click(d_question, key)">{{ key }}</ion-radio>
+            </ion-list>
         </div>
-
-
         <!-- text input -->
         <form id="quizPage-form12" class="list">
         <label class="item item-input" id="login-input5">
           <span class="label">其他反馈意见：</span>
-          <input type="text" placeholder="" ng-model="feedback_page_text_area">
+          <input type="text" placeholder="" ng-model="$parent.feedback_page_text_area">
         </label>
       </form>
         

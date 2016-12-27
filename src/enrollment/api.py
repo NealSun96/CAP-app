@@ -18,9 +18,10 @@ from knowledge_test_answer.models import KnowledgeTestAnswer
 from knowledge_test_first_score.models import KnowledgeTestFirstScore
 from knowledge_test_start.models import KnowledgeTestStart
 from diagnosis.models import Diagnosis
+from djgap.corsresource import CorsResourceBase
 
 
-class EnrollmentResource(ModelResource):
+class EnrollmentResource(CorsResourceBase, ModelResource):
     class Meta:
         queryset = Enrollment.objects.all()
         allowed_method = ['get']
