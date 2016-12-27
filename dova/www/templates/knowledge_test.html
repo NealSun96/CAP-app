@@ -2,7 +2,7 @@
     <!-- <ion-content padding="true" class="has-header"></ion-content> -->
 
     <ion-nav-buttons class="has-header" side="right">
-        <button ui-sref="knowledge_test_page" class="button button-icon icon No Icon"> Submit</button>
+        <button ng-click="submit()" class="button button-icon icon No Icon" ng-if="count==limit"> Submit</button>
     </ion-nav-buttons>
 
     <ion-content padding="true" class="has-header">
@@ -13,7 +13,7 @@
                 <span class="input-label">{{ question.display_id }}. {{ question.question }}</span>
             </label>
             <ion-list ng-repeat="choice in question.answer_keys">
-                <ion-radio name="{{ question.id }}">{{ choice }}</ion-radio>
+                <ion-radio name="{{ question.id }}" ng-click="click(question.id, choice)">{{ choice }}</ion-radio>
                 <!--ng-model="choice0" ng-value="1"-->
             </ion-list>
         </div>
