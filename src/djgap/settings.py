@@ -48,6 +48,8 @@ INSTALLED_APPS = (
     'feedback',
     'knowledge_test',
     'knowledge_test_answer',
+    'knowledge_test_first_score',
+    'knowledge_test_start',
     'question',
     'question_ordered'
 )

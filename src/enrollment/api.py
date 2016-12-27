@@ -15,6 +15,8 @@ from .models import Enrollment
 from feedback.models import Feedback
 from action_plan_answer.models import ActionPlanAnswer
 from knowledge_test_answer.models import KnowledgeTestAnswer
+from knowledge_test_first_score.models import KnowledgeTestFirstScore
+from knowledge_test_start.models import KnowledgeTestStart
 from diagnosis.models import Diagnosis
 
 
@@ -32,6 +34,8 @@ class EnrollmentResource(ModelResource):
             url(r"^(?P<resource_name>%s)/assignments/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
             url(r"^(?P<resource_name>%s)/upload/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('upload_answers'), name="api_upload_answers"),
             url(r"^(?P<resource_name>%s)/check_mark/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('check_mark'), name="api_check_mark"),
+            url(r"^(?P<resource_name>%s)/record_start/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('record_start'), name="api_record_start"),
+            url(r"^(?P<resource_name>%s)/first_score/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('first_score'), name="api_first_score"),
         ]
 
     def get_enrollments(self, request, **kwargs):
@@ -190,9 +194,16 @@ class EnrollmentResource(ModelResource):
             if len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Knowledge test does not exist'))
             knowledge_test = enrollment.course.knowledgetest_set.filter(level=user_group).first()
+            if len(enrollment.knowledgeteststart_set.all()) <= 0:
+                raise ImmediateHttpResponse(HttpNotFound('Knowledge test start time does not exist'))
+            if len(enrollment.knowledgetestfirstscore_set.all()) <= 0:
+                raise ImmediateHttpResponse(HttpNotFound('Knowledge test first score does not exist'))
+
+            time_now = datetime.now(pytz.timezone('Asia/Shanghai'))
+            dtime = time_now - enrollment.knowledgeteststart_set.first().start_time
             KnowledgeTestAnswer(enrollment=enrollment, knowledge_test=knowledge_test, answers=bundle.data.get('answers'),
-                                time_taken=bundle.data.get('time_taken'), first_score=bundle.data.get('first_score'),
-                                final_score=bundle.data.get('final_score'), completion_date=datetime.now(pytz.timezone('Asia/Shanghai'))).save()
+                                time_taken=dtime.seconds, first_score=enrollment.knowledgetestfirstscore_set.first().first_score,
+                                final_score=bundle.data.get('final_score'), completion_date=time_now).save()
         elif a_type == 'diagnosis':
             if len(enrollment.diagnosis_set.all()) > 0:
                 raise ImmediateHttpResponse(HttpBadRequest('Diagnosis already exists'))
@@ -218,18 +229,13 @@ class EnrollmentResource(ModelResource):
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
 
-        # answers = json.loads(bundle.data.get("answers"))
-        answers = bundle.data.get("answers")
-        print answers
+        answers = json.loads(bundle.data.get("answers"))
         user_group = request.user.groups.all()[0].name
         if len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) <= 0:
             raise ImmediateHttpResponse(HttpNotFound('Knowledge test does not exist'))
         knowledge_test = enrollment.course.knowledgetest_set.filter(level=user_group).first()
         if not answers or answers and len(knowledge_test.questionordered_set.all()) != len(answers):
-            print len(knowledge_test.questionordered_set.all())
-            if answers:
-                print len(answers)
-            raise ImmediateHttpResponse(HttpNotFound('Bad answers'))
+            raise ImmediateHttpResponse(HttpBadRequest('Bad answers'))
 
         score = 0
         total_score = 0
@@ -238,5 +244,37 @@ class EnrollmentResource(ModelResource):
             total_score += question.score
 
         return self.create_response(request, {
-            'objects': '%s/%s' % (score, total_score)
+            'objects': [score, total_score]
         })
+
+    def record_start(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+
+        try:
+            enrollment = Enrollment.objects.get(id=kwargs['id'], user=request.user)
+        except ObjectDoesNotExist:
+            raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
+        if len(enrollment.knowledgeteststart_set.all()) <= 0:
+            KnowledgeTestStart(enrollment=enrollment, start_time=datetime.now(pytz.timezone('Asia/Shanghai'))).save()
+
+        return self.create_response(request, {})
+
+    def first_score(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+
+        try:
+            enrollment = Enrollment.objects.get(id=kwargs['id'], user=request.user)
+        except ObjectDoesNotExist:
+            raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
+        if len(enrollment.knowledgetestfirstscore_set.all()) > 0:
+            return self.create_response(request, {})
+
+        deserialized = self.deserialize(request, request.body,
+                                        format=request.META.get('CONTENT_TYPE', 'application/json'))
+        deserialized = self.alter_deserialized_detail_data(request, deserialized)
+        bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
+        KnowledgeTestFirstScore(enrollment=enrollment, first_score=bundle.data.get("first_score")).save()
+
+        return self.create_response(request, {})

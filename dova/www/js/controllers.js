@@ -194,17 +194,16 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
         var data = {"answers": angular.toJson(answers)}
         var url = "https://ebc43596.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/action_plan/";
         $http.post(url, data, config).then(function successCallback(response) {
-            $rootScope.submit_success = true;
+            $state.go('courseOne');
         }, function errorCallback(response) {
-            $rootScope.submit_success = false;
         });
-        $state.go('courseOne');
     }
 }])
 
 .controller('knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
-    $scope.loadQuestions = function() {
+    var answers = []
+    var init = function() {
         var config = {headers:  {
             'Authorization': 'Apikey ' + $rootScope.api_auth
         }
@@ -216,12 +215,32 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
             for (var i = 0; i < questions.length; i++) {
                 questions[i]['id'] = i;
                 questions[i]['display_id'] = i + 1;
+                answers.push("");
             };
             $scope.questions = questions;
+            $scope.limit = questions.length;
         }, function errorCallback(response) {
             $scope.questions = [];
         });
+
+        $http.post("http://ebc43596.ngrok.io/api/v1/enrollment/record_start/" + $rootScope.enrollment_in_handle + "/", {}, config).then(function successCallback(response) {
+        }, function errorCallback(response) {});
     };
+    init();
+
+    $scope.click = function(id, choice) {
+        answers[id] = choice;
+        $scope.count = 0;
+        for(var i = 0; i< answers.length; i++) {
+            $scope.count = answers[i] == "" ? $scope.count : $scope.count+1;
+        }
+    }
+
+    $scope.submit = function() {
+        $rootScope.knowledge_test_answers = answers;
+        $state.go('check_knowledge_test');
+    }
+
 }])
 
 .controller('diagnosisCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
@@ -254,10 +273,39 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
     };
 }])
 
-.controller('check_knowledge_testCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+.controller('check_knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+function ($scope, $stateParams, $http, $rootScope, $state) {
+    var init = function() {
+        $scope.passed = false;
+        $scope.score_message = "Calculating...";
+        var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
+        var data = {"answers": angular.toJson($rootScope.knowledge_test_answers)}
+        var url = "http://ebc43596.ngrok.io/api/v1/enrollment/check_mark/" + $rootScope.enrollment_in_handle + "/";
+        $http.post(url, data, config).then(function successCallback(response) {
+            var score = response.data.objects[0];
+            var total_score = response.data.objects[1];
+            var passed = score * 1.0 / total_score > 0.8;
 
+            data = {"first_score": score}
+            url = "https://ebc43596.ngrok.io/api/v1/enrollment/first_score/" + $rootScope.enrollment_in_handle + "/";
+            $http.post(url, data, config).then(function successCallback(response) {
+                $scope.score = score;
+                $scope.score_message = "Your current score is: " + parseInt(score) + "/" + parseInt(total_score);
+                $scope.passed = passed;
+                $scope.extra_message = passed ? "You can choose to go back and retry, or to submit." : "You score is too low for the test to be submitted. Please retry.";
+            }, function errorCallback(response) {});
+        }, function errorCallback(response) {
+        });
+    };
+    init();
 
+    $scope.submit = function() {
+        var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
+        var data = {"answers": angular.toJson($rootScope.knowledge_test_answers), "final_score": $scope.score}
+        var url = "https://ebc43596.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
+        $http.post(url, data, config).then(function successCallback(response) {
+            $state.go('courseOne');
+        }, function errorCallback(response) {
+        });
+    }
 }])
