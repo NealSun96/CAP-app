@@ -146,12 +146,59 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
     }
 }])
 
-.controller('feedbackCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
 
+.controller('feedbackCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+function ($scope, $stateParams, $http, $rootScope, $state) {
+    $scope.counter = 0;
+    $scope.limit = 11;
+    var answers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+    var a_questions = ["1.本次培训内容和实际需求匹配度如何？", "2.本次培训的目标对你的明确程度如何？", "3.此次培训对提到的目标的完成度如何？", "4.培训时间长度可覆盖所提到的目标么？"];
+    var b_questions = ["1.讲师讲解的易懂性:", "2.讲师能够清楚简明扼要回答问题的能力：", "3.讲师能够调整进度适应不同学员的能力：", "4.讲师专注在课程目标："];
+    var c_questions = ["1.培训教室的舒适程度：", "2.培训组织与协调："];
 
+    $scope.a_questions = [];
+    $scope.b_questions = [];
+    $scope.c_questions = [];
+    $scope.d_question = {
+        question: "",
+        id: 10
+    };
+    $scope.keys = ["2", "1", "0"];
+
+    for (var i = 0; i < a_questions.length; i++) {
+        $scope.a_questions.push({
+            question: a_questions[i],
+            id: i
+        })
+    }
+    for (var i = 0; i < b_questions.length; i++) {
+        $scope.b_questions.push({
+            question: b_questions[i],
+            id: i + a_questions.length
+        })
+    }
+    for (var i = 0; i < c_questions.length; i++) {
+        $scope.c_questions.push({
+            question: c_questions[i],
+            id: i + a_questions.length + b_questions.length
+        })
+    }
+
+    $scope.click = function(q, value) {
+        if (answers[q.id] == -1) $scope.counter++;
+        answers[q.id] = value;
+    }
+
+    $scope.submit = function() {
+      answers.push($scope.feedback_page_text_area);
+        var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
+        var data = {"feedbacks": angular.toJson(answers)}
+        var url = "https://ebc43596.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/feedback/";
+        $http.post(url, data, config).then(function successCallback(response) {
+            $state.go('courseOne');
+        }, function errorCallback(response) {
+        });
+    }
 }])
 
 .controller('behaviorCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
@@ -263,8 +310,8 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
                     point: diagnosis_points[i],
                     id: i,
                     display_id: i + 1,
-                    self_id: "s" + parseInt(i),
-                    other_id: "o" + parseInt(i)
+                    self_id: "s" + i,
+                    other_id: "o" + i
                 });
                 self_diagnosis.push("");
                 other_diagnosis.push("");
@@ -314,7 +361,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
             url = "https://ebc43596.ngrok.io/api/v1/enrollment/first_score/" + $rootScope.enrollment_in_handle + "/";
             $http.post(url, data, config).then(function successCallback(response) {
                 $scope.score = score;
-                $scope.score_message = "Your current score is: " + parseInt(score) + "/" + parseInt(total_score);
+                $scope.score_message = "Your current score is: " + score + "/" + total_score;
                 $scope.passed = passed;
                 $scope.extra_message = passed ? "You can choose to go back and retry, or to submit." : "You score is too low for the test to be submitted. Please retry.";
             }, function errorCallback(response) {});
