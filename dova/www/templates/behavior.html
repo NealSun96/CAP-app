@@ -1,7 +1,7 @@
 <ion-view title="behavior" id="behavior_page" ng-init='loadActions()'>
 
     <ion-nav-buttons class="has-header" side="right">
-        <button ui-sref="dashboard" class="button button-icon icon No Icon"> Submit</button>
+        <button class="button button-icon icon No Icon" ng-click="submit()" ng-if="checked==limit"> Submit</button>
     </ion-nav-buttons>
 
     <ion-content padding="true" class="has-header">
