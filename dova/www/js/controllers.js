@@ -203,6 +203,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 .controller('knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
     var answers = []
+    $scope.count = 0;
     var init = function() {
         var config = {headers:  {
             'Authorization': 'Apikey ' + $rootScope.api_auth
@@ -229,11 +230,8 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
     init();
 
     $scope.click = function(id, choice) {
+        if (answers[id] == "") $scope.count++;
         answers[id] = choice;
-        $scope.count = 0;
-        for(var i = 0; i< answers.length; i++) {
-            $scope.count = answers[i] == "" ? $scope.count : $scope.count+1;
-        }
     }
 
     $scope.submit = function() {
@@ -245,8 +243,10 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
 .controller('diagnosisCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
+    var self_diagnosis = [];
+    var other_diagnosis = [];
     $scope.options = ["明显进步", "稍有改善", "没有变化"];
-//    $scope.options = ["good", "ok", "bad"];
+    $scope.count = 0;
 
     $scope.loadDiagnosis = function() {
         var config = {headers:  {
@@ -263,14 +263,38 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
                     point: diagnosis_points[i],
                     id: i,
                     display_id: i + 1,
-                    self_id: "self" + parseInt(i),
-                    other_id: "other" + parseInt(i)
+                    self_id: "s" + parseInt(i),
+                    other_id: "o" + parseInt(i)
                 });
+                self_diagnosis.push("");
+                other_diagnosis.push("");
             };
+            $scope.limit = diagnosis_points.length * 2;
         }, function errorCallback(response) {
             $scope.diagnosis_points = [];
         });
     };
+
+    $scope.click = function(id, self_id, option) {
+        if (self_id.slice(0, 1) == "s") {
+            if (self_diagnosis[id] == "") $scope.count++;
+            self_diagnosis[id] = option;
+        }
+        else {
+            if (other_diagnosis[id] == "") $scope.count++;
+            other_diagnosis[id] = option;
+        }
+    }
+
+    $scope.submit = function() {
+        var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
+        var data = {"self_diagnosis": angular.toJson(self_diagnosis), "other_diagnosis": angular.toJson(other_diagnosis)}
+        var url = "https://ebc43596.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/diagnosis/";
+        $http.post(url, data, config).then(function successCallback(response) {
+            $state.go('courseOne');
+        }, function errorCallback(response) {
+        });
+    }
 }])
 
 .controller('check_knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
