@@ -264,16 +264,17 @@ class EnrollmentResource(ModelResource):
         self.method_check(request, allowed=['post'])
         self.is_authenticated(request)
 
-        deserialized = self.deserialize(request, request.body,
-                                        format=request.META.get('CONTENT_TYPE', 'application/json'))
-        deserialized = self.alter_deserialized_detail_data(request, deserialized)
-        bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
-
         try:
             enrollment = Enrollment.objects.get(id=kwargs['id'], user=request.user)
         except ObjectDoesNotExist:
             raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
-        if len(enrollment.knowledgetestfirstscore_set.all()) <= 0:
-            KnowledgeTestFirstScore(enrollment=enrollment, first_score=bundle.data.get("first_score")).save()
+        if len(enrollment.knowledgetestfirstscore_set.all()) > 0:
+            return self.create_response(request, {})
+
+        deserialized = self.deserialize(request, request.body,
+                                        format=request.META.get('CONTENT_TYPE', 'application/json'))
+        deserialized = self.alter_deserialized_detail_data(request, deserialized)
+        bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
+        KnowledgeTestFirstScore(enrollment=enrollment, first_score=bundle.data.get("first_score")).save()
 
         return self.create_response(request, {})

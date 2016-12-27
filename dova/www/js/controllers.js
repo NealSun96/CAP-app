@@ -277,6 +277,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 function ($scope, $stateParams, $http, $rootScope, $state) {
     var init = function() {
         $scope.passed = false;
+        $scope.score_message = "Calculating...";
         var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
         var data = {"answers": angular.toJson($rootScope.knowledge_test_answers)}
         var url = "http://ebc43596.ngrok.io/api/v1/enrollment/check_mark/" + $rootScope.enrollment_in_handle + "/";
@@ -284,15 +285,14 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
             var score = response.data.objects[0];
             var total_score = response.data.objects[1];
             var passed = score * 1.0 / total_score > 0.8;
-            console.log(score * 1.0 / total_score);
 
             data = {"first_score": score}
             url = "https://ebc43596.ngrok.io/api/v1/enrollment/first_score/" + $rootScope.enrollment_in_handle + "/";
             $http.post(url, data, config).then(function successCallback(response) {
                 $scope.score = score;
-                $scope.total_score = total_score;
+                $scope.score_message = "Your current score is: " + parseInt(score) + "/" + parseInt(total_score);
                 $scope.passed = passed;
-                $scope.extra_message = passed ? "" : "You score is too low for the test to be submitted. Please retry.";
+                $scope.extra_message = passed ? "You can choose to go back and retry, or to submit." : "You score is too low for the test to be submitted. Please retry.";
             }, function errorCallback(response) {});
         }, function errorCallback(response) {
         });
