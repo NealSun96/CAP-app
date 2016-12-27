@@ -1,7 +1,7 @@
-<ion-view title="diagnosis" id="knowledge_test_page" ng-init="loadDiagnosis()">
+<ion-view title="diagnosis" id="knowledge_test_page" ng-init="loadDiagnosis()" cache-view="false">
     <!-- <ion-content padding="true" class="has-header"></ion-content> -->
     <ion-nav-buttons class="has-header" side="right">
-        <button ui-sref="dashboard" class="button button-icon icon No Icon"> Submit</button>
+        <button ng-click="submit()" class="button button-icon icon No Icon" ng-if="count==limit"> Submit</button>
     </ion-nav-buttons>
     <ion-content padding="true" class="has-header">
 
@@ -16,7 +16,7 @@
                 <span class="input-label">Me</span>
             </label>
             <ion-list ng-repeat="option in options">
-                <ion-radio name="{{ point.self_id }}">{{ option }}</ion-radio>
+                <ion-radio name="{{ point.self_id }}" ng-click="click(point.id, point.self_id, option)">{{ option }}</ion-radio>
             </ion-list>
         </div>
 
@@ -25,7 +25,7 @@
                 <span class="input-label">My Supervisor</span>
             </label>
             <ion-list ng-repeat="option in options">
-                <ion-radio name="{{ point.other_id }}">{{ option }}</ion-radio>
+                <ion-radio name="{{ point.other_id }}" ng-click="click(point.id, point.other_id, option)">{{ option }}</ion-radio>
             </ion-list>
         </div>
     </ion-list>
