@@ -19,20 +19,41 @@
           <div ng-style="{ color: enrollment.diagnosis_status == 'Completed' ? 'green' : enrollment.diagnosis_status == 'Available' ? 'red' : 'black' }">
               Diagnosis: {{ enrollment.diagnosis_status }}</div>
         </div>
+
         <i class="icon ion-ios-arrow-right icon-accessory"></i>
+      </ion-item>
+
+      <!-- NEW LIST -->
+      
+      <ion-item ng-style="{ color: enrollment.feedback_status == 'Completed' ? 'green' : enrollment.feedback_status == 'Available' ? 'red' : 'black' }" class="item-icon-left item-icon-right balanced" id="dashboardRedesign-list-item5">
+        <i class="icon ion-ionic"></i>Feedback: {{ enrollment.feedback_status }}
+        <i class="icon ion-ios-arrow-right"></i>
+      </ion-item>
+      <ion-item ng-style="{ color: enrollment.action_plan_status == 'Completed' ? 'green' : enrollment.action_plan_status == 'Available' ? 'red' : 'black' }" class="item-icon-left item-icon-right balanced" id="dashboardRedesign-list-item8">
+        <i class="icon ion-ionic"></i>Action Plan: {{ enrollment.action_plan_status }}
+        <i class="icon ion-ios-arrow-right"></i>
+      </ion-item>
+      <ion-item ng-style="{ color: enrollment.knowledge_test_status == 'Completed' ? 'green' : enrollment.knowledge_test_status == 'Available' ? 'red' : 'black' } class="item-icon-left item-icon-right balanced" id="dashboardRedesign-list-item7">
+        <i class="icon ion-ionic"></i>Knowledge Test: {{ enrollment.knowledge_test_status }}
+        <i class="icon ion-ios-arrow-right"></i>
+      </ion-item>
+      <ion-item ng-style="{ color: enrollment.diagnosis_status == 'Completed' ? 'green' : enrollment.diagnosis_status == 'Available' ? 'red' : 'black' } class="item-icon-left item-icon-right balanced" id="dashboardRedesign-list-item6">
+        <i class="icon ion-ionic"></i>Diagnosis: {{ enrollment.diagnosis_status }}
+        <i class="icon ion-ios-arrow-right"></i>
       </ion-item>
     </ion-list>
 
     <!-- THIS FOR TESTING -->
-
-    <ion-item class="item-thumbnail-left item-icon-right  course" id="dashboard-list-item45" ng-click="toAssignments(enrollment.id)">
+    <div class="wraper">
+      
+    <ion-item class="item-thumbnail-left item-icon-right  course" id="dashboard-list-item45">
         <img src="img/nature-02.jpg">
         <div style="float: left;"> 
-          <h2 >{{ enrollment.course_name }}</h2>
-          <p style="white-space:normal;">{{ enrollment.teacher_name }}</p>
+          <h2 >{{ enrollment.course_name }} Course Name</h2>
+          <p style="white-space:normal;">{{ enrollment.teacher_name }} Teacher Name</p>
         </div>
 
-        <div style="float: right; font-size: 9px; width: 250px;">
+<!--         <div style="float: right; font-size: 9px; width: 250px;">
           <div ng-style="{ color: enrollment.feedback_status == 'Completed' ? 'green' : enrollment.feedback_status == 'Available' ? 'red' : 'black' }">
               Feedback: {{ enrollment.feedback_status }}</div>
           <div ng-style="{ color: enrollment.action_plan_status == 'Completed' ? 'green' : enrollment.action_plan_status == 'Available' ? 'red' : 'black' }">
@@ -42,8 +63,34 @@
           <div ng-style="{ color: enrollment.diagnosis_status == 'Completed' ? 'green' : enrollment.diagnosis_status == 'Available' ? 'red' : 'black' }">
               Diagnosis: {{ enrollment.diagnosis_status }}</div>
         </div>
-        <i class="icon ion-ios-arrow-right icon-accessory"></i>
+        <i class="icon ion-ios-arrow-right icon-accessory"></i> -->
+      </ion-item>
+            <!-- NEW LIST -->
+
+      <ion-item class="item-icon-left item-icon-right" id="dashboardRedesign-list-item5" ng-click="toAssignments(enrollment.id)" ng-style="{ color: enrollment.feedback_status == 'Completed' ? 'green' : enrollment.feedback_status == 'Available' ? 'red' : 'black' }">
+        <i class="icon ion-ionic"></i>Feedback: {{ enrollment.feedback_status }}
+        <i class="icon ion-ios-arrow-right"></i>
+      </ion-item>
+      <ion-item class="item-icon-left item-icon-right" id="dashboardRedesign-list-item8" ng-click="toAssignments(enrollment.id)" ng-style="{ color: enrollment.action_plan_status == 'Completed' ? 'green' : enrollment.action_plan_status == 'Available' ? 'red' : 'black' }">
+        <i class="icon ion-ionic"></i>Action Plan: {{ enrollment.action_plan_status }}
+        <i class="icon ion-ios-arrow-right"></i>
+      </ion-item>
+      <ion-item class="item-icon-left item-icon-right" id="dashboardRedesign-list-item7" ng-click="toAssignments(enrollment.id)" ng-style="{ color: enrollment.knowledge_test_status == 'Completed' ? 'green' : enrollment.knowledge_test_status == 'Available' ? 'red' : 'black' }">
+        <i class="icon ion-ionic"></i>Knowledge Test: {{ enrollment.knowledge_test_status }}
+        <i class="icon ion-ios-arrow-right"></i>
+      </ion-item>
+      <ion-item class="item-icon-left item-icon-right" id="dashboardRedesign-list-item6" ng-click="toAssignments(enrollment.id)" ng-style="{ color: enrollment.diagnosis_status == 'Completed' ? 'green' : enrollment.diagnosis_status == 'Available' ? 'red' : 'black' }">
+        <i class="icon ion-ionic"></i>Diagnosis: {{ enrollment.diagnosis_status }}
+        <i class="icon ion-ios-arrow-right"></i>
       </ion-item>
 
+    </div>
+
   </ion-content>
+
+  <style type="text/css">
+    .wraper{
+      margin-bottom: 15px;
+    }
+  </style>
 </ion-view>
