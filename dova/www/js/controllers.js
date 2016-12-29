@@ -1,8 +1,13 @@
 angular.module('app.controllers', [])
   
 .controller('signupCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
+    
 function ($scope, $stateParams, $http, $state, $rootScope) {
+    $scope.offline_debug = true;
     $scope.signup = function() {
+        
+        if ($scope.offline_debug) {$state.go('login');}
+
         data = {
             "username": $scope.reg_username,
             "first_name": $scope.reg_firstname,
@@ -28,8 +33,10 @@ function ($scope, $stateParams) {
    
 .controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
 function ($scope, $stateParams, $http, $state, $rootScope) {
-
+$scope.offline_debug = true;
     $scope.login = function() {
+        if ($scope.offline_debug) {$state.go('dashboard');}
+
         var auth = btoa($scope.username + ":" + $scope.password);
         var config = {headers:  {
         'Authorization': 'Basic ' + auth,
@@ -149,6 +156,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
 .controller('feedbackCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
+$scope.offline_debug = true;
     $scope.counter = 0;
     $scope.limit = 11;
     var answers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
@@ -190,6 +198,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
     }
 
     $scope.submit = function() {
+        if ($scope.offline_debug) {$state.go('courseOne');}
       answers.push($scope.feedback_page_text_area);
         var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
         var data = {"feedbacks": angular.toJson(answers)}
@@ -203,6 +212,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
 .controller('behaviorCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
+$scope.offline_debug = true;
     $scope.limit = 3;
 
     $scope.loadActions = function() {
@@ -233,6 +243,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
        }
 
     $scope.submit = function() {
+        if (scope.offline_debug) {$state.go(courseOne);}
         var answers = [];
         for (var i = 0; i < $scope.action_points.length; i++) {
             if ($scope.action_points[i].selected) answers.push($scope.action_points[i].point)
@@ -249,6 +260,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
 .controller('knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
+$scope.offline_debug = true;
     var answers = []
     $scope.count = 0;
     var init = function() {
@@ -282,6 +294,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
     }
 
     $scope.submit = function() {
+        if ($scope.offline_debug) {$state.go('courseOne');}
         $rootScope.knowledge_test_answers = answers;
         $state.go('check_knowledge_test');
     }
@@ -290,6 +303,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
 .controller('diagnosisCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
+$scope.offline_debug = true;
     var self_diagnosis = [];
     var other_diagnosis = [];
     $scope.options = ["明显进步", "稍有改善", "没有变化"];

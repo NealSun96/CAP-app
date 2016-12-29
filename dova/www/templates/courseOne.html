@@ -1,10 +1,17 @@
-<ion-view title="" id="page5" ng-init="loadAssignments()" cache-view="false">
+<ion-view view-title="Course name" id="page5" ng-init="loadAssignments()" cache-view="false" hide-back-button="true">
+
+    <ion-nav-buttons class="has-header" side="left">
+      <button class="button button-icon icon ion-ios-arrow-back" ui-sref="dashboard" nav-direction="back">Back</button>
+    </ion-nav-buttons>
+
+
   <ion-content padding="true" class="has-header">
     <h2 id="courseOne-heading1" style="color:#000000;">{{ enrollment.course_name }}</h2>
     <div id="courseOne-markdown6" class="show-list-numbers-and-dots">
       <p style="color:#000000;">{{ enrollment.teacher_name }}</p>
     </div>
     <div class="spacer" style="width: 748px; height: 35px;"></div>
+
     <ion-list id="courseOne-list6">
       <ion-item class="item-icon-right" id="courseOne-list-item25" ng-disabled="f_disabled" ng-click="feedback()">Feedback
         <span class="item-note">{{ enrollment.feedback_status }}</span>
@@ -23,5 +30,6 @@
         <i ng-show="!d_disabled" class="icon ion-ios-arrow-forward icon-accessory"></i>
       </ion-item>
     </ion-list>
+    
   </ion-content>
 </ion-view>

@@ -78,7 +78,7 @@ angular.module('app.routes', [])
     url: '/check_knowledge_test',
     templateUrl: 'templates/check_knowledge_test.html',
     controller: 'check_knowledge_testCtrl'
-  })
+  });
 
 $urlRouterProvider.otherwise('/login')
 
