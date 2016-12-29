@@ -19,6 +19,9 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
             $state.go('login');
         }, function errorCallback(response) {
             $rootScope.register_success = false;
+            var ERRelement = document.getElementById("signup_error_box");
+            ERRelement.style.visibility = "visible";
+            setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
         });
     }
 }])
