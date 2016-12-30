@@ -8,16 +8,10 @@ angular.module('app.routes', [])
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-      .state('signup', {
+  .state('signup', {
     url: '/signup',
     templateUrl: 'templates/signup.html',
     controller: 'signupCtrl'
-  })
-
-  .state('signUpComplete', {
-    url: '/signUpComplete',
-    templateUrl: 'templates/signUpComplete.html',
-    controller: 'signUpCompleteCtrl'
   })
 
   .state('login', {
@@ -30,18 +24,6 @@ angular.module('app.routes', [])
     url: '/CourseOne',
     templateUrl: 'templates/courseOne.html',
     controller: 'courseOneCtrl'
-  })
-
-  .state('quizPage', {
-    url: '/quizPage',
-    templateUrl: 'templates/quizPage.html',
-    controller: 'quizPageCtrl'
-  })
-
-  .state('taskPage', {
-    url: '/taskPage',
-    templateUrl: 'templates/taskPage.html',
-    controller: 'taskPageCtrl'
   })
 
   .state('dashboard', {
