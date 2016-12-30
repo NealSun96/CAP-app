@@ -1,10 +1,10 @@
-<ion-view title="Signup" hide-back-button="true" id="page2">
+<ion-view view-title="Signup" hide-back-button="true" id="page2">
   <ion-content padding="true" class="has-header" scroll="false">
     <form id="signup-form3" class="list center-form" style="max-width: 500px; display: block; margin: 0 auto;">
 
 
     <!-- some error message to display when signup fails -->
-    <div class="error-box" id="login_error_message" ng-if="">
+    <div class="error-box animate-if" id="signup_error_box" style="visibility: hidden;">
       <p> Signup Error </p> <!-- should be replaced with proper error message -->
     </div>
 
@@ -36,8 +36,6 @@
 
     </form>
   </ion-content>
-</ion-view>
-
 <style type="text/css">
   .center-form{
     
@@ -78,3 +76,4 @@
     }
 }
 </style>
+</ion-view>
