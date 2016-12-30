@@ -28,6 +28,7 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
 .controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
 function ($scope, $stateParams, $http, $state, $rootScope) {
     var offline_debug = false;
+
     $scope.login = function() {
         if (offline_debug) {$state.go('dashboard');}
 
@@ -40,13 +41,46 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
 
         $http.get("https://ebc43596.ngrok.io/api/v1/login/", config).then(function successCallback(response) {
             $rootScope.api_auth = $scope.username + ":" + response.data.objects[0].api_key;
+            $scope.saveData();
             $state.go('dashboard');
         }, function errorCallback(response) {
+            $scope.logout();//delete any existing data
             var ERRelement = document.getElementById("login_error_message");
             ERRelement.style.visibility = "visible";
             setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
         });
     }
+    // used for testing
+    // $scope.printData = function(){
+    //     alert("user: " + window.localStorage.getItem("username") + " pass: " + window.localStorage.getItem("password"));
+    // }
+
+    $scope.logout = function(){
+        //delete all data saved
+        window.localStorage.removeItem("username");
+        window.localStorage.removeItem("password");
+    }
+
+    $scope.saveData = function(){
+        window.localStorage.setItem("username", $scope.username);
+        window.localStorage.setItem("password", $scope.password);
+    }
+
+    //if user data is found, it fills the fields with it and calls login
+    $scope.isLoggedIn = function (){
+        //those check for undefined, but should work fine since undefined shouldn't happen
+        if (window.localStorage.getItem("username") !== null && window.localStorage.getItem("password") !== null) {
+            $scope.username = window.localStorage.getItem("username");
+            $scope.password = window.localStorage.getItem("password");
+            $scope.login();
+        }else{
+            console.log("No saved user data");
+        }
+    }
+
+    //runs at page load
+    $scope.isLoggedIn();
+
 }])
 
 .controller('courseOneCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
