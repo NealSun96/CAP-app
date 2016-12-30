@@ -2,3 +2,6 @@
 *.sqlite3
 .idea
 rest/
+dova/platforms/
+dova/plugins/
+dova/resources/
