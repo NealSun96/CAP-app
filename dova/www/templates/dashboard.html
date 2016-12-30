@@ -2,7 +2,7 @@
   <ion-content padding="true" class="has-header">
     <ion-list id="dashboard-list9" ng-repeat="enrollment in enrollments">
 
-      <ion-item class="item-thumbnail-left item-icon-right  course" id="dashboard-list-item45" ng-click="toAssignments(enrollment.id)">
+      <ion-item class="item-thumbnail-left item-icon-right  course" id="dashboard-list-item45" ng-click="toAssignments(enrollment.id)" nav-direction="forward">
         <img src="img/nature-02.jpg">
         <div style="float: left;"> 
           <h2 >{{ enrollment.course_name }}</h2>
