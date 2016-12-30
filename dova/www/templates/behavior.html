@@ -17,7 +17,7 @@
                         ng-disabled="checked==limit && !point.selected" ng-change="onClick(point)"
                         ng-model-options="{allowInvalid: true}"
                         ng-style="{ color: checked==limit && !point.selected ? 'grey' : 'black' }">
-              {{ point.point }}</ion-checkbox>
+              {{ $index + 1 }}. {{ point.point }}</ion-checkbox>
         </li>
       </ol>
 
