@@ -3,7 +3,7 @@ angular.module('app.controllers', [])
 .controller('signupCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
     
 function ($scope, $stateParams, $http, $state, $rootScope) {
-    $scope.offline_debug = false;
+    $scope.offline_debug = true;
     $scope.signup = function() {
         
         if ($scope.offline_debug) {$state.go('login');}
@@ -36,7 +36,7 @@ function ($scope, $stateParams) {
    
 .controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
 function ($scope, $stateParams, $http, $state, $rootScope) {
-$scope.offline_debug = false;
+$scope.offline_debug = true;
     $scope.login = function() {
         if ($scope.offline_debug) {$state.go('dashboard');}
 
@@ -154,12 +154,16 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
         $rootScope.enrollment_in_handle = e_id;
         $state.go("courseOne");
     }
+
+    $scope.toggleGroup = function (){
+        $scope.showGroup = !$scope.showGroup;
+    }
 }])
 
 
 .controller('feedbackCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
-$scope.offline_debug = false;
+$scope.offline_debug = true;
     $scope.counter = 0;
     $scope.limit = 11;
     var answers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
@@ -215,7 +219,7 @@ $scope.offline_debug = false;
 
 .controller('behaviorCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
-$scope.offline_debug = false;
+$scope.offline_debug = true;
     $scope.limit = 3;
 
     $scope.loadActions = function() {
@@ -263,7 +267,7 @@ $scope.offline_debug = false;
 
 .controller('knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
-$scope.offline_debug = false;
+$scope.offline_debug = true;
     var answers = []
     $scope.count = 0;
     var init = function() {
@@ -306,7 +310,7 @@ $scope.offline_debug = false;
 
 .controller('diagnosisCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
-$scope.offline_debug = false;
+$scope.offline_debug = true;
     var self_diagnosis = [];
     var other_diagnosis = [];
     $scope.options = ["明显进步", "稍有改善", "没有变化"];
