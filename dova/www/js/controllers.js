@@ -3,10 +3,9 @@ angular.module('app.controllers', [])
 .controller('signupCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
     
 function ($scope, $stateParams, $http, $state, $rootScope) {
-    $scope.offline_debug = false;
+    var offline_debug = false;
     $scope.signup = function() {
-        
-        if ($scope.offline_debug) {$state.go('login');}
+        if (offline_debug) {$state.go('login');}
 
         data = {
             "username": $scope.reg_username,
@@ -26,19 +25,11 @@ function ($scope, $stateParams, $http, $state, $rootScope) {
     }
 }])
    
-.controller('signUpCompleteCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
-
-
-}])
-   
 .controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
 function ($scope, $stateParams, $http, $state, $rootScope) {
-$scope.offline_debug = false;
+    var offline_debug = false;
     $scope.login = function() {
-        if ($scope.offline_debug) {$state.go('dashboard');}
+        if (offline_debug) {$state.go('dashboard');}
 
         var auth = btoa($scope.username + ":" + $scope.password);
         var config = {headers:  {
@@ -117,22 +108,6 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
     }
 }])
    
-.controller('quizPageCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
-
-
-}])
-   
-.controller('taskPageCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
-
-
-}])
-   
 .controller('dashboardCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
     var init = function() {
@@ -159,7 +134,7 @@ function ($scope, $stateParams, $http, $rootScope, $state) {
 
 .controller('feedbackCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
-$scope.offline_debug = false;
+    var offline_debug = false;
     $scope.counter = 0;
     $scope.limit = 11;
     var answers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
@@ -174,7 +149,7 @@ $scope.offline_debug = false;
         question: "",
         id: 10
     };
-    $scope.keys = ["2", "1", "0"];
+    $scope.keys = ["优秀", "一般", "差 "];
 
     for (var i = 0; i < a_questions.length; i++) {
         $scope.a_questions.push({
@@ -201,7 +176,7 @@ $scope.offline_debug = false;
     }
 
     $scope.submit = function() {
-        if ($scope.offline_debug) {$state.go('courseOne');}
+        if (offline_debug) {$state.go('courseOne');}
       answers.push($scope.feedback_page_text_area);
         var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
         var data = {"feedbacks": angular.toJson(answers)}
@@ -215,7 +190,7 @@ $scope.offline_debug = false;
 
 .controller('behaviorCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
-$scope.offline_debug = false;
+    var offline_debug = false;
     $scope.limit = 3;
 
     $scope.loadActions = function() {
@@ -246,7 +221,7 @@ $scope.offline_debug = false;
        }
 
     $scope.submit = function() {
-        if (scope.offline_debug) {$state.go(courseOne);}
+        if (offline_debug) {$state.go(courseOne);}
         var answers = [];
         for (var i = 0; i < $scope.action_points.length; i++) {
             if ($scope.action_points[i].selected) answers.push($scope.action_points[i].point)
@@ -263,7 +238,7 @@ $scope.offline_debug = false;
 
 .controller('knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
-$scope.offline_debug = false;
+    var offline_debug = false;
     var answers = []
     $scope.count = 0;
     var init = function() {
@@ -297,7 +272,7 @@ $scope.offline_debug = false;
     }
 
     $scope.submit = function() {
-        if ($scope.offline_debug) {$state.go('courseOne');}
+        if (offline_debug) {$state.go('courseOne');}
         $rootScope.knowledge_test_answers = answers;
         $state.go('check_knowledge_test');
     }
@@ -306,7 +281,7 @@ $scope.offline_debug = false;
 
 .controller('diagnosisCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
 function ($scope, $stateParams, $http, $rootScope, $state) {
-$scope.offline_debug = false;
+    var offline_debug = false;
     var self_diagnosis = [];
     var other_diagnosis = [];
     $scope.options = ["明显进步", "稍有改善", "没有变化"];
@@ -351,6 +326,7 @@ $scope.offline_debug = false;
     }
 
     $scope.submit = function() {
+        if (offline_debug) {$state.go('courseOne');}
         var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
         var data = {"self_diagnosis": angular.toJson(self_diagnosis), "other_diagnosis": angular.toJson(other_diagnosis)}
         var url = "https://ebc43596.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/diagnosis/";
