@@ -6,11 +6,13 @@ from tastypie.api import Api
 
 from .api import LoginResource, RegisterResource
 from enrollment.api import EnrollmentResource
+from course.api import CourseResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(LoginResource())
 v1_api.register(RegisterResource())
 v1_api.register(EnrollmentResource())
+v1_api.register(CourseResource())
 
 urlpatterns = patterns('',
     # Examples:
