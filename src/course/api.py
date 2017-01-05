@@ -1,5 +1,7 @@
 import json
+import base64
 
+from django.core.files.base import ContentFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf.urls import url
 from django.contrib.auth.models import User
@@ -86,6 +88,13 @@ class CourseResource(CorsResourceBase, ModelResource):
         course.course_name = bundle.data.get('course_name')
         course.start_time = bundle.data.get('start_time')
         course.done = bundle.data.get('done')
+
+        image_data = bundle.data.get('picture')
+        if isinstance(image_data, basestring) and image_data.startswith('data:image'):
+            format, imgstr = image_data.split(';base64,')
+            ext = format.split('/')[-1]
+
+            course.picture = ContentFile(base64.b64decode(imgstr), name=str(course.id) + '.' + ext)
         course.save()
 
         return self.create_response(request, {})

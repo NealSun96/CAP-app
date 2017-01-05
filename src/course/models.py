@@ -4,7 +4,7 @@ from django.db import models
 
 
 def get_image_path(instance, filename):
-    return os.path.join('course_photos', str(instance.id), filename)
+    return os.path.join('course_pics', str(instance.id), filename)
 
 
 class Course(models.Model):
