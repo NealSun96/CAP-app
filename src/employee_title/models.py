@@ -18,8 +18,13 @@ class EmployeeTitle(models.Model):
         TITLE_UNKNOWN: []
     }
     # a mapping from provided names to f1 app's group names
-    ACCEPTED_NAMES = (
-        (TITLE_TEACHER, 'trainer'),
+    ACCEPTED_NAMES = {
+        "teacher": TITLE_TEACHER,
+        "manager": TITLE_STUDENT_MANAGER,
+        "non-manager": TITLE_STUDENT_NON_MANAGER,
+    }
+
+    ASSIGNMENT_LEVEL_CHOICES = (
         (TITLE_STUDENT_MANAGER, 'manager'),
         (TITLE_STUDENT_NON_MANAGER, 'non-manager'),
         ('discarded', 'DISCARDED')
