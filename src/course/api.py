@@ -93,8 +93,9 @@ class CourseResource(CorsResourceBase, ModelResource):
         if isinstance(image_data, basestring) and image_data.startswith('data:image'):
             format, imgstr = image_data.split(';base64,')
             ext = format.split('/')[-1]
-
             course.picture = ContentFile(base64.b64decode(imgstr), name=str(course.id) + '.' + ext)
+        else:
+            raise ImmediateHttpResponse(HttpBadRequest('Bad picture'))
         course.save()
 
         return self.create_response(request, {})
