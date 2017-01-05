@@ -49,12 +49,10 @@ class EmployeeTitleResource(CorsResourceBase, ModelResource):
         else:
             raise ImmediateHttpResponse(HttpBadRequest('Bad CSV file'))
         reader = csv.reader(file_data.split("\n"))
-        print "fine at csv"
         for row in reader:
             if len(row) == 0:
                 break
             if len(row) != 2:
-                print 'The csv file is not formatted correctly on the following line: %s' % ",".join(row)
                 raise ImmediateHttpResponse(HttpBadRequest('The csv file is not formatted correctly on the following line: %s' % ",".join(row)))
             for et in EmployeeTitle.objects.filter(username=row[0]).all():
                 et.delete()
