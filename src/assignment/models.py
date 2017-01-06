@@ -6,7 +6,7 @@ from employee_title.models import EmployeeTitle
 
 class Assignment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    level = models.CharField(max_length=100, choices=EmployeeTitle.ACCEPTED_NAMES)
+    level = models.CharField(max_length=100, choices=EmployeeTitle.ASSIGNMENT_LEVEL_CHOICES)
 
     class Meta:
         abstract = True
