@@ -140,6 +140,9 @@ angular.module('app.controllers', [])
 
 .controller('dashboardCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
+        //remember to set this in the js, maybe as a rootscope
+        $scope.isTeacher = true;
+
         var init = function() {
             var config = {headers:  {
                 'Authorization': 'Apikey ' + $rootScope.api_auth
