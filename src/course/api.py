@@ -14,6 +14,7 @@ from tastypie.utils import trailing_slash, dict_strip_unicode_keys
 
 from .models import Course
 from employee_title.models import EmployeeTitle
+from enrollment.models import Enrollment
 from action_plan.models import ActionPlan
 from knowledge_test.models import KnowledgeTest
 from question.models import Question
@@ -36,6 +37,7 @@ class CourseResource(CorsResourceBase, ModelResource):
             url(r"^(?P<resource_name>%s)/edit_course/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('edit_course'), name="api_edit_course"),
             url(r"^(?P<resource_name>%s)/get_assignments/(?P<id>\d+)/(?P<type>\w+)/(?P<level>[\w-]+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
             url(r"^(?P<resource_name>%s)/edit_assignments/(?P<id>\d+)/(?P<type>\w+)/(?P<level>[\w-]+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('edit_assignments'), name="api_edit_assignments"),
+            url(r"^(?P<resource_name>%s)/enroll_students/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('enroll_students'), name="api_enroll_students"),
         ]
 
     def authorized_read_list(self, object_list, bundle):
@@ -220,3 +222,42 @@ class CourseResource(CorsResourceBase, ModelResource):
                 q.question.delete()
 
         return self.create_response(request, {})
+
+    def enroll_students(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+
+        user_group = request.user.groups.first().name
+        if user_group != "teacher":
+            raise ImmediateHttpResponse(HttpBadRequest('Not a teacher'))
+
+        try:
+            course = Course.objects.get(id=kwargs['id'], teacher=request.user)
+        except ObjectDoesNotExist:
+            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+
+        deserialized = self.deserialize(request, request.body,
+                                        format=request.META.get('CONTENT_TYPE', 'application/json'))
+        deserialized = self.alter_deserialized_detail_data(request, deserialized)
+        bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
+
+        file_data = bundle.data.get('file')
+        if isinstance(file_data, basestring) and file_data.startswith('data:text'):
+            _, str = file_data.split(';base64,')
+            file_data = base64.b64decode(str)
+        else:
+            raise ImmediateHttpResponse(HttpBadRequest('Bad file'))
+        rows = file_data.split("\n")
+        rows = [x for x in rows if x != ""]
+        for row in rows:
+            try:
+                user = User.objects.get(username=row)
+            except User.DoesNotExist:
+                raise ImmediateHttpResponse(HttpBadRequest('Username %s does not exist' % row))
+            for e in Enrollment.objects.filter(user=user).filter(course=course).all():
+                e.delete()
+            Enrollment(user=user, course=course).save()
+        object_list = {
+            'objects': len(rows),
+        }
+        return self.create_response(request, object_list)
