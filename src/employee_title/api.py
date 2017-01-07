@@ -48,16 +48,18 @@ class EmployeeTitleResource(CorsResourceBase, ModelResource):
             file_data = base64.b64decode(str)
         else:
             raise ImmediateHttpResponse(HttpBadRequest('Bad CSV file'))
-        reader = csv.reader(file_data.split("\n"))
+        file_data = [row for row in file_data.split("\n") if row != ""]
+        reader = csv.reader(file_data)
         for row in reader:
-            if len(row) == 0:
-                break
             if len(row) != 2:
                 raise ImmediateHttpResponse(HttpBadRequest('The csv file is not formatted correctly on the following line: %s' % ",".join(row)))
+            title = EmployeeTitle.ACCEPTED_NAMES.get(row[1])
+            if not title:
+                raise ImmediateHttpResponse(HttpBadRequest("Title '%s' is not accepted" % row[1]))
             for et in EmployeeTitle.objects.filter(username=row[0]).all():
                 et.delete()
-            EmployeeTitle(username=row[0], title=EmployeeTitle.ACCEPTED_NAMES.get(row[1], EmployeeTitle.TITLE_UNKNOWN)).save()
+            EmployeeTitle(username=row[0], title=title).save()
         object_list = {
-            'objects': sum(1 for row in reader),
+            'objects': len(file_data)
         }
         return self.create_response(request, object_list)
