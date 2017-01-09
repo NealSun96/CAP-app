@@ -38,6 +38,7 @@ class CourseResource(CorsResourceBase, ModelResource):
             url(r"^(?P<resource_name>%s)/get_assignments/(?P<id>\d+)/(?P<type>\w+)/(?P<level>[\w-]+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
             url(r"^(?P<resource_name>%s)/edit_assignments/(?P<id>\d+)/(?P<type>\w+)/(?P<level>[\w-]+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('edit_assignments'), name="api_edit_assignments"),
             url(r"^(?P<resource_name>%s)/enroll_students/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('enroll_students'), name="api_enroll_students"),
+            url(r"^(?P<resource_name>%s)/get_enrolled/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_enrolled'), name="api_get_enrolled"),
         ]
 
     def authorized_read_list(self, object_list, bundle):
@@ -259,5 +260,21 @@ class CourseResource(CorsResourceBase, ModelResource):
             Enrollment(user=user, course=course).save()
         object_list = {
             'objects': len(rows),
+        }
+        return self.create_response(request, object_list)
+
+    def get_enrolled(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+
+        try:
+            course = Course.objects.get(id=kwargs['id'], teacher=request.user)
+        except ObjectDoesNotExist:
+            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+
+        context = "\n".join(enroll.user.username for enroll in course.enrollment_set.all())
+
+        object_list = {
+            'objects': context
         }
         return self.create_response(request, object_list)
