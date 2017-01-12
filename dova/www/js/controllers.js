@@ -347,11 +347,11 @@ angular.module('app.controllers', [])
     $scope.click = function(id, self_id, option) {
         if (self_id.slice(0, 1) == "s") {
             if (self_diagnosis[id] == "") $scope.count++;
-            self_diagnosis[id] = option;
+            self_diagnosis[id] = $scope.options.length - $scope.options.indexOf(option);
         }
         else {
             if (other_diagnosis[id] == "") $scope.count++;
-            other_diagnosis[id] = option;
+            other_diagnosis[id] = $scope.options.length - $scope.options.indexOf(option);
         }
     }
 
@@ -378,7 +378,7 @@ angular.module('app.controllers', [])
             $http.post(url, data, config).then(function successCallback(response) {
                 var score = response.data.objects[0];
                 var total_score = response.data.objects[1];
-                var passed = score * 1.0 / total_score > 0.8;
+                var passed = score * 1.0 / total_score >= 0.8;
 
                 data = {"first_score": score}
                 url = "https://5994a09c.ngrok.io/api/v1/enrollment/first_score/" + $rootScope.enrollment_in_handle + "/";

@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf.urls import url
+from django.db.models import F
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.authorization import DjangoAuthorization
 from tastypie.exceptions import ImmediateHttpResponse
@@ -44,7 +45,7 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
         self.is_authenticated(request)
 
         # Do the query.
-        enrollments = Enrollment.objects.filter(user=request.user).filter(course__done=False)
+        enrollments = Enrollment.objects.filter(user=request.user).filter(course__done=False).filter(course__start_time=F('start_time'))
 
         objects = []
 
@@ -69,7 +70,7 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
                 if has_action_plan else "{color: 'black'}"
 
             current_date = datetime.now(pytz.timezone('Asia/Shanghai'))
-            knowledge_test_open_date = (enrollment.course.start_time
+            knowledge_test_open_date = (enrollment.start_time
                                        + timedelta(enrollment.course.KNOWLEDGE_TEST_OPEN_DAYS))
             knowledge_test_open_string = knowledge_test_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_knowledge_test = len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) > 0
@@ -81,7 +82,7 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
                 "{color: 'red'}" if has_knowledge_test and current_date >= knowledge_test_open_date else \
                 "{color: 'black'}"
 
-            diagnosis_open_date = (enrollment.course.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS))
+            diagnosis_open_date = (enrollment.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS))
             diagnosis_open_string = diagnosis_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_diagnosis = len(enrollment.diagnosis_set.all()) > 0
             bundle.data['diagnosis_status'] = 'Completed' if has_diagnosis else \
