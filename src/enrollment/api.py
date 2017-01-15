@@ -259,6 +259,10 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
         if len(enrollment.knowledgeteststart_set.all()) <= 0:
             KnowledgeTestStart(enrollment=enrollment, start_time=datetime.now(pytz.timezone('Asia/Shanghai'))).save()
+        else:
+            kts = KnowledgeTestStart.objects.get(enrollment=enrollment)
+            kts.start_time = datetime.now(pytz.timezone('Asia/Shanghai'))
+            kts.save()
 
         return self.create_response(request, {})
 
