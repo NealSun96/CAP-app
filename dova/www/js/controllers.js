@@ -3,7 +3,7 @@ angular.module('app.controllers', [])
 .controller('signupCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
     
     function ($scope, $stateParams, $http, $state, $rootScope) {
-        var offline_debug = false;
+        var offline_debug = true;
         $scope.signup = function() {
             if (offline_debug) {$state.go('login');}
 
@@ -27,7 +27,7 @@ angular.module('app.controllers', [])
 
 .controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
     function ($scope, $stateParams, $http, $state, $rootScope) {
-        var offline_debug = false;
+        var offline_debug = true;
 
         $scope.login = function() {
             if (offline_debug) {$state.go('dashboard');}
@@ -164,7 +164,7 @@ angular.module('app.controllers', [])
 
 .controller('feedbackCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
-        var offline_debug = false;
+        var offline_debug = true;
         $scope.counter = 0;
         $scope.limit = 11;
         var answers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
@@ -220,7 +220,7 @@ angular.module('app.controllers', [])
 
 .controller('behaviorCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
-        var offline_debug = false;
+        var offline_debug = true;
         $scope.limit = 3;
 
         $scope.loadActions = function() {
@@ -268,7 +268,7 @@ angular.module('app.controllers', [])
 
 .controller('knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
-        var offline_debug = false;
+        var offline_debug = true;
         var answers = []
         $scope.count = 0;
         var init = function() {
@@ -311,7 +311,7 @@ angular.module('app.controllers', [])
 
 .controller('diagnosisCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
-        var offline_debug = false;
+        var offline_debug = true;
         var self_diagnosis = [];
         var other_diagnosis = [];
         $scope.options = ["明显进步", "稍有改善", "没有变化"];

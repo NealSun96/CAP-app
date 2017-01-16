@@ -3,7 +3,7 @@ angular.module('app.controllers', [])
 .controller('signupCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
     
     function ($scope, $stateParams, $http, $state, $rootScope) {
-        var offline_debug = false;
+        var offline_debug = true;
         $scope.signup = function() {
             if (offline_debug) {$state.go('login');}
 
@@ -27,7 +27,7 @@ angular.module('app.controllers', [])
 
 .controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
     function ($scope, $stateParams, $http, $state, $rootScope) {
-        var offline_debug = false;
+        var offline_debug = true;
 
         $scope.login = function() {
             if (offline_debug) {$state.go('dashboard');}
@@ -103,3 +103,12 @@ angular.module('app.controllers', [])
     }
 }])
 
+.controller('edit_courseCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+    function ($scope, $stateParams, $http, $rootScope, $state) {
+        
+}])
+
+.controller('edit_behaviourCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+    function ($scope, $stateParams, $http, $rootScope, $state) {
+        
+}])
