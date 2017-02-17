@@ -17,6 +17,7 @@ angular.module('app.controllers', [])
                 $rootScope.register_success = true;
                 $state.go('login');
             }, function errorCallback(response) {
+                $rootScope.checkConnection();
                 $rootScope.register_success = false;
                 var ERRelement = document.getElementById("signup_error_box");
                 ERRelement.style.visibility = "visible";
@@ -44,6 +45,7 @@ angular.module('app.controllers', [])
             $scope.saveData();
             $state.go('dashboard');
         }, function errorCallback(response) {
+                $rootScope.checkConnection();
                 $rootScope.register_success = false;
                 var ERRelement = document.getElementById("signup_error_box");
                 ERRelement.style.visibility = "visible";
@@ -73,6 +75,7 @@ angular.module('app.controllers', [])
 
     //runs at page load
     $scope.isLoggedIn();
+
 
 }])
 
@@ -416,3 +419,14 @@ angular.module('app.controllers', [])
             });
         }
     }])
+
+.run(function($rootScope){
+    //check connection to Internet
+    $rootScope.checkConnection = function(){
+        if(window.Connection){
+            if(navigator.connection.type == Connection.NONE) {
+                alert("No Internet Connection, Please make sure you are connected.");
+            }
+        }
+    }
+})
