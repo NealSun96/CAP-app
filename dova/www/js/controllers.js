@@ -44,16 +44,13 @@ angular.module('app.controllers', [])
             $scope.saveData();
             $state.go('dashboard');
         }, function errorCallback(response) {
-            $rootScope.logout();//delete any existing data
-            var ERRelement = document.getElementById("login_error_message");
-            ERRelement.style.visibility = "visible";
-            setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
-        });
+                $rootScope.register_success = false;
+                var ERRelement = document.getElementById("signup_error_box");
+                ERRelement.style.visibility = "visible";
+                setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
+            });
     }
-    // used for testing
-    // $scope.printData = function(){
-    //     alert("user: " + window.localStorage.getItem("username") + " pass: " + window.localStorage.getItem("password"));
-    // }
+
 
     $scope.logout = function(){
         //delete all data saved
@@ -165,6 +162,16 @@ angular.module('app.controllers', [])
         window.localStorage.removeItem("apiKey");
         $state.go("login");
     }
+
+    $scope.course_arrow_down = true;
+    $scope.course_detail = true;
+    $scope.toggleGroup = function (){
+         $scope.showGroup = !$scope.showGroup;
+         $scope.course_arrow_down = !$scope.course_arrow_down;
+         $scope.course_arrow_up = !$scope.course_arrow_up;
+         $scope.course_detail = !$scope.course_detail;
+    }
+
 }])
 
 
