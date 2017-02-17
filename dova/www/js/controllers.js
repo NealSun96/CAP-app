@@ -55,7 +55,7 @@ angular.module('app.controllers', [])
     //     alert("user: " + window.localStorage.getItem("username") + " pass: " + window.localStorage.getItem("password"));
     // }
 
-    $rootScope.logout = function(){
+    $scope.logout = function(){
         //delete all data saved
         window.localStorage.removeItem("apiKey");
     }
@@ -158,6 +158,12 @@ angular.module('app.controllers', [])
     $scope.toAssignments = function(e_id) {
         $rootScope.enrollment_in_handle = e_id;
         $state.go("courseOne");
+    }
+
+    $scope.logout = function(){
+        //delete all data saved
+        window.localStorage.removeItem("apiKey");
+        $state.go("login");
     }
 }])
 
