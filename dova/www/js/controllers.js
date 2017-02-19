@@ -54,11 +54,6 @@ angular.module('app.controllers', [])
     }
 
 
-    $scope.logout = function(){
-        //delete all data saved
-        window.localStorage.removeItem("apiKey");
-    }
-
     $scope.saveData = function(){
         window.localStorage.setItem("apiKey", $rootScope.api_auth);
     }
