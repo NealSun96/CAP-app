@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+    {% load staticfiles %}
+    <head>
+        <title>Courses</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/courses.css' %}">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="{% static 'djgap/js/courses.js' %}"></script>
+    </head>
+    
+    <body>
+        <div id="content">
+            <h1> Welcome </h1>
+            <button class="logout"><span>Logout</span></button>
+            <ul id="list">
+            </ul>
+        </div>
+    </body>
+
+</html>
