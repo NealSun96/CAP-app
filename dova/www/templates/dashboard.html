@@ -3,7 +3,7 @@
 
     <ion-scroll class="top-container">
 
-      <<div class="wraper" style="border: 1px solid;">
+      <div class="wraper" style="border: 1px solid;">
 
         <ion-item class="item-thumbnail-left item-icon-right  course" id="dashboard-list-item45" ng-click="toggleGroup()">
           <img src="img/nature-02.jpg" style="">
@@ -52,9 +52,9 @@
 
             </ion-scroll>
 
-<form class="bottom-form" style="">
-              <button class="button button-full logout-button" style="margin:0px;" ng-click="logout()" nav-direction="back">Logout</button>
-            </form>
+      <form class="bottom-form" >
+        <button nav-direction="back" class="button button-full logout-button" style="margin:0px;" ng-click="logout()" nav-direction="back">Logout</button>
+      </form>
 
             <!-- TESTING DATA -->
 
@@ -136,7 +136,7 @@
   }
 
   .logout-button{
-    background-color: white;
+    background-color: rgba(0,0,0,0.1);
   }
 </style>
 </ion-view>
