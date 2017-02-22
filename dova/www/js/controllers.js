@@ -47,7 +47,7 @@ angular.module('app.controllers', [])
         }, function errorCallback(response) {
                 $rootScope.checkConnection();
                 $rootScope.register_success = false;
-                var ERRelement = document.getElementById("signup_error_box");
+                var ERRelement = document.getElementById("login_error_message");
                 ERRelement.style.visibility = "visible";
                 setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
             });
