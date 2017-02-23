@@ -3,9 +3,12 @@
     {% load staticfiles %}
     <head>
         <title>DashBoard</title>
+        <!-- link rel="stylesheet" type="text/css" href="../../static/djgap/css/dash.css" -->
         <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/dash.css' %}">
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <!-- script src="../../static/djgap/js/dash.js"></script -->
         <script src="{% static 'djgap/js/dash.js' %}"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </head>
     
     <body>
@@ -29,8 +32,6 @@
             </div>
             <div id="navLeft">
                 <button id="refresh"><span>REFRESH</span></button>
-                <button id="0" class="menuItem menuItemActive"><span>DASHBOARD</span></button> 
-                <h4 class="label">OPTIONS</h4>
                 <button id="1" class="menuItem"><span>EDIT COURSE</span></button> 
                 <button id="2" class="menuItem"><span>EDIT ACTION PLAN</span></button> 
                 <button id="3" class="menuItem"><span>EDIT KNOWLEDGE TEST</span></button> 
@@ -38,34 +39,7 @@
                 <button id="5" class="menuItem"><span>CALCULATE DATA</span></button> 
             </div>
             <div id="info">
-                <div id="data0" class="data active">
-                    <div id="courseInfo">
-                        <h2 class="field"><span class="cLabel">COURSE NAME:</span><input  type="text" class="inputField courseName ronly" value="" readonly></h2>
-                        <h2 class="field"><span class="cLabel">COURSE CODE:</span><input  type="text" class="inputField courseCode ronly" value="" readonly></h2>
-                        <h2 class="field"><span class="cLabel">DEPARTMENT:</span><input  type="text" class="inputField courseDept ronly" value="" readonly></h2>
-                        <h2 class="field"><span class="cLabel">SEMESTER:</span><input  type="text" class="inputField courseSem ronly" value="" readonly></h2>
-                        <h2 class="field"><span class="cLabel">PREREQUISITES:</span><input  type="text" class="inputField coursePreReq ronly" value="" readonly></h2>
-                        <h2 class="field"><span class="cLabel">INSTRUCTOR:</span><input  type="text" class="inputField courseIns ronly" value="" readonly></h2>
-                        <h2 class="field"><span class="cLabel"># STUDENTS:</span><input  type="text" class="inputField courseNumStuds ronly" value="" readonly></h2>
-                        <h2 class="field"><span class="cLabel">CLASS AVERAGE:</span><input  type="text" class="inputField courseAvg ronly" value="" readonly></h2>
-                        
-                    </div>
-                    <div id="students">
-                        <h2 class="field"><span class="cLabel">STUDENTS</span></h2>
-                        <ul id="studList">
-                        </ul>
-                    </div>
-                    <div id="actionPlan">
-                        <h2 class="field"><span class="cLabel">ACTION PLAN</span></h2>
-                        <p class="actPlan"></p>
-                    </div>
-                    <div id="test">
-                        <h2 class="field"><span class="cLabel">KNOWLEDGE TEST:</span></h2>
-                        <div class="knowTest"></div>
-                    </div>
-                    
-                </div>
-                <div id="data1" class="data">
+                <div id="data1" class="data active">
                     <div id="courseInfo" class="card">
                         <h2 class="field"><span class="cLabel">COURSE NAME:</span><input  type="text" class="inputField courseName" value=""></h2>
                         <h2 class="field"><span class="cLabel">COURSE CODE:</span><input  type="text" class="inputField courseCode" value=""></h2>

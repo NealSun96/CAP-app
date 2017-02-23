@@ -15,6 +15,7 @@ html, body {
     -webkit-font-smoothing: antialiased;
     background: #f0f0f0;
     overflow:hidden;
+    -webkit-text-size-adjust:none;
 }
 #content{
     padding: 0;
@@ -497,7 +498,7 @@ html, body {
 
 .saveBtn {
     
-    transition: all 0.5s;
+    transition: all 0.1s;
     margin: 20px;
     width: 25%;
     height: 8%;
@@ -531,6 +532,9 @@ html, body {
     box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
     float: none;
     width: 95%;
+    overflow: scroll;
+    overflow-x: auto;
+    overflow-y: auto;
 }
 
 .card .field {
