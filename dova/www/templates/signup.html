@@ -5,7 +5,7 @@
 
     <!-- some error message to display when signup fails -->
     <div class="error-box" id="signup_error_box" style="visibility: hidden;">
-      <p> Signup Error </p> <!-- should be replaced with proper error message -->
+      <p id="error-text"> Signup Error </p> <!-- should be replaced with proper error message -->
     </div>
 
 
@@ -15,19 +15,19 @@
 
         <label class="item item-input top-input" id="signup-input1">
           <span class="input-label">First Name</span>
-          <input type="text" placeholder="" ng-model="$parent.reg_firstname">
+          <input type="text" id="firstNameField" placeholder="" ng-model="$parent.reg_firstname">
         </label>
         <label class="item item-input" id="signup-input2">
           <span class="input-label">Last Name</span>
-          <input type="text" placeholder="" ng-model="$parent.reg_lastname">
+          <input type="text" id="lastNameField" placeholder="" ng-model="$parent.reg_lastname">
         </label>
         <label class="item item-input" id="signup-input3">
           <span class="input-label">Username</span>
-          <input type="text" placeholder="" ng-model="$parent.reg_username">
+          <input type="text" id="usernameField" placeholder="" ng-model="$parent.reg_username">
         </label>
         <label class="item item-input bottom-input" id="signup-input4">
           <span class="input-label">Password</span>
-          <input type="password" placeholder="" ng-model="$parent.reg_password">
+          <input type="password" id="passwordField" placeholder="" ng-model="$parent.reg_password">
         </label>
       </ion-list>
 

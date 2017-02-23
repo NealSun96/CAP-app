@@ -17,8 +17,55 @@ angular.module('app.controllers', [])
                 $rootScope.register_success = true;
                 $state.go('login');
             }, function errorCallback(response) {
-                $rootScope.checkConnection();
+                var changed = false;//check if the error text has changed
+
+                if($rootScope.checkConnection()) changed = true;
+                
+                //password checks bools
+                var hasNumber = false;
+                //get tags
+                var errorText = document.getElementById("error-text");
+                var firstName = document.getElementById("firstNameField");
+                var lastName = document.getElementById("lastNameField");
+                var username = document.getElementById("usernameField");
+                var password = document.getElementById("passwordField");
+
+                errorText.innerHTML = "";//reset error text
+
+                if (firstName.value.length == 0){ 
+                    errorText.innerHTML += "First Name should not be left Empty! <br>";
+                    changed = true;
+                }
+
+                if (lastName.value.length == 0){ 
+                    errorText.innerHTML += "Last Name should not be left Empty! <br>";
+                    changed = true;
+                }
+
+                if (username.value.length < 3){ 
+                    errorText.innerHTML += "Username should be at least 3 characters long! <br>";
+                    changed = true;
+                }
+
+                if (password.value.length < 8){
+                    errorText.innerHTML += "Password should be at least 8 characters long! <br>";
+                    changed = true;
+                }
+
+                //check if a number is present in the password
+                var matches = password.value.match(/\d+/g);
+                if (matches != null){
+                    hasNumber = true;
+                    changed = false;
+                }else {
+                    errorText.innerHTML += "Password needs to have a number in it! <br>";
+                    changed = true;
+                }
+
+                if(!changed) errorText.innerHTML = "Signup Error!";
                 $rootScope.register_success = false;
+
+                //show error box
                 var ERRelement = document.getElementById("signup_error_box");
                 ERRelement.style.visibility = "visible";
                 setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
@@ -46,7 +93,15 @@ angular.module('app.controllers', [])
             $state.go('dashboard');
         }, function errorCallback(response) {
                 $rootScope.checkConnection();
+
+                var errorText = document.getElementById("error-text");
+
+                if (response.status >= 500) errorText.innerHTML = "Server inaccessible, Please try again later.";
+                if(response.status == 401) errorText.innerHTML = "Wrong Username and/or Password, Try Again!";
+
                 $rootScope.register_success = false;
+
+                //show error box
                 var ERRelement = document.getElementById("login_error_message");
                 ERRelement.style.visibility = "visible";
                 setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
@@ -421,6 +476,7 @@ angular.module('app.controllers', [])
         if(window.Connection){
             if(navigator.connection.type == Connection.NONE) {
                 alert("No Internet Connection, Please make sure you are connected.");
+                return true;
             }
         }
     }
