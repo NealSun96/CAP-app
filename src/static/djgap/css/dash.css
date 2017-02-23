@@ -25,6 +25,10 @@ html, body {
     padding: 0;
     margin: 0;
     position: fixed;
+    overflow: scroll;
+    overflow-x: auto;
+    overflow-y: auto;
+    overflow-y: auto;
 }
 
 #navTop {
@@ -45,7 +49,7 @@ html, body {
 
 #info {
     float: left;
-    width: 85%;
+    width: 100%;
     height: 90%;
 }
 
@@ -249,7 +253,7 @@ html, body {
     display: none;
     color: black;
     width: 99%;
-    height: 98%;
+    height: auto;
 }
 
 .active {
@@ -271,9 +275,7 @@ html, body {
     padding: 1%;
     margin-top: 1%;
     margin-left: 1%;
-    -webkit-box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
-    -moz-box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
-    box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
+    
 }
 
 
@@ -501,7 +503,7 @@ html, body {
     transition: all 0.1s;
     margin: 20px;
     width: 25%;
-    height: 8%;
+    height: 50px;
     border: none;
     font-size: 14pt;
     background-color: #FF6B6B;
@@ -522,19 +524,19 @@ html, body {
 
 .card {
 
-    height: 45%;
+    height: auto;
+    min-height: 200px;
     background-color: #dddddd;
     padding: 1%;
     margin-top: 1%;
     margin-left: 1%;
-    -webkit-box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
-    -moz-box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
-    box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
+    
     float: none;
     width: 95%;
     overflow: scroll;
     overflow-x: auto;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .card .field {
@@ -543,7 +545,8 @@ html, body {
 }
 
 .card textarea {
-    height: 80%;
+    height: 100%;
+    min-height: 200px;
     width: 96%;
     margin-left: 20px;
     margin-right: 20px;
@@ -572,5 +575,10 @@ html, body {
 #testFile {
     
    padding-left: 20px;
+}
+
+#title .inputField {
+    width: auto;
+    min-width: 350px;
 }
 
