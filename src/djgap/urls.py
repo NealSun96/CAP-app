@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^api/', include(v1_api.urls)),
     url(r'^$', 'djgap.views.home', name='home'),
     url(r'^index.html', 'djgap.views.home', name='home'),
-    url(r'^courses.html', 'djgap.views.courses', name='courses'),
+    url(r'^courses/(?P<key>[\w=]+)$', 'djgap.views.courses', name='courses'),
     url(r'^dashboard.html', 'djgap.views.dashboard', name='dashboard'),
     url(r'^admin/', include(admin.site.urls)),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
