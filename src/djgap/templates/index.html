@@ -4,8 +4,6 @@
     <head>
         <title>Login</title>
         <link rel="stylesheet" type="text/css" href = "{% static 'djgap/css/main.css' %}">
-        <!--link rel="stylesheet" type="text/css" href = "../../static/djgap/css/main.css"-->
-        <!--href="{{ STATIC_URL }}css/main.css">-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script type="text/javascript" src="{% static 'djgap/js/main.js' %}"></script>
     </head>
@@ -13,15 +11,15 @@
     <body>
 
         <div id="container" class="active">
-            <form name="login" method="" onsubmit="return(validate())">
+            <form id="login" method="" onsubmit="">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
                 <div id="lower">
                     <input type="checkbox"><label class="check" for="checkbox">Keep me logged in</label>
-                    <input type="hidden" name="redirect" value="courses.html"> 
-                    <input type="submit" value="Login">
+                    <!--<input type="hidden" name="redirect" value="courses.html"> -->
+                    <input type="button" id="submit" value="Login">
                 </div>
             </form>
         </div>
