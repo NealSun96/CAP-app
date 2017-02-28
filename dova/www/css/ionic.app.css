@@ -6335,10 +6335,11 @@ button.item.item-button-right {
     position: absolute;
     top: 10px;
     left: 10px;
+    left: calc(2% - 10px);
     max-width: 160px;
     max-height: 80px;
-    width: 100%;
-    height: 100%; }
+    display: block;
+    margin: 0 auto; }
 
 .item-avatar.item-complex,
 .item-avatar-left.item-complex,
