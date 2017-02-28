@@ -7,17 +7,38 @@
 
     <ion-content padding="true" class="has-header">
 
-    <ion-list ng-repeat="question in questions"> <!-- ng-repeat here -->
+    <ion-list ng-repeat="question in questions">
         <div>
-            <label>
-                <span class="label">{{ question.display_id }}. {{ question.question }}</span>
-            </label>
+            <div class="question">
+                <label >
+                    <span class="label">{{ question.display_id }}. {{ question.question }}</span>
+                </label>                
+            </div>
+
             <ion-list ng-repeat="choice in question.answer_keys">
+                <ion-radio name="{{ question.id }}" ng-click="click(question.id, choice)">{{ $index + 1 }}. {{ choice }}</ion-radio>
+                <ion-radio name="{{ question.id }}" ng-click="click(question.id, choice)">{{ $index + 1 }}. {{ choice }}</ion-radio>
                 <ion-radio name="{{ question.id }}" ng-click="click(question.id, choice)">{{ $index + 1 }}. {{ choice }}</ion-radio>
             </ion-list>
         </div>
     </ion-list>
 
 
+
+
     </ion-content>
+
+<style type="text/css">
+    .question{
+        background-color: lightgrey;
+        height: 46px;
+        line-height: 40px;
+        text-align: left;
+    }
+    .question label{
+        display: inline-block;
+        vertical-align: middle;
+    }
+</style>
+
 </ion-view>
