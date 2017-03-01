@@ -182,9 +182,11 @@ angular.module('app.controllers', [])
             }
         };
 
+        $scope.show_detail = [];
         $http.get("https://71133ed0.ngrok.io/api/v1/enrollment/enrollments/", config)
         .then(function successCallback(response) {
             $rootScope.enrollments = response.data.objects;
+            for (var i = 0; i < response.data.objects.length; i++) $scope.show_detail.push(true);
         }, function errorCallback(response) {
             $rootScope.enrollments = [];
         });
@@ -230,13 +232,8 @@ angular.module('app.controllers', [])
         $state.go("login");
     }
 
-    $scope.course_arrow_down = true;
-    $scope.course_detail = true;
-    $scope.toggleGroup = function (){
-         $scope.showGroup = !$scope.showGroup;
-         $scope.course_arrow_down = !$scope.course_arrow_down;
-         $scope.course_arrow_up = !$scope.course_arrow_up;
-         $scope.course_detail = !$scope.course_detail;
+    $scope.toggleGroup = function (i){
+         $scope.show_detail[i] = !$scope.show_detail[i];
     }
 
 }])
