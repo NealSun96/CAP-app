@@ -1,6 +1,7 @@
 *.pyc
 *.sqlite3
 .idea
+.DS_Store
 rest/
 dova/platforms/
 dova/plugins/
