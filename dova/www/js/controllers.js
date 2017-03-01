@@ -3,7 +3,7 @@ angular.module('app.controllers', [])
 .controller('signupCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
     
     function ($scope, $stateParams, $http, $state, $rootScope) {
-        var offline_debug = false;
+        var offline_debug = true;
         $scope.signup = function() {
             if (offline_debug) {$state.go('login');}
 
@@ -17,6 +17,7 @@ angular.module('app.controllers', [])
                 $rootScope.register_success = true;
                 $state.go('login');
             }, function errorCallback(response) {
+                $rootScope.checkConnection();
                 $rootScope.register_success = false;
                 var ERRelement = document.getElementById("signup_error_box");
                 ERRelement.style.visibility = "visible";
@@ -27,7 +28,7 @@ angular.module('app.controllers', [])
 
 .controller('loginCtrl', ['$scope', '$stateParams', '$http', '$state', '$rootScope',
     function ($scope, $stateParams, $http, $state, $rootScope) {
-        var offline_debug = false;
+        var offline_debug = true;
 
         $scope.login = function() {
             if (offline_debug) {$state.go('dashboard');}
@@ -44,21 +45,14 @@ angular.module('app.controllers', [])
             $scope.saveData();
             $state.go('dashboard');
         }, function errorCallback(response) {
-            $rootScope.logout();//delete any existing data
-            var ERRelement = document.getElementById("login_error_message");
-            ERRelement.style.visibility = "visible";
-            setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
-        });
+                $rootScope.checkConnection();
+                $rootScope.register_success = false;
+                var ERRelement = document.getElementById("login_error_message");
+                ERRelement.style.visibility = "visible";
+                setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
+            });
     }
-    // used for testing
-    // $scope.printData = function(){
-    //     alert("user: " + window.localStorage.getItem("username") + " pass: " + window.localStorage.getItem("password"));
-    // }
 
-    $scope.logout = function(){
-        //delete all data saved
-        window.localStorage.removeItem("apiKey");
-    }
 
     $scope.saveData = function(){
         window.localStorage.setItem("apiKey", $rootScope.api_auth);
@@ -76,6 +70,7 @@ angular.module('app.controllers', [])
 
     //runs at page load
     $scope.isLoggedIn();
+
 
 }])
 
@@ -165,12 +160,47 @@ angular.module('app.controllers', [])
         window.localStorage.removeItem("apiKey");
         $state.go("login");
     }
+
+    $scope.course_arrow_down = true;
+    $scope.course_detail = true;
+    $scope.toggleGroup = function (event){
+
+        var ell = event.currentTarget;
+        // console.log(ell);
+
+        console.log(ell.getElementsByClassName("course_detail")[0]);
+
+        var courseDetails = ell.getElementsByClassName("course_detail")[0];
+
+
+        console.log("visibility: " + courseDetails.style.visibility);
+
+        courseDetails.style.visibility = "hidden";
+        if(courseDetails.style.visibility == "visible") {courseDetails.style.visibility = "hidden";}
+        if(courseDetails.style.visibility == "hidden") {courseDetails.style.visibility = "visible";}
+
+
+
+
+
+         $scope.showGroup = !$scope.showGroup;
+         $scope.course_arrow_down = !$scope.course_arrow_down;
+         $scope.course_arrow_up = !$scope.course_arrow_up;
+         //$scope.course_detail = !$scope.course_detail;
+    }
+
+
+// var ERRelement = document.getElementById("login_error_message");
+// ERRelement.style.visibility = "visible";
+// setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
+
+
 }])
 
 
 .controller('feedbackCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
-        var offline_debug = false;
+        var offline_debug = true;
         $scope.counter = 0;
         $scope.limit = 11;
         var answers = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
@@ -226,7 +256,7 @@ angular.module('app.controllers', [])
 
 .controller('behaviorCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
-        var offline_debug = false;
+        var offline_debug = true;
         $scope.limit = 3;
 
         $scope.loadActions = function() {
@@ -274,7 +304,7 @@ angular.module('app.controllers', [])
 
 .controller('knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
-        var offline_debug = false;
+        var offline_debug = true;
         var answers = []
         $scope.count = 0;
         var init = function() {
@@ -317,7 +347,7 @@ angular.module('app.controllers', [])
 
 .controller('diagnosisCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
-        var offline_debug = false;
+        var offline_debug = true;
         var self_diagnosis = [];
         var other_diagnosis = [];
         $scope.options = ["明显进步", "稍有改善", "没有变化"];
@@ -409,3 +439,14 @@ angular.module('app.controllers', [])
             });
         }
     }])
+
+.run(function($rootScope){
+    //check connection to Internet
+    $rootScope.checkConnection = function(){
+        if(window.Connection){
+            if(navigator.connection.type == Connection.NONE) {
+                alert("No Internet Connection, Please make sure you are connected.");
+            }
+        }
+    }
+})

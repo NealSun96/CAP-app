@@ -1,4 +1,4 @@
-<ion-view view-title="Login" id="page4" cache-view="false">
+<ion-view view-title="Login" id="page4" cache-view="false" hide-back-button="true">
   <ion-content padding="true" class="has-header" scroll="false">
 
 
@@ -8,7 +8,7 @@
 
 
     <!-- some error message to display when login fails -->
-    <div class="error-box animate-if" id="login_error_message" style="visibility: hidden;">
+    <div class="error-box" id="login_error_message" style="visibility: hidden;">
       <p> Login Error </p> <!-- should be replaced with proper error message -->
     </div>
 
@@ -60,7 +60,7 @@
 .error-box{
     padding:10px;
     border:1px solid darken($assertive, 10%);
-    background-color: red;
+    background-color: #FFCCCC;
     border-radius:4px;
     margin-bottom:10px;
     display: block;
