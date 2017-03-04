@@ -111,68 +111,8 @@ angular.module('app.controllers', [])
 
     //runs at page load
     $scope.isLoggedIn();
-
-
 }])
 
-.controller('courseOneCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
-    function ($scope, $stateParams, $http, $rootScope, $state) {
-        $scope.f_disabled = false;
-        $scope.ap_disabled = false;
-        $scope.kt_disabled = false;
-        $scope.d_disabled = false;
-
-        var init = function() {
-            var config = {headers:  {
-                'Authorization': 'Apikey ' + $rootScope.api_auth
-            }
-        };
-        $http.get("https://71133ed0.ngrok.io/api/v1/enrollment/enrollments/", config)
-        .then(function successCallback(response) {
-            var enrollments = response.data.objects;
-            $rootScope.enrollments = enrollments
-
-            var len = enrollments.length;
-            for (var i = 0; i < len; i++) {
-                if (enrollments[i].id == $rootScope.enrollment_in_handle) {
-                    $scope.enrollment = enrollments[i];
-                }
-            }
-
-            $scope.f_disabled = $scope.enrollment.feedback_status != 'Available';
-            $scope.ap_disabled = $scope.enrollment.action_plan_status != 'Available';
-            $scope.kt_disabled = $scope.enrollment.knowledge_test_status != 'Available';
-            $scope.d_disabled = $scope.enrollment.diagnosis_status != 'Available';
-        }, function errorCallback(response) {
-            $rootScope.enrollments = [];
-        });
-    };
-    init();
-
-    $scope.feedback = function() {
-        if (!$scope.f_disabled) {
-            $state.go("feedback");
-        }
-    };
-
-    $scope.action_plan = function() {
-        if (!$scope.ap_disabled) {
-            $state.go("behavior");
-        }
-    };
-
-    $scope.k_test = function() {
-        if (!$scope.kt_disabled) {
-            $state.go("knowledge_test");
-        }
-    };
-
-    $scope.diagnosis = function() {
-        if (!$scope.d_disabled) {
-            $state.go("diagnosis");
-        }
-    }
-}])
 
 .controller('dashboardCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
@@ -193,37 +133,24 @@ angular.module('app.controllers', [])
     };
     init();
 
-    $scope.toAssignments = function(e_id) {
-        $rootScope.enrollment_in_handle = e_id;
-        $state.go("courseOne");
-    }
-
     $scope.toFeedback = function(e_id) {
-        if (!$scope.f_disabled) {
-            $rootScope.enrollment_in_handle = e_id;
-            $state.go("feedback");
-        }
+        $rootScope.enrollment_in_handle = e_id;
+        $state.go("feedback");
     };
 
     $scope.toActionPlan = function(e_id) {
-        if (!$scope.ap_disabled) {
-            $rootScope.enrollment_in_handle = e_id;
-            $state.go("behavior");
-        }
+        $rootScope.enrollment_in_handle = e_id;
+        $state.go("behavior");
     };
 
     $scope.toKTest = function(e_id) {
-        if (!$scope.f_disabled) {
-            $rootScope.enrollment_in_handle = e_id;
-            $state.go("knowledge_test");
-        }
+        $rootScope.enrollment_in_handle = e_id;
+        $state.go("knowledge_test");
     };
 
     $scope.toDiagnosis = function(e_id) {
-        if (!$scope.d_disabled) {
-            $rootScope.enrollment_in_handle = e_id;
-            $state.go("diagnosis");
-        }
+        $rootScope.enrollment_in_handle = e_id;
+        $state.go("diagnosis");
     };
 
     $scope.logout = function(){
@@ -283,13 +210,13 @@ angular.module('app.controllers', [])
         }
 
         $scope.submit = function() {
-            if (offline_debug) {$state.go('courseOne');}
+            if (offline_debug) {$state.go('dashboard');}
             answers.push($scope.feedback_page_text_area);
             var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
             var data = {"feedbacks": angular.toJson(answers)}
             var url = "https://71133ed0.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/feedback/";
             $http.post(url, data, config).then(function successCallback(response) {
-                $state.go('courseOne');
+                $state.go('dashboard');
             }, function errorCallback(response) {
             });
         }
@@ -328,7 +255,7 @@ angular.module('app.controllers', [])
     }
 
     $scope.submit = function() {
-        if (offline_debug) {$state.go(courseOne);}
+        if (offline_debug) {$state.go(dashboard);}
         var answers = [];
         for (var i = 0; i < $scope.action_points.length; i++) {
             if ($scope.action_points[i].selected) answers.push($scope.action_points[i].point)
@@ -337,7 +264,7 @@ angular.module('app.controllers', [])
     var data = {"answers": angular.toJson(answers)}
     var url = "https://71133ed0.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/action_plan/";
     $http.post(url, data, config).then(function successCallback(response) {
-        $state.go('courseOne');
+        $state.go('dashboard');
     }, function errorCallback(response) {
     });
 }
@@ -379,7 +306,7 @@ angular.module('app.controllers', [])
     }
 
     $scope.submit = function() {
-        if (offline_debug) {$state.go('courseOne');}
+        if (offline_debug) {$state.go('dashboard');}
         $rootScope.knowledge_test_answers = answers;
         $state.go('check_knowledge_test');
     }
@@ -433,19 +360,19 @@ angular.module('app.controllers', [])
     }
 
     $scope.submit = function() {
-        if (offline_debug) {$state.go('courseOne');}
+        if (offline_debug) {$state.go('dashboard');}
         var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
         var data = {"self_diagnosis": angular.toJson(self_diagnosis), "other_diagnosis": angular.toJson(other_diagnosis)}
         var url = "https://71133ed0.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/diagnosis/";
         $http.post(url, data, config).then(function successCallback(response) {
-            $state.go('courseOne');
+            $state.go('dashboard');
         }, function errorCallback(response) {
         });
     }
 }])
 
-.controller('check_knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
-    function ($scope, $stateParams, $http, $rootScope, $state) {
+.controller('check_knowledge_testCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state', '$ionicViewSwitcher',
+    function ($scope, $stateParams, $http, $rootScope, $state, $ionicViewSwitcher) {
         var init = function() {
             $scope.passed = false;
             $scope.score_message = "Calculating...";
@@ -475,7 +402,8 @@ angular.module('app.controllers', [])
             var data = {"answers": angular.toJson($rootScope.knowledge_test_answers), "final_score": $scope.score}
             var url = "https://71133ed0.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
             $http.post(url, data, config).then(function successCallback(response) {
-                $state.go('courseOne');
+                $ionicViewSwitcher.nextDirection('back');
+                $state.go('dashboard');
             }, function errorCallback(response) {
             });
         }
