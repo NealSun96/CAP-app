@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+    {% load staticfiles %}
+    <head>
+        <title>DashBoard</title>
+        <!-- link rel="stylesheet" type="text/css" href="../../static/djgap/css/dash.css" -->
+        <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/dash.css' %}">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <!-- script src="../../static/djgap/js/dash.js"></script -->
+        <script src="{% static 'djgap/js/dash.js' %}"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    </head>
+    
+    <body>
+        <div id="content">
+                        
+            <div id="navTop">
+                <div class="left">
+                    <div class="logo">
+                        <span><img src="https://static1.squarespace.com/static/54fe5d59e4b038fd96c9a7c5/550a1fa1e4b0fca40dc6f6b1/550a1fa1e4b03c7ec206969d/1426726818023/Placeholder+Logo.png" width="80px" height="80px"></span>
+                    </div>
+                    <h1 id="title" class="course"><input  type="text" class="inputField courseCode inpTitle" value="" readonly></h1>
+                </div>
+                <div class="right">
+                    <div id="logout">
+                        <img id="logoutBtn" src="https://cdn2.iconfinder.com/data/icons/picons-essentials/57/logout-512.png" width="50px" height="50px">
+                    </div>
+                    <h3 id="name"></h3>
+                    
+                </div>
+                
+            </div>
+            <div id="navLeft">
+                <button id="refresh"><span>REFRESH</span></button>
+                <button id="1" class="menuItem"><span>EDIT COURSE</span></button> 
+                <button id="2" class="menuItem"><span>EDIT ACTION PLAN</span></button> 
+                <button id="3" class="menuItem"><span>EDIT KNOWLEDGE TEST</span></button> 
+                <button id="4" class="menuItem"><span>ENROLL STUDENT</span></button> 
+                <button id="5" class="menuItem"><span>CALCULATE DATA</span></button> 
+            </div>
+            <div id="info">
+                <div id="data1" class="data active">
+                    <div id="courseInfo" class="card">
+                        <h2 class="field"><span class="cLabel">COURSE NAME:</span><input  type="text" class="inputField courseName" value=""></h2>
+                        <h2 class="field"><span class="cLabel">COURSE CODE:</span><input  type="text" class="inputField courseCode" value=""></h2>
+                        <h2 class="field"><span class="cLabel">DEPARTMENT:</span><input  type="text" class="inputField courseDept" value=""></h2>
+                        <h2 class="field"><span class="cLabel">SEMESTER:</span><input  type="text" class="inputField courseSem" value=""></h2>
+                        <h2 class="field"><span class="cLabel">PREREQUISITES:</span><input  type="text" class="inputField coursePreReq" value=""></h2>
+                        <h2 class="field"><span class="cLabel">INSTRUCTOR:</span><input  type="text" class="inputField courseIns" value=""></h2>
+                        <h2 class="field"><span class="cLabel"># STUDENTS:</span><input  type="text" class="inputField courseNumStuds" value=""></h2>
+                        <h2 class="field"><span class="cLabel">CLASS AVERAGE:</span><input  type="text" class="inputField courseAvg" value=""></h2>
+                    </div>
+                    <button id="courseSave" class="saveBtn">SAVE</button>
+                </div>
+                <div id="data2" class="data">
+                    <div class="card">
+                        <h2 class="field"><span class="cLabel">ACTION PLAN:</span></h2><br>
+                        <textarea id="actionPlanEdit"></textarea>
+                    </div>
+                    <button id="planSave" class="saveBtn">SAVE</button>
+                </div>
+                <div id="data3" class="data">
+                    <div class="card">
+                        <h2 class="field"><span class="cLabel">KNOWLEDGE TEST:</span></h2><br>
+                        <input type="file" id="testFile" accept="*/*">
+                    </div>
+                    <button id="testUpload" class="saveBtn">UPLOAD</button>
+                </div>
+                <div id="data4" class="data">
+                    <div class="card">
+                        <h2 class="field"><span class="cLabel">STUDENT NAME:</span><input  type="text" class="inputField studentName" value=""></h2>
+                        <h2 class="field"><span class="cLabel">STUDENT ID:</span><input  type="text" class="inputField studentID" value=""></h2>
+                        <h2 class="field"><span class="cLabel">STUDENT EMAIL:</span><input  type="text" class="inputField studentEmail" value=""></h2>
+                    </div>
+                    <button id="enroll" class="saveBtn">ENROLL</button>
+                </div>
+                <div id="data5" class="data">
+                    <div class="card">
+                        <h2 class="field"><span class="cLabel">CLASS AVERAGE:</span><input  type="text" class="inputField courseAvg ronly" value=""></h2>
+                        <h2 class="field"><span class="cLabel">CLASS MEDIAN:</span><input  type="text" class="inputField classMedian ronly" value=""></h2>
+                        <h2 class="field"><span class="cLabel"># STUDENTS:</span><input  type="text" class="inputField courseNumStuds ronly" value=""></h2>
+                    </div>
+                    <button id="calculateData" class="saveBtn">CALCULATE DATA</button>
+                </div>
+            </div>
+            
+        </div>
+    </body>
+
+</html>
