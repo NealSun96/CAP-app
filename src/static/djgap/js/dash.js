@@ -81,6 +81,20 @@ function updateCourseInfo() {
 }
 
 function uploadTest() {
+    
+    // questions are organized by id ex: q1, q2
+    $("#q1 .question").val("THIS IS HOW TO SET A QUESTION???");
+    // get the answer from database
+    var answer = 2;
+    // so the answer is option 2
+    if ($("#q1 .option2").prop('checked')) {
+        console.log("correct");
+    } else {
+        console.log("incorrect");
+    }
+    // to set the answer for q2 option2
+    $("#q1 .opt2").val("NEW OPTION")
+    
     return false;
 }
 
@@ -97,12 +111,8 @@ function refresh(userID, course) {
     $("#name").text("Hello! " + username);    
     
     var courseName = "SOME COURSE NAME";
-    var courseDept = "SOME DEPARTMENT";
-    var courseSem = "WINTER 2017";
-    var coursePreReq = "AAA123, BBB234";
+    var startTime = "WINTER 2017";
     var courseIns = username;
-    var courseNumStuds = 100;
-    var courseAvg = "42.0";
     
     // dummy values
 //    $(".course").append(course);
@@ -128,13 +138,8 @@ function refresh(userID, course) {
     // ==================================================================
     
     $(".courseName").val(courseName);
-    $(".courseCode").val(course);
-    $(".courseDept").val(courseDept);
-    $(".courseSem").val(courseSem);
-    $(".coursePreReq").val(coursePreReq);
+    $(".startTime").val(startTime);
     $(".courseIns").val(courseIns);
-    $(".courseNumStuds").val(courseNumStuds);
-    $(".courseAvg").val(courseAvg);
     
     $(".inpTitle").attr('size', $(".inpTitle").val().length);
     

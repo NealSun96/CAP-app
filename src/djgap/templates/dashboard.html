@@ -45,20 +45,33 @@
                 <div id="data1" class="data active">
                     <div id="courseInfo" class="card">
                         <h2 class="field"><span class="cLabel">COURSE NAME:</span><input  type="text" class="inputField courseName" value=""></h2>
-                        <h2 class="field"><span class="cLabel">COURSE CODE:</span><input  type="text" class="inputField courseCode" value=""></h2>
-                        <h2 class="field"><span class="cLabel">DEPARTMENT:</span><input  type="text" class="inputField courseDept" value=""></h2>
-                        <h2 class="field"><span class="cLabel">SEMESTER:</span><input  type="text" class="inputField courseSem" value=""></h2>
-                        <h2 class="field"><span class="cLabel">PREREQUISITES:</span><input  type="text" class="inputField coursePreReq" value=""></h2>
+                        <h2 class="field"><span class="cLabel">START TIME:</span><input  type="text" class="inputField startTime" value=""></h2>
                         <h2 class="field"><span class="cLabel">INSTRUCTOR:</span><input  type="text" class="inputField courseIns" value=""></h2>
-                        <h2 class="field"><span class="cLabel"># STUDENTS:</span><input  type="text" class="inputField courseNumStuds" value=""></h2>
-                        <h2 class="field"><span class="cLabel">CLASS AVERAGE:</span><input  type="text" class="inputField courseAvg" value=""></h2>
+                        <h2 class="field" for="checkbox"><span class="cLabel">DONE</span><input id='courseDone' class="checkBox" type="checkbox"></h2>
                     </div>
                     <button id="courseSave" class="saveBtn">SAVE</button>
                 </div>
                 <div id="data2" class="data">
                     <div class="card">
-                        <h2 class="field"><span class="cLabel">ACTION PLAN:</span></h2><br>
-                        <textarea id="actionPlanEdit"></textarea>
+                        <h2 class="field">
+                            <span class="cLabel">ACTION PLAN:</span>
+                            <select class="dropdown">
+                              <option value="tier1">Tier 1</option>
+                              <option value="tier2">Tier 2</option>
+                            </select>
+                        </h2><br>
+                        <ol>
+                            <li><input id="act1" type="text" class="inputField" value=""></li>
+                            <li><input id="act2" type="text" class="inputField" value=""></li>
+                            <li><input id="act3" type="text" class="inputField" value=""></li>
+                            <li><input id="act4" type="text" class="inputField" value=""></li>
+                            <li><input id="act5" type="text" class="inputField" value=""></li>
+                            <li><input id="act6" type="text" class="inputField" value=""></li>
+                            <li><input id="act7" type="text" class="inputField" value=""></li>
+                            <li><input id="act8" type="text" class="inputField" value=""></li>
+                            <li><input id="act9" type="text" class="inputField" value=""></li>
+                            <li><input id="act10" type="text" class="inputField" value=""></li>
+                        </ol>
                     </div>
                     <button id="planSave" class="saveBtn">SAVE</button>
                 </div>
@@ -66,21 +79,104 @@
                     <div class="card">
                         <h2 class="field"><span class="cLabel">KNOWLEDGE TEST:</span></h2><br>
                         <ol id="questionList">
-                        
+                            <li id="q1">
+                                <input  type="text" class="inputField question" value="QUESTION1">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li><br>
+                            <li id="q2">
+                                <input  type="text" class="inputField question" value="QUESTION2">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li><br>
+                            <li id="q3">
+                                <input  type="text" class="inputField question" value="QUESTION3">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li><br>
+                            <li id="q4">
+                                <input  type="text" class="inputField question" value="QUESTION4">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li><br>
+                            <li id="q5">
+                                <input  type="text" class="inputField question" value="QUESTION5">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li><br>
+                            <li id="q6">
+                                <input  type="text" class="inputField question" value="QUESTION6">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li><br>
+                            <li id="q7">
+                                <input  type="text" class="inputField question" value="QUESTION7">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li><br>
+                            <li id="q8">
+                                <input  type="text" class="inputField question" value="QUESTION8">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li><br>
+                            <li id="q9">
+                                <input  type="text" class="inputField question" value="QUESTION9">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li><br>
+                            <li id="q10">
+                                <input  type="text" class="inputField question" value="QUESTION10">
+                                <ol type="a" class="answers">
+                                    <li><input class="checkBox option1" type="checkbox"><input  type="text" class="inputField answer opt1" value="OPTION1"></li>
+                                    <li><input class="checkBox option2" type="checkbox"><input  type="text" class="inputField answer opt2" value="OPTION2"></li>
+                                    <li><input class="checkBox option3" type="checkbox"><input  type="text" class="inputField answer opt3" value="OPTION3"></li>
+                                    <li><input class="checkBox option4" type="checkbox"><input  type="text" class="inputField answer opt4" value="OPTION4"></li>
+                                </ol>
+                            </li>
+                            
                         </ol>
                     </div>
-                    <button id="addQuestion" class="saveBtn">ADD QUESTION</button>
                     <button id="testUpload" class="saveBtn">SAVE</button>
-                    
-                    <div id="addQPanel">
-                    
-                    </div>
                 </div>
                 <div id="data4" class="data">
                     <div class="card">
-                        <h2 class="field"><span class="cLabel">STUDENT NAME:</span><input  type="text" class="inputField studentName" value=""></h2>
-                        <h2 class="field"><span class="cLabel">STUDENT ID:</span><input  type="text" class="inputField studentID" value=""></h2>
-                        <h2 class="field"><span class="cLabel">STUDENT EMAIL:</span><input  type="text" class="inputField studentEmail" value=""></h2>
+                        <h2 class="field"><span class="cLabel">ADD ENROLL FILE:</span><input type="file" id='studentFile' accept="*/*" /></h2>
                     </div>
                     <button id="enroll" class="saveBtn">ENROLL</button>
                 </div>
