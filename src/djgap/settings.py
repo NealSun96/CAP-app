@@ -126,9 +126,17 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'djgap/templates'),
 )
 
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'
 
-
-
-
-
-
+DEFAULT_FROM_EMAIL = 'noreply@capapp.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = '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'

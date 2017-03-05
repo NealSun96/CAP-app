@@ -11,35 +11,40 @@ $(document).ready(function() {
         });
     });
     
-    var userID = getUserID();
-    console.log(userID);
-    
-    var username = userID; // get name froms server
-    var courses = ["CSCA08", "CSCA48", "MATB41", "CSCB63"]; // get courses in a list from server
-    
-    $("h1").append(username); 
-    
-    for (var i = 0; i < courses.length; i++) {
-        var btn = "<li><a href=\"dashboard.html?course=" + courses[i] + "&id=" + userID + "\">" + "<button class=\"cbtn\"><span>" + courses[i] + "</span></button></a></li>"
-        $("#list").append(btn);
-    }
-    
-    // add the create new course button
-    var btn = "<li><a href=\"dashboard.html?course=\"><button class=\"cbtn crCourse\"><span>+ Create Course</span></button></a></li>"
-    $("#list").append(btn);
+    var auth = getAuth();
+    var courses = [];
+    var endPoint = "http://71133ed0.ngrok.io/api/v1/course/"
+    $.ajax({
+        type: "GET",
+        url: endPoint,
+        data: {},
+        success: function(data){
+            for (var i = 0; i < data.objects.length; i++) {
+                var btn = "<li><a href=\"dashboard/" + data.objects[i].id + "\">" + "<button class=\"cbtn\"><span>" + data.objects[i].course_name + "</span></button></a></li>"
+                $("#list").append(btn);
+            }
+
+            // add the create new course button
+            var btn = "<li><a href=\"dashboard\"><button class=\"cbtn crCourse\"><span>新建课程</span></button></a></li>"
+            $("#list").append(btn);
+        },
+        error: function(data){
+            error();
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("Authorization", "Apikey " + auth);
+            xhr.setRequestHeader("Content-Type", "application/json");
+        },
+        complete: function(){
+        }
+    })
     
     $(".logout").click(function() {
         setTimeout(function(){window.location.href = "index.html"});
     });
 });
 
-function getUserID() {
-    
-    var params = document.URL.split("?");
-    var userID = "";
-    if (params.length > 1) {
-        var userID = params[1].split("=")[1];
-    }
-    
-    return userID;
+function getAuth() {
+    var params = document.URL.split("/");
+    return atob(params[params.length - 1]);
 }
