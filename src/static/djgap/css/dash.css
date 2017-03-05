@@ -49,7 +49,7 @@ html, body {
 
 #info {
     float: left;
-    width: 100%;
+    width: 85%;
     height: 90%;
 }
 
@@ -582,3 +582,42 @@ html, body {
     min-width: 350px;
 }
 
+#errorItem {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    min-height: 40px;
+    height: auto;   
+    transition: all 0.5s;
+    background-color:#662332;
+    border: 0px solid #000000;
+    border-radius: 0;
+    display: none;
+}
+
+#errorItem span {
+    margin: 0;
+    padding: 0;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+    color: aliceblue;
+    font-family: colab;
+    font-size: 12pt;
+    letter-spacing: 3pt;
+    width: 97%;
+    height: 100%;
+    display:flex;
+    align-items: center;
+    //justify-content: center; 
+    padding-left: 3%;
+    word-wrap: break-word;
+    
+}
+
+#errorItem:hover{
+    filter: invert(100%);
+}

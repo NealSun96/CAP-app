@@ -1,4 +1,7 @@
 $(document).ready(function(){
+    
+    
+    
     // disable zooming in and zoomign out
     $(document).keydown(function(event) {
     if (event.ctrlKey==true && (event.which == '61' || event.which == '107' || event.which == '173' || event.which == '109'  || event.which == '187'  || event.which == '189'  ) ) {
@@ -16,7 +19,10 @@ $(document).ready(function(){
        }
     });
     
-    refresh();
+    var userID = getUserID();
+    var course = getCourse();
+    
+    refresh(userID, course);
     
     $("#refresh").click(function(){setTimeout(function(){window.location.href = document.URL;});});
     
@@ -28,31 +34,39 @@ $(document).ready(function(){
     }); 
 
     $(".menuItem").click(function(){
-        $(".menuItem").removeClass("menuItemActive");
-        $(".data").removeClass("active");
-        var id = $(this).attr('id');
-        $("#data"+id).addClass("active");
-        $(this).addClass("menuItemActive");
+        if (!$(".menuItem").hasClass('.error')){
+            $(".menuItem").removeClass("menuItemActive");
+            $(".data").removeClass("active");
+            var id = $(this).attr('id');
+            $("#data"+id).addClass("active");
+            $(this).addClass("menuItemActive");
+        }
     });
     
     $("#courseSave").click(function(){
         updateCourseInfo();
-        refresh();
+        refresh(userID, course);
+        // example use of error bar
+        error("ERROR SAVING COURSE DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA ");
     });
     
     $("#planSave").click(function(){
         updatePlan();
-        refresh();
+        refresh(userID, course);
     });
     
     $("#testUpload").click(function(){
         uploadTest();
-        refresh();
+        refresh(userID, course);
     });
     
     $("#enroll").click(function(){
         enroll();
-        refresh();
+        refresh(userID, course);;
+    });
+    
+    $('#errorItem').click(function(){
+        $('#errorItem').fadeOut(100);
     });
     
     
@@ -74,18 +88,13 @@ function updatePlan() {
     return false;
 }
 
-function refresh() {
+function refresh(userID, course) {
     
-    
-    var userID = getUserID();
     console.log(userID);
     
     var username = userID.toString(); // get name froms server using userID
     
     $("#name").text("Hello! " + username);    
-    var course = getCourse();
-    
-    var dummyStudents = ["Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar"];
     
     var courseName = "SOME COURSE NAME";
     var courseDept = "SOME DEPARTMENT";
@@ -105,14 +114,6 @@ function refresh() {
 //    $(".numStudents").append(courseNumStuds);
 //    $(".cAvg").append(courseAvg);
         
-    
-    //dummy list of students
-    
-    dummyStudents.sort();
-    for (var i = 0; i < dummyStudents.length; i++) {
-        var student = "<li class=\"listitem\">" + dummyStudents[i]+ "</li>";
-        $("#studList").append(student);
-    }
         
     
     // dummy action plan
@@ -120,8 +121,7 @@ function refresh() {
     $(".actPlan").text(actionPlan);
     
     // dummy knowledge test
-    var knowTest = "http://www.some-download-link.com/some-test-that-is-very-hard.pdf"
-    $(".knowTest").append("<a class=\"downBtn\" href=\"" + knowTest + "\">DOWNLOAD TEST</a>");
+    populateTest();
     
     
     // edit course fields ===============================================
@@ -178,4 +178,31 @@ function getCourse() {
     }
     
     return course;
+}
+
+function error(message) {
+    $('#errorItem span').text(message);
+    $('#errorItem').fadeIn(500);
+}
+
+function populateTest() {
+    
+    
+}
+
+function exampleListToElement() {
+    // list of sutend name I want to add to a predefined <ol> within dashboard.html
+    var dummyStudents = ["Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar"];
+    
+    
+    // first loop through the list
+    for (var i = 0; i < dummyStudents.length; i++){
+        // construct html tag for the current student with class='student'
+        var tag = "<li class='student'>" + dummyStudents[i] + "</li>"
+        // apend it to the the sturent list using its iD
+        $("#studentList").append(tag);
+        // append will add tag to the end of the student list
+        // $("#studentList").html(tag) will replace the entire list with tag
+    }
+    
 }

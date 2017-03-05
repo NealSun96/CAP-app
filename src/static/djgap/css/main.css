@@ -146,3 +146,14 @@ input[type=submit]:active {
 .inactive {
     display: none;
 }
+
+.invalid {
+    
+    padding: 5px;
+    margin: 5px;
+    width: 94%;
+    height: 30px;
+    color: #d22;
+    text-align: center;
+    display: none;
+}

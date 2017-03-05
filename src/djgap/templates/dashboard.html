@@ -3,10 +3,10 @@
     {% load staticfiles %}
     <head>
         <title>DashBoard</title>
-        <!--link rel="stylesheet" type="text/css" href="../../static/djgap/css/dash.css"-->
+<!--        <link rel="stylesheet" type="text/css" href="../../static/djgap/css/dash.css">-->
         <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/dash.css' %}">
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-        <!--script src="../../static/djgap/js/dash.js"></script-->
+<!--        <script src="../../static/djgap/js/dash.js"></script>-->
         <script src="{% static 'djgap/js/dash.js' %}"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </head>
@@ -30,14 +30,17 @@
                 </div>
                 
             </div>
-            <!-- div id="navLeft">
+            <div id="navLeft">
                 <button id="refresh"><span>REFRESH</span></button>
-                <button id="1" class="menuItem"><span>EDIT COURSE</span></button> 
+                <br>
+                <div id="errorItem"><span></span></div>
+                <br><br>
+                <button id="1" class="menuItem menuItemActive"><span>EDIT COURSE</span></button> 
                 <button id="2" class="menuItem"><span>EDIT ACTION PLAN</span></button> 
                 <button id="3" class="menuItem"><span>EDIT KNOWLEDGE TEST</span></button> 
                 <button id="4" class="menuItem"><span>ENROLL STUDENT</span></button> 
                 <button id="5" class="menuItem"><span>CALCULATE DATA</span></button> 
-            </div -->
+            </div>
             <div id="info">
                 <div id="data1" class="data active">
                     <div id="courseInfo" class="card">
@@ -52,21 +55,28 @@
                     </div>
                     <button id="courseSave" class="saveBtn">SAVE</button>
                 </div>
-                <div id="data2" class="data active">
+                <div id="data2" class="data">
                     <div class="card">
                         <h2 class="field"><span class="cLabel">ACTION PLAN:</span></h2><br>
                         <textarea id="actionPlanEdit"></textarea>
                     </div>
                     <button id="planSave" class="saveBtn">SAVE</button>
                 </div>
-                <div id="data3" class="data active">
+                <div id="data3" class="data">
                     <div class="card">
                         <h2 class="field"><span class="cLabel">KNOWLEDGE TEST:</span></h2><br>
-                        <input type="file" id="testFile" accept="*/*">
+                        <ol id="questionList">
+                        
+                        </ol>
                     </div>
-                    <button id="testUpload" class="saveBtn">UPLOAD</button>
+                    <button id="addQuestion" class="saveBtn">ADD QUESTION</button>
+                    <button id="testUpload" class="saveBtn">SAVE</button>
+                    
+                    <div id="addQPanel">
+                    
+                    </div>
                 </div>
-                <div id="data4" class="data active">
+                <div id="data4" class="data">
                     <div class="card">
                         <h2 class="field"><span class="cLabel">STUDENT NAME:</span><input  type="text" class="inputField studentName" value=""></h2>
                         <h2 class="field"><span class="cLabel">STUDENT ID:</span><input  type="text" class="inputField studentID" value=""></h2>
@@ -74,7 +84,7 @@
                     </div>
                     <button id="enroll" class="saveBtn">ENROLL</button>
                 </div>
-                <div id="data5" class="data active">
+                <div id="data5" class="data">
                     <div class="card">
                         <h2 class="field"><span class="cLabel">CLASS AVERAGE:</span><input  type="text" class="inputField courseAvg ronly" value=""></h2>
                         <h2 class="field"><span class="cLabel">CLASS MEDIAN:</span><input  type="text" class="inputField classMedian ronly" value=""></h2>
