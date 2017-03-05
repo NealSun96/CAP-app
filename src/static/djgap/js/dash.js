@@ -101,7 +101,7 @@ function refresh(userID, course) {
     var courseSem = "WINTER 2017";
     var coursePreReq = "AAA123, BBB234";
     var courseIns = username;
-    var courseNumStuds = dummyStudents.length;
+    var courseNumStuds = 100;
     var courseAvg = "42.0";
     
     // dummy values
