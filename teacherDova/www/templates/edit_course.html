@@ -1,0 +1,73 @@
+<ion-view view-title="edit_course" id="edit_course_page">
+  <ion-content padding="true" class="has-header padding">
+    <div class="SideMenu">
+      
+      <h3 class="text-center">Things to edit</h3>
+
+      <ion-list>
+        <ion-item class="noborder">Diagnostics</ion-item>
+        <ion-item>Knowledge test</ion-item>
+        <ion-item>Behavior</ion-item>
+
+      </ion-list>
+
+    </div>
+
+
+    <div class="mainPage">
+      <h3>Courses</h3>
+      <ion-list class="item-borderless">
+        <ion-item ui-sref="dashboard">Diagnostics</ion-item>
+        <ion-item>Knowledge test</ion-item>
+        <ion-item ui-sref="edit_behaviour">Behavior</ion-item>
+      </ion-list>
+    </div>
+  </ion-content>
+
+  <style type="text/css">
+    .SideMenu{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200px;
+
+      border-style: solid;
+      border-width: medium;
+      border-color: #76c8b2;
+      border-radius: 4px 4px 4px 4px;
+
+      /*height: 100%;*/
+    }
+    .SideMenu h3{
+      height: 42px;
+      background-color: #76c8b2;
+    }
+
+    .mainPage{
+      position: absolute;
+      top: 0;
+      left: 225px;
+      width: 85%;
+
+      border-style: solid;
+      border-width: medium;
+      border-color: #76c8b2;
+      border-radius: 4px 4px 4px 4px;
+    }
+    .mainPage h3{
+      height: 42px;
+      background-color: #76c8b2;
+    }
+
+    ion-content{
+      margin-left: 5px;
+      margin-top: 100px;
+    }
+
+    ion-list{
+      cursor: pointer;
+    }
+
+
+  </style>
+</ion-view>
