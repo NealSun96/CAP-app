@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import json
 import base64
-import pytz
 
 from django.core.files.base import ContentFile
 from django.core.exceptions import ObjectDoesNotExist
@@ -51,29 +52,29 @@ class CourseResource(CorsResourceBase, ModelResource):
         self.is_authenticated(request)
         user_group = request.user.groups.first().name
         if user_group != "teacher":
-            raise ImmediateHttpResponse(HttpBadRequest('Not a teacher'))
+            raise ImmediateHttpResponse(HttpBadRequest('您的用户权限不属于教师，无法进行该操作'))
 
         deserialized = self.deserialize(request, request.body,
                                         format=request.META.get('CONTENT_TYPE', 'application/json'))
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
 
-        teacher = bundle.data.get('teacher')
+        teacher = request.user
         if bundle.data.get('teacher') != bundle.request.user.username:
             try:
                 other_teacher = User.objects.get(username=bundle.data.get('teacher'))
                 other_teacher_group = other_teacher.groups.first().name
                 if other_teacher_group != "teacher":
-                    raise ImmediateHttpResponse(HttpBadRequest('Assigned teacher is not a teacher'))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'%s的用户权限不属于教师' % bundle.data.get('teacher')))
             except ObjectDoesNotExist:
-                raise ImmediateHttpResponse(HttpNotFound('Assigned teacher does not exist'))
+                raise ImmediateHttpResponse(HttpNotFound(u'无法找到与%s匹配的用户' % bundle.data.get('teacher')))
             teacher = other_teacher
 
-        time = pytz.timezone('Asia/Shanghai').localize(bundle.data.get('start_time'))
+        course = Course(course_name=bundle.data.get('course_name'), start_time=bundle.data.get('start_time'),
+                        teacher=teacher, done=bundle.data.get('done'))
+        course.save()
 
-        Course(course_name=bundle.data.get('course_name'), start_time=time, teacher=teacher).save()
-
-        return self.create_response(request, {})
+        return self.create_response(request, {"id": course.id, "teacher": course.teacher.username})
 
     def edit_course(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
@@ -81,13 +82,12 @@ class CourseResource(CorsResourceBase, ModelResource):
 
         user_group = request.user.groups.first().name
         if user_group != "teacher":
-            raise ImmediateHttpResponse(HttpBadRequest('Not a teacher'))
+            raise ImmediateHttpResponse(HttpBadRequest('您的用户权限不属于教师，无法进行该操作'))
 
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
-
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
         deserialized = self.deserialize(request, request.body,
                                         format=request.META.get('CONTENT_TYPE', 'application/json'))
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
@@ -98,25 +98,27 @@ class CourseResource(CorsResourceBase, ModelResource):
                 other_teacher = User.objects.get(username=bundle.data.get('teacher'))
                 other_teacher_group = other_teacher.groups.first().name
                 if other_teacher_group != "teacher":
-                    raise ImmediateHttpResponse(HttpBadRequest('Assigned teacher is not a teacher'))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'%s的用户权限不属于教师' % bundle.data.get('teacher')))
             except ObjectDoesNotExist:
-                raise ImmediateHttpResponse(HttpNotFound('Assigned teacher does not exist'))
+                raise ImmediateHttpResponse(HttpNotFound(u'无法找到与%s匹配的用户' % bundle.data.get('teacher')))
             course.teacher = other_teacher
 
         course.course_name = bundle.data.get('course_name')
-        course.start_time = pytz.timezone('Asia/Shanghai').localize(bundle.data.get('start_time'))
+        course.start_time = bundle.data.get('start_time')
         course.done = bundle.data.get('done')
 
-        image_data = bundle.data.get('picture')
-        if isinstance(image_data, basestring) and image_data.startswith('data:image'):
-            format, imgstr = image_data.split(';base64,')
-            ext = format.split('/')[-1]
-            course.picture = ContentFile(base64.b64decode(imgstr), name=str(course.id) + '.' + ext)
-        else:
-            raise ImmediateHttpResponse(HttpBadRequest('Bad picture'))
+        # Image uploading is disabled for now
+        if False:
+            image_data = bundle.data.get('picture')
+            if isinstance(image_data, basestring) and image_data.startswith('data:image'):
+                format, imgstr = image_data.split(';base64,')
+                ext = format.split('/')[-1]
+                course.picture = ContentFile(base64.b64decode(imgstr), name=str(course.id) + '.' + ext)
+            else:
+                raise ImmediateHttpResponse(HttpBadRequest('Bad picture'))
         course.save()
 
-        return self.create_response(request, {})
+        return self.create_response(request, {"id": course.id, "teacher": course.teacher.username})
 
     def get_assignments(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
@@ -308,8 +310,8 @@ class CourseResource(CorsResourceBase, ModelResource):
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
 
-        start_time = pytz.timezone('Asia/Shanghai').localize(bundle.data.get('start_time'))
-        end_time = pytz.timezone('Asia/Shanghai').localize(bundle.data.get('end_time'))
+        start_time = bundle.data.get('start_time')
+        end_time = bundle.data.get('end_time')
 
         enrollments = course.enrollment_set.filter(start_time__gte=start_time)\
             .filter(start_time__lte=end_time)

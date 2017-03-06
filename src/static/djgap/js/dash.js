@@ -1,11 +1,14 @@
 var baseUrl = getUrl();
 var params = getAuthAndID();
-var auth = params[0];
+var auth = atob(params[0]);
+var teacher = auth.split(":")[0];
 var id = params[1];
+var new_course = id == "new_course";
+var ap_tier = "manager";
+var kt_tier = "manager";
+
 
 $(document).ready(function(){
-    var new_course = id == "new_course";
-
     // disable zooming in and zoomign out
     $(document).keydown(function(event) {
     if (event.ctrlKey==true && (event.which == '61' || event.which == '107' || event.which == '173' || event.which == '109'  || event.which == '187'  || event.which == '189'  ) ) {
@@ -33,7 +36,7 @@ $(document).ready(function(){
        $("#logout").animate(function() {
            $("#logout").css("background-color:#4ECDC4;");
        });
-       setTimeout(function(){window.location.href = base_url + "/courses/"+auth});
+       setTimeout(function(){window.location.href = baseUrl + "/courses/"+btoa(auth)});
     }); 
 
     
@@ -58,21 +61,17 @@ $(document).ready(function(){
     
     $('.startTime').each(function() {
         
-        $(this).timepicker({});
+        $(this).timepicker({
+            timeFormat: 'HH:mm:ss',});
     });
     
     $('.startDate').each(function() {
-        
-        $(this).datepicker();
+        $(this).datepicker(
+        { dateFormat: 'yy-mm-dd' });
     });
     
     $("#courseSave").click(function(){
-        if (new_course) {
-            setTimeout(function(){window.location.href = baseUrl + "/dashboard/"+auth+"/"+id;});
-        }
-        else refresh();
-
-        error("ERROR SAVING COURSE DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA ");
+        editCourse();
     });
     
     $("#planSave").click(function(){
@@ -95,14 +94,12 @@ $(document).ready(function(){
     });
     
     // tier listners
-    // action plan
     $('#data2 select').on('change', function() {
-        alert( this.value );
+        ap_tier = this.value;
     });
-    
-    // knowledge test plan
+
     $('#data3 select').on('change', function() {
-        alert( this.value + "test" );
+        kt_tier = this.value
     });
     
     
@@ -112,8 +109,42 @@ function enroll() {
     return false;
 }
 
-function updateCourseInfo() {
-    return false;
+function editCourse() {
+    var endPoint;
+    if (new_course) endPoint = baseUrl + "/api/v1/course/add_course/";
+    else endPoint = baseUrl + "/api/v1/course/edit_course/" + id + "/";
+    var start_time = $('.startDate').val() + "T"+$('.startTime').val()+"+08:00";
+    var data = {
+            "course_name": $(".courseName").val(),
+            "start_time": start_time,
+            "teacher": $(".courseIns").val(),
+            "done": $('#courseDone').prop('checked')
+        }
+    $.ajax({
+        type: "POST",
+        url: endPoint,
+        data: JSON.stringify(data),
+        dataType: "json",
+        success: function(data){
+            if (teacher != data.teacher) {
+                $("#logout").click();
+            }
+            else if (id != data.id) {
+                setTimeout(function(){window.location.href = baseUrl + "/dashboard/"+btoa(auth)+"/"+data.id;});
+            }
+            else refresh();
+
+        },
+        error: function(data){
+            error(data.responseText);
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("Authorization", "Apikey " + auth);
+            xhr.setRequestHeader("Content-Type", "application/json");
+        },
+        complete: function(){
+        }
+    })
 }
 
 function uploadTest() {
@@ -149,9 +180,7 @@ function updatePlan() {
 }
 
 function refresh() {
-
     populateCourse();
-
     populateActionPlan();
     populateTest();
 }
@@ -162,7 +191,7 @@ function error(message) {
 }
 
 function populateCourse() {
-    if (id != "new_course") {
+    if (!new_course) {
         var endPoint = baseUrl + "/api/v1/course/"
         $.ajax({
             type: "GET",
@@ -173,9 +202,11 @@ function populateCourse() {
                     console.log(data.objects);
                     if (data.objects[i].id == id) {
                         $(".courseName").val(data.objects[i].course_name);
-                        $(".startTime").val(data.objects[i].start_time);
-                        $(".courseIns").val(atob(auth).split(":")[0]);
-                        $("#courseDone").val(data.objects[i].done);
+                        var time = data.objects[i].start_time
+                        $(".startTime").val(time.split("T")[1]);
+                        $(".startDate").val(time.split("T")[0]);
+                        $(".courseIns").val(teacher);
+                        $("#courseDone").prop('checked', data.objects[i].done);
 
                         $(".inpTitle").val(data.objects[i].course_name)
                         $(".inpTitle").attr('size', $(".inpTitle").val().length);
@@ -188,7 +219,7 @@ function populateCourse() {
                 error("无法找到课程，请返回后刷新重试");
             },
             beforeSend: function(xhr){
-                xhr.setRequestHeader("Authorization", "Apikey " + atob(auth));
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
                 xhr.setRequestHeader("Content-Type", "application/json");
             },
             complete: function(){
