@@ -1,7 +1,11 @@
+var baseUrl = getUrl();
+var params = getAuthAndID();
+var auth = params[0];
+var id = params[1];
+
 $(document).ready(function(){
-    
-    var baseUrl = getUrl();
-    
+    var new_course = id == "new_course";
+
     // disable zooming in and zoomign out
     $(document).keydown(function(event) {
     if (event.ctrlKey==true && (event.which == '61' || event.which == '107' || event.which == '173' || event.which == '109'  || event.which == '187'  || event.which == '189'  ) ) {
@@ -18,13 +22,9 @@ $(document).ready(function(){
        event.preventDefault();
        }
     });
-    
-    var newCourse = isNewCourse();
-    var userID = getUserID();
-    var course = getCourse();
-    
-    if (!newCourse) {
-        refresh(userID, course);
+
+    if (!new_course) {
+        refresh();
     }
     
     $("#refresh").click(function(){setTimeout(function(){window.location.href = document.URL;});});
@@ -33,13 +33,11 @@ $(document).ready(function(){
        $("#logout").animate(function() {
            $("#logout").css("background-color:#4ECDC4;");
        });
-        // CHANGE THISSS BACKKC
-       setTimeout(function(){window.location.href = "courses.html?id="+userID}); 
+       setTimeout(function(){window.location.href = base_url + "/courses/"+auth});
     }); 
+
     
-    
-    if (newCourse) {
-        console.log("hellolololololo");
+    if (new_course) {
         $("#1 span").text("NEW COURSE");
         $("#2").addClass("blocked");
         $("#3").addClass("blocked");
@@ -64,35 +62,30 @@ $(document).ready(function(){
     });
     
     $("#courseSave").click(function(){
-        
-        if (!newCourse) {
-            updateCourseInfo();
-            refresh(userID, course);
-        } else {
-            course = $(".courseName").val();
-            setTimeout(function(){window.location.href = document.URL.split("?")[0]+"?id="+userID+"&course="+course;});
+        if (new_course) {
+            setTimeout(function(){window.location.href = baseUrl + "/dashboard/"+auth+"/"+id;});
         }
-        // example use of error bar
+        else refresh();
+
         error("ERROR SAVING COURSE DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA ");
     });
     
     $("#planSave").click(function(){
         updatePlan();
-        refresh(userID, course);
+        refresh();
     });
     
     $("#testUpload").click(function(){
         uploadTest();
-        refresh(userID, course);
+        refresh();
     });
     
     $("#enroll").click(function(){
         enroll();
-        refresh(userID, course);;
+        refresh();
     });
     
     $('#errorItem').click(function(){
-
         $('#errorItem').fadeOut(100);
     });
     
@@ -119,7 +112,7 @@ function updateCourseInfo() {
 }
 
 function uploadTest() {
-    
+
     // questions are organized by id ex: q1, q2
     $("#q1 .question").val("THIS IS HOW TO SET A QUESTION???");
     // get the answer from database
@@ -150,102 +143,53 @@ function updatePlan() {
     return false;
 }
 
-function refresh(userID, course) {
-    
-    console.log(userID);
-    
-    var username = userID.toString(); // get name froms server using userID
-    
-    $("#name").text("Hello! " + username);    
-    
-    var courseName = course;
-    var startTime = "9";
-    var courseIns = username;
-    
-    // dummy values
-//    $(".course").append(course);
-//    $(".cName").append(courseName);
-//    $(".depart").append(courseDept);
-//    $(".cSemester").append(courseSem);
-//    $(".preReq").append(coursePreReq);
-//    $(".instructor").append(courseIns);
-//    $(".numStudents").append(courseNumStuds);
-//    $(".cAvg").append(courseAvg);
-        
-        
-    
-    // dummy action plan
+function refresh() {
+
+    populateCourse();
+
     populateActionPlan();
-    
-    // dummy knowledge test
     populateTest();
-    
-    
-    // edit course fields ===============================================
-    // ==================================================================
-    
-    $(".courseName").val(courseName);
-    $(".startTime").val(startTime);
-    $(".courseIns").val(courseIns);
-    
-    $(".inpTitle").attr('size', $(".inpTitle").val().length);    
-    
-}
-
-function getUserID() {
-    
-    var params = document.URL.split("?");
-    var userID = "";
-    if (params.length > 1) {
-        var conds = params[1].split("&");
-        for (var i = 0; i < conds.length; i++) {
-            var data = conds[i].split("=");
-            if (data[0] === "id") {
-                userID = data[1];
-            }
-        }
-    }
-    
-    return userID;
-}
-
-function isNewCourse() {
-    
-    var params = document.URL.split("?");
-    var isNewCourse = false;
-    if (params.length > 1) {
-        var conds = params[1].split("&");
-        for (var i = 0; i < conds.length; i++) {
-            var data = conds[i].split("=");
-            if (data[0] === "new") {
-                isNewCourse = true;
-            }
-        }
-    }
-    
-    return isNewCourse;
-}
-
-function getCourse() {
-    
-    var params = document.URL.split("?");
-    var course = "";
-    if (params.length > 1) {
-        var conds = params[1].split("&");
-        for (var i = 0; i < conds.length; i++) {
-            var data = conds[i].split("=");
-            if (data[0] === "course") {
-                course = data[1];
-            }
-        }
-    }
-    
-    return course;
 }
 
 function error(message) {
     $('#errorItem span').text(message);
     $('#errorItem').fadeIn(500);
+}
+
+function populateCourse() {
+    if (id != "new_course") {
+        var endPoint = baseUrl + "/api/v1/course/"
+        $.ajax({
+            type: "GET",
+            url: endPoint,
+            data: {},
+            success: function(data){
+                for (var i = 0; i < data.objects.length; i++) {
+                    console.log(data.objects);
+                    if (data.objects[i].id == id) {
+                        $(".courseName").val(data.objects[i].course_name);
+                        $(".startTime").val(data.objects[i].start_time);
+                        $(".courseIns").val(atob(auth).split(":")[0]);
+                        $("#courseDone").val(data.objects[i].done);
+
+                        $(".inpTitle").val(data.objects[i].course_name)
+                        $(".inpTitle").attr('size', $(".inpTitle").val().length);
+
+                        break;
+                    }
+                }
+            },
+            error: function(data){
+                error("无法找到课程，请返回后刷新重试");
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + atob(auth));
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
 }
 
 function exampleListToElement() {
@@ -269,7 +213,7 @@ function getUrl() {
     return location.protocol + "//" + location.hostname + (location.port && ":" + location.port);
 }
 
-function getAuth() {
+function getAuthAndID() {
     var params = document.URL.split("/");
-    return atob(params[params.length - 1]);
+    return [params[params.length - 2], params[params.length - 1]];
 }
