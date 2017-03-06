@@ -1,6 +1,6 @@
 $(document).ready(function(){
     
-    
+    var baseUrl = getUrl();
     
     // disable zooming in and zoomign out
     $(document).keydown(function(event) {
@@ -33,6 +33,7 @@ $(document).ready(function(){
        $("#logout").animate(function() {
            $("#logout").css("background-color:#4ECDC4;");
        });
+        // CHANGE THISSS BACKKC
        setTimeout(function(){window.location.href = "courses.html?id="+userID}); 
     }); 
     
@@ -251,7 +252,7 @@ function exampleListToElement() {
     // list of sutend name I want to add to a predefined <ol> within dashboard.html
     var dummyStudents = ["Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar"];
     
-    
+
     // first loop through the list
     for (var i = 0; i < dummyStudents.length; i++){
         // construct html tag for the current student with class='student'
@@ -262,4 +263,13 @@ function exampleListToElement() {
         // $("#studentList").html(tag) will replace the entire list with tag
     }
     
+}
+
+function getUrl() {
+    return location.protocol + "//" + location.hostname + (location.port && ":" + location.port);
+}
+
+function getAuth() {
+    var params = document.URL.split("/");
+    return atob(params[params.length - 1]);
 }
