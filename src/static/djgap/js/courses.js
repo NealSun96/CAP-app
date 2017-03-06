@@ -41,6 +41,7 @@ $(document).ready(function() {
     })
     
     $(".logout").click(function() {
+        localStorage.removeItem('auth');
         setTimeout(function(){window.location.href = baseUrl + "/index.html"});
     });
 });

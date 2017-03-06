@@ -1,10 +1,10 @@
 
 $(document).ready(function() {
-    
+    var baseUrl = getUrl();
     var key = 'auth';
-    
+
     var loginAuth = localStorage.getItem(key);
-    if (loginAuth != "") {
+    if (loginAuth != null) {
         setTimeout(function() {window.location.href=baseUrl+"/courses/" + loginAuth;});
     }
     
