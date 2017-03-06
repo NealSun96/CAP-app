@@ -21,19 +21,19 @@ $(document).ready(function() {
         data: {},
         success: function(data){
             for (var i = 0; i < data.objects.length; i++) {
-                var btn = "<li><a href=\"" + baseUrl + "/dashboard/" + data.objects[i].id + "\">" + "<button class=\"cbtn\"><span>" + data.objects[i].course_name + "</span></button></a></li>"
+                var btn = "<li><a href=\"" + baseUrl + "/dashboard/"+auth+"/"+data.objects[i].id + "\"><button class=\"cbtn\"><span>" + data.objects[i].course_name + "</span></button></a></li>"
                 $("#list").append(btn);
             }
 
             // add the create new course button
-            var btn = "<li><a href=\"" + baseUrl + "/dashboard\"><button class=\"cbtn crCourse\"><span>新建课程</span></button></a></li>"
+            var btn = "<li><a href=\"" + baseUrl + "/dashboard/"+auth+"/new_course\"><button class=\"cbtn crCourse\"><span>新建课程</span></button></a></li>"
             $("#list").append(btn);
         },
         error: function(data){
             error();
         },
         beforeSend: function(xhr){
-            xhr.setRequestHeader("Authorization", "Apikey " + auth);
+            xhr.setRequestHeader("Authorization", "Apikey " + atob(auth));
             xhr.setRequestHeader("Content-Type", "application/json");
         },
         complete: function(){
@@ -47,7 +47,7 @@ $(document).ready(function() {
 
 function getAuth() {
     var params = document.URL.split("/");
-    return atob(params[params.length - 1]);
+    return params[params.length - 1];
 }
 
 function getUrl() {

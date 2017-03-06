@@ -26,7 +26,7 @@ from djgap.corsresource import CorsResourceBase
 class CourseResource(CorsResourceBase, ModelResource):
     class Meta:
         queryset = Course.objects.all()
-        fields = ["id", "course_name", "start_time"]
+        fields = ["id", "course_name", "start_time", "done"]
         allowed_method = ['get']
         resource_name = 'course'
         authorization = DjangoAuthorization()

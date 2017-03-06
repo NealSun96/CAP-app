@@ -1,7 +1,10 @@
+var baseUrl = getUrl();
+var params = getAuthAndID();
+var auth = params[0];
+var id = params[1];
+
 $(document).ready(function(){
-    
-    var baseUrl = getUrl();
-    
+
     // disable zooming in and zoomign out
     $(document).keydown(function(event) {
     if (event.ctrlKey==true && (event.which == '61' || event.which == '107' || event.which == '173' || event.which == '109'  || event.which == '187'  || event.which == '189'  ) ) {
@@ -19,10 +22,7 @@ $(document).ready(function(){
        }
     });
     
-    var userID = getUserID();
-    var course = getCourse();
-    
-    refresh(userID, course);
+    refresh();
     
     $("#refresh").click(function(){setTimeout(function(){window.location.href = document.URL;});});
     
@@ -45,24 +45,24 @@ $(document).ready(function(){
     
     $("#courseSave").click(function(){
         updateCourseInfo();
-        refresh(userID, course);
+        refresh();
         // example use of error bar
         error("ERROR SAVING COURSE DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA ");
     });
     
     $("#planSave").click(function(){
         updatePlan();
-        refresh(userID, course);
+        refresh();
     });
     
     $("#testUpload").click(function(){
         uploadTest();
-        refresh(userID, course);
+        refresh();
     });
     
     $("#enroll").click(function(){
         enroll();
-        refresh(userID, course);;
+        refresh();
     });
     
     $('#errorItem').click(function(){
@@ -81,7 +81,7 @@ function updateCourseInfo() {
 }
 
 function uploadTest() {
-    
+
     // questions are organized by id ex: q1, q2
     $("#q1 .question").val("THIS IS HOW TO SET A QUESTION???");
     // get the answer from database
@@ -102,92 +102,53 @@ function updatePlan() {
     return false;
 }
 
-function refresh(userID, course) {
-    
-    console.log(userID);
-    
-    var username = userID.toString(); // get name froms server using userID
-    
-    $("#name").text("Hello! " + username);    
-    
-    var courseName = "SOME COURSE NAME";
-    var startTime = "WINTER 2017";
-    var courseIns = username;
-    
-    // dummy values
-//    $(".course").append(course);
-//    $(".cName").append(courseName);
-//    $(".depart").append(courseDept);
-//    $(".cSemester").append(courseSem);
-//    $(".preReq").append(coursePreReq);
-//    $(".instructor").append(courseIns);
-//    $(".numStudents").append(courseNumStuds);
-//    $(".cAvg").append(courseAvg);
-        
-        
-    
-    // dummy action plan
-    var actionPlan = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-    $(".actPlan").text(actionPlan);
+function refresh() {
+
+    populateCourse();
     
     // dummy knowledge test
     populateTest();
-    
-    
-    // edit course fields ===============================================
-    // ==================================================================
-    
-    $(".courseName").val(courseName);
-    $(".startTime").val(startTime);
-    $(".courseIns").val(courseIns);
-    
-    $(".inpTitle").attr('size', $(".inpTitle").val().length);
-    
-    // edit action plan =================================================
-    // ===================================================================
-    $("#actionPlanEdit").val(actionPlan);
-    $("#actionPlanEdit").css({"-webkit-box-sizing":"border-box", "-moz-box-sizing": "border-box", "box-sizing": "border-box"});
-    
-    
-}
-
-function getUserID() {
-    
-    var params = document.URL.split("?");
-    var userID = "";
-    if (params.length > 1) {
-        var conds = params[1].split("&");
-        for (var i = 0; i < conds.length; i++) {
-            var data = conds[i].split("=");
-            if (data[0] === "id") {
-                userID = data[1];
-            }
-        }
-    }
-    
-    return userID;
-}
-
-function getCourse() {
-    
-    var params = document.URL.split("?");
-    var course = "";
-    if (params.length > 1) {
-        var conds = params[1].split("&");
-        for (var i = 0; i < conds.length; i++) {
-            var data = conds[i].split("=");
-            if (data[0] === "course") {
-                course = data[1];
-            }
-        }
-    }
-    
-    return course;
 }
 
 function error(message) {
     $('#errorItem span').text(message);
     $('#errorItem').fadeIn(500);
+}
+
+function populateCourse() {
+    if (id != "new_course") {
+        var endPoint = baseUrl + "/api/v1/course/"
+        $.ajax({
+            type: "GET",
+            url: endPoint,
+            data: {},
+            success: function(data){
+                for (var i = 0; i < data.objects.length; i++) {
+                    console.log(data.objects);
+                    if (data.objects[i].id == id) {
+                        $(".courseName").val(data.objects[i].course_name);
+                        $(".startTime").val(data.objects[i].start_time);
+                        $(".courseIns").val(atob(auth).split(":")[0]);
+                        $("#courseDone").val(data.objects[i].done);
+
+                        $(".inpTitle").val(data.objects[i].course_name)
+                        $(".inpTitle").attr('size', $(".inpTitle").val().length);
+
+                        break;
+                    }
+                }
+            },
+            error: function(data){
+                error("无法找到课程，请返回后刷新重试");
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + atob(auth));
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
 }
 
 function populateTest() {
@@ -216,7 +177,7 @@ function getUrl() {
     return location.protocol + "//" + location.hostname + (location.port && ":" + location.port);
 }
 
-function getAuth() {
+function getAuthAndID() {
     var params = document.URL.split("/");
-    return atob(params[params.length - 1]);
+    return [params[params.length - 2], params[params.length - 1]];
 }
