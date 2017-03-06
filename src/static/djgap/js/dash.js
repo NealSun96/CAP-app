@@ -19,10 +19,13 @@ $(document).ready(function(){
        }
     });
     
+    var newCourse = isNewCourse();
     var userID = getUserID();
     var course = getCourse();
     
-    refresh(userID, course);
+    if (!newCourse) {
+        refresh(userID, course);
+    }
     
     $("#refresh").click(function(){setTimeout(function(){window.location.href = document.URL;});});
     
@@ -30,22 +33,44 @@ $(document).ready(function(){
        $("#logout").animate(function() {
            $("#logout").css("background-color:#4ECDC4;");
        });
-       setTimeout(function(){window.location.href = "index.html"}); 
+       setTimeout(function(){window.location.href = "courses.html?id="+userID}); 
     }); 
+    
+    
+    if (newCourse) {
+        console.log("hellolololololo");
+        $("#1 span").text("NEW COURSE");
+        $("#2").addClass("blocked");
+        $("#3").addClass("blocked");
+        $("#4").addClass("blocked");
+        $("#5").addClass("blocked");
+    } else {
+        $(".menuItem").click(function(){
+            if (!$(".menuItem").hasClass('.error')){
+                $(".menuItem").removeClass("menuItemActive");
+                $(".data").removeClass("active");
+                var id = $(this).attr('id');
+                $("#data"+id).addClass("active");
+                $(this).addClass("menuItemActive");
+            }
+        });
 
-    $(".menuItem").click(function(){
-        if (!$(".menuItem").hasClass('.error')){
-            $(".menuItem").removeClass("menuItemActive");
-            $(".data").removeClass("active");
-            var id = $(this).attr('id');
-            $("#data"+id).addClass("active");
-            $(this).addClass("menuItemActive");
-        }
+    }
+    
+    $('.startTime').each(function() {
+        
+        $(this).timepicker({});
     });
     
     $("#courseSave").click(function(){
-        updateCourseInfo();
-        refresh(userID, course);
+        
+        if (!newCourse) {
+            updateCourseInfo();
+            refresh(userID, course);
+        } else {
+            course = $(".courseName").val();
+            setTimeout(function(){window.location.href = document.URL.split("?")[0]+"?id="+userID+"&course="+course;});
+        }
         // example use of error bar
         error("ERROR SAVING COURSE DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA ");
     });
@@ -66,6 +91,7 @@ $(document).ready(function(){
     });
     
     $('#errorItem').click(function(){
+
         $('#errorItem').fadeOut(100);
     });
     
@@ -98,6 +124,16 @@ function uploadTest() {
     return false;
 }
 
+function populateTest() {
+    
+    
+}
+
+function populateActionPlan() {
+    
+    
+}
+
 function updatePlan() {
     return false;
 }
@@ -110,8 +146,8 @@ function refresh(userID, course) {
     
     $("#name").text("Hello! " + username);    
     
-    var courseName = "SOME COURSE NAME";
-    var startTime = "WINTER 2017";
+    var courseName = course;
+    var startTime = "9";
     var courseIns = username;
     
     // dummy values
@@ -127,8 +163,7 @@ function refresh(userID, course) {
         
     
     // dummy action plan
-    var actionPlan = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-    $(".actPlan").text(actionPlan);
+    populateActionPlan();
     
     // dummy knowledge test
     populateTest();
@@ -141,13 +176,7 @@ function refresh(userID, course) {
     $(".startTime").val(startTime);
     $(".courseIns").val(courseIns);
     
-    $(".inpTitle").attr('size', $(".inpTitle").val().length);
-    
-    // edit action plan =================================================
-    // ===================================================================
-    $("#actionPlanEdit").val(actionPlan);
-    $("#actionPlanEdit").css({"-webkit-box-sizing":"border-box", "-moz-box-sizing": "border-box", "box-sizing": "border-box"});
-    
+    $(".inpTitle").attr('size', $(".inpTitle").val().length);    
     
 }
 
@@ -166,6 +195,23 @@ function getUserID() {
     }
     
     return userID;
+}
+
+function isNewCourse() {
+    
+    var params = document.URL.split("?");
+    var isNewCourse = false;
+    if (params.length > 1) {
+        var conds = params[1].split("&");
+        for (var i = 0; i < conds.length; i++) {
+            var data = conds[i].split("=");
+            if (data[0] === "new") {
+                isNewCourse = true;
+            }
+        }
+    }
+    
+    return isNewCourse;
 }
 
 function getCourse() {
@@ -188,11 +234,6 @@ function getCourse() {
 function error(message) {
     $('#errorItem span').text(message);
     $('#errorItem').fadeIn(500);
-}
-
-function populateTest() {
-    
-    
 }
 
 function exampleListToElement() {

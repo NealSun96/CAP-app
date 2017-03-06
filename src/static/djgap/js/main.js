@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    //error();
+    
     $('.invalid').click(function(){
         $('.invalid').fadeOut(100); 
     });
@@ -7,7 +9,7 @@ $(document).ready(function(){
 function validate()
 {
     // call error if login fails
-    // error();
+    //error();
     var username = document.forms["login"]["username"].value;
     var password = document.forms["login"]["password"].value;
     
