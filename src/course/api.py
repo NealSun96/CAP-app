@@ -217,7 +217,7 @@ class CourseResource(CorsResourceBase, ModelResource):
                 q.question.question_body = post_q.get('question_body')
                 answer_keys = post_q.get('answer_keys')
                 if len(answer_keys) != len(set(answer_keys)):
-                    raise ImmediateHttpResponse(HttpBadRequest(u'问题：%s 之中含有重复的选项' % post_q.get('question_body')))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'问题：\"%s\"之中含有重复的选项' % post_q.get('question_body')))
                 q.question.answer_keys = json.dumps(answer_keys)
                 q.question.right_answer = post_q.get('right_answer')
                 q.question.save()
@@ -226,7 +226,7 @@ class CourseResource(CorsResourceBase, ModelResource):
             for post_q in post_questions[len(questions):]:
                 answer_keys = post_q.get('answer_keys')
                 if len(answer_keys) != len(set(answer_keys)):
-                    raise ImmediateHttpResponse(HttpBadRequest(u'问题：%s 之中含有重复的选项' % post_q.get('question_body')))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'问题：\"%s\"之中含有重复的选项' % post_q.get('question_body')))
                 new_question = Question(question_body=post_q.get('question_body'),
                                         answer_keys=json.dumps(answer_keys),
                                         right_answer=post_q.get('right_answer'))
@@ -247,12 +247,12 @@ class CourseResource(CorsResourceBase, ModelResource):
 
         user_group = request.user.groups.first().name
         if user_group != "teacher":
-            raise ImmediateHttpResponse(HttpBadRequest('Not a teacher'))
+            raise ImmediateHttpResponse(HttpBadRequest('您的用户权限不属于教师，无法进行该操作'))
 
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
         deserialized = self.deserialize(request, request.body,
                                         format=request.META.get('CONTENT_TYPE', 'application/json'))
@@ -264,17 +264,16 @@ class CourseResource(CorsResourceBase, ModelResource):
             _, str = file_data.split(';base64,')
             file_data = base64.b64decode(str)
         else:
-            raise ImmediateHttpResponse(HttpBadRequest('Bad file'))
+            raise ImmediateHttpResponse(HttpBadRequest('该文件无法被阅读'))
         rows = file_data.split("\n")
         rows = [x for x in rows if x != ""]
         for row in rows:
             try:
                 user = User.objects.get(username=row)
             except User.DoesNotExist:
-                raise ImmediateHttpResponse(HttpBadRequest('Username %s does not exist' % row))
-            for e in Enrollment.objects.filter(user=user).filter(course=course).all():
-                e.delete()
-            Enrollment(user=user, course=course, start_time=course.start_time).save()
+                raise ImmediateHttpResponse(HttpBadRequest(u'无法找到与%s匹配的用户' % row))
+            if not Enrollment.objects.filter(user=user).filter(course=course).filter(start_time=course.start_time).all():
+                Enrollment(user=user, course=course, start_time=course.start_time).save()
         object_list = {
             'objects': len(rows),
         }
@@ -287,12 +286,12 @@ class CourseResource(CorsResourceBase, ModelResource):
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
-        context = "\n".join(enroll.user.username for enroll in course.enrollment_set.all())
-
+        data = [enroll.user.get_full_name() + ", " + enroll.user.username for enroll in course.enrollment_set.all()]
+        data.sort()
         object_list = {
-            'objects': context
+            'objects': data
         }
         return self.create_response(request, object_list)
 

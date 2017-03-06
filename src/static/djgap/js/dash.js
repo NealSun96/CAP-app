@@ -7,6 +7,8 @@ var new_course = id == "new_course";
 var ap_tier = "manager";
 var kt_tier = "manager";
 
+var reader  = new FileReader();
+
 
 $(document).ready(function(){
     // disable zooming in and zoomign out
@@ -104,10 +106,6 @@ $(document).ready(function(){
     
     
 });
-
-function enroll() {
-    return false;
-}
 
 function editCourse() {
     var endPoint;
@@ -224,11 +222,42 @@ function editTest() {
     })
 }
 
+function enroll() {
+    var file = $('#studentFile').prop('files')[0];
+    reader.onload = receivedText;
+    reader.readAsDataURL(file);
+    function receivedText() {
+        var endPoint = baseUrl + "/api/v1/course/enroll_students/" + id + "/";
+        console.log(reader.result);
+        $.ajax({
+            type: "POST",
+            url: endPoint,
+            data: JSON.stringify({
+                file: reader.result
+            }),
+            dataType: "json",
+            success: function(data){
+                refresh();
+            },
+            error: function(data){
+                error(data.responseText);
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
+}
+
 
 function refresh() {
     populateCourse();
     populateActionPlan();
     populateKnowledgeTest();
+    populateEnrolls();
 }
 
 function error(message) {
@@ -337,6 +366,34 @@ function populateKnowledgeTest() {
                         $("#q" + (i+1) + " .option" + (j+1)).prop('checked', false);
                     }
                     $("#q" + (i+1) + " .score").val("");
+                }
+            },
+            error: function(data){
+                error(data.responseText);
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
+}
+
+function populateEnrolls() {
+//    <input  type="text" class="inputField courseAvg ronly" value="">
+    if (!new_course) {
+        var endPoint = baseUrl + "/api/v1/course/get_enrolled/"+ id + "/";
+        $.ajax({
+            type: "GET",
+            url: endPoint,
+            data: {},
+            success: function(data){
+                $("#studList").empty();
+                for (var i = 0; i < data.objects.length; i++) {
+                    var tag = "<li >" + data.objects[i] + "</li>";
+                    $("#studList").append(tag);
                 }
             },
             error: function(data){
