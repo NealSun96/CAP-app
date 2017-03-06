@@ -25,20 +25,7 @@
     <body>
         <div id="content">
                         
-            <div id="navTop">
-                <div class="left">
-                    <div class="logo">
-                        <span></span>
-                    </div>
-                    <h1 id="title" class="course"><input  type="text" class="inputField courseCode inpTitle" value="" readonly></h1>
-                </div>
-                <div class="right">
-                    <div id="logout">
-                        <img id="logoutBtn" src="https://cdn2.iconfinder.com/data/icons/picons-essentials/57/logout-512.png" width="50px" height="50px">
-                    </div>
-                </div>
-                
-            </div>
+            
             <div id="navLeft">
                 <button id="refresh"><span>REFRESH</span></button>
                 <br>
@@ -48,12 +35,23 @@
                 <button id="4" class="menuItem"><span>ENROLL STUDENT</span></button> 
                 <button id="5" class="menuItem"><span>CALCULATE DATA</span></button> 
             </div>
+            <div id="navTop">
+                <div class="left">
+                    <h1 id="title" class="course"><input  type="text" class="inputField courseCode inpTitle" value="" readonly></h1>
+                </div>
+                <div class="right">
+                    <div id="logout">
+                        <img id="logoutBtn" src="https://cdn2.iconfinder.com/data/icons/picons-essentials/57/logout-512.png" width="50px" height="50px">
+                    </div>
+                </div>
+                
+            </div>
             <div id="info">
                 <div id="errorItem"><span></span></div>
                 <div id="data1" class="data active">
                     <div id="courseInfo" class="card">
                         <h2 class="field"><span class="cLabel">COURSE NAME:</span><input  type="text" class="inputField courseName" value=""></h2>
-                        <h2 class="field"><span class="cLabel">START TIME:</span><input  type="text" class="inputField startTime timepicker-without-dropdown" value=""></h2>
+                        <h2 class="field"><span class="cLabel">START TIME:</span><input  type="text" class="inputField startTime" value=""> <input  type="text" class="inputField startDate" value=""></h2>
                         <h2 class="field"><span class="cLabel">INSTRUCTOR:</span><input  type="text" class="inputField courseIns" value=""></h2>
                         <h2 class="field" for="checkbox"><span class="cLabel">DONE</span><input id='courseDone' class="checkBox" type="checkbox"></h2>
                     </div>
