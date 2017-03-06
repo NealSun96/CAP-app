@@ -4,6 +4,7 @@ var auth = params[0];
 var id = params[1];
 
 $(document).ready(function(){
+    var new_course = id == "new_course";
 
     // disable zooming in and zoomign out
     $(document).keydown(function(event) {
@@ -21,8 +22,10 @@ $(document).ready(function(){
        event.preventDefault();
        }
     });
-    
-    refresh();
+
+    if (!new_course) {
+        refresh();
+    }
     
     $("#refresh").click(function(){setTimeout(function(){window.location.href = document.URL;});});
     
@@ -30,23 +33,40 @@ $(document).ready(function(){
        $("#logout").animate(function() {
            $("#logout").css("background-color:#4ECDC4;");
        });
-       setTimeout(function(){window.location.href = baseUrl + "index.html"});
+       setTimeout(function(){window.location.href = base_url + "/courses/"+auth});
     }); 
 
-    $(".menuItem").click(function(){
-        if (!$(".menuItem").hasClass('.error')){
-            $(".menuItem").removeClass("menuItemActive");
-            $(".data").removeClass("active");
-            var id = $(this).attr('id');
-            $("#data"+id).addClass("active");
-            $(this).addClass("menuItemActive");
-        }
+    
+    if (new_course) {
+        $("#1 span").text("NEW COURSE");
+        $("#2").addClass("blocked");
+        $("#3").addClass("blocked");
+        $("#4").addClass("blocked");
+        $("#5").addClass("blocked");
+    } else {
+        $(".menuItem").click(function(){
+            if (!$(".menuItem").hasClass('.error')){
+                $(".menuItem").removeClass("menuItemActive");
+                $(".data").removeClass("active");
+                var id = $(this).attr('id');
+                $("#data"+id).addClass("active");
+                $(this).addClass("menuItemActive");
+            }
+        });
+
+    }
+    
+    $('.startTime').each(function() {
+        
+        $(this).timepicker({});
     });
     
     $("#courseSave").click(function(){
-        updateCourseInfo();
-        refresh();
-        // example use of error bar
+        if (new_course) {
+            setTimeout(function(){window.location.href = baseUrl + "/dashboard/"+auth+"/"+id;});
+        }
+        else refresh();
+
         error("ERROR SAVING COURSE DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA ");
     });
     
@@ -67,6 +87,17 @@ $(document).ready(function(){
     
     $('#errorItem').click(function(){
         $('#errorItem').fadeOut(100);
+    });
+    
+    // tier listners
+    // action plan
+    $('#data2 select').on('change', function() {
+        alert( this.value );
+    });
+    
+    // knowledge test plan
+    $('#data3 select').on('change', function() {
+        alert( this.value + "test" );
     });
     
     
@@ -98,6 +129,16 @@ function uploadTest() {
     return false;
 }
 
+function populateTest() {
+    
+    
+}
+
+function populateActionPlan() {
+    
+    
+}
+
 function updatePlan() {
     return false;
 }
@@ -105,8 +146,8 @@ function updatePlan() {
 function refresh() {
 
     populateCourse();
-    
-    // dummy knowledge test
+
+    populateActionPlan();
     populateTest();
 }
 
@@ -149,11 +190,6 @@ function populateCourse() {
             }
         })
     }
-}
-
-function populateTest() {
-    
-    
 }
 
 function exampleListToElement() {

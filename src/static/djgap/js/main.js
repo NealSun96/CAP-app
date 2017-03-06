@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
 $("#submit").click(function() {
     var username = document.forms["login"]["username"].value;
@@ -36,3 +37,4 @@ function error() {
 function getUrl() {
     return location.protocol + "//" + location.hostname + (location.port && ":" + location.port);
 }
+
