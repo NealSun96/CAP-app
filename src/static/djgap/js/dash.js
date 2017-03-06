@@ -95,6 +95,17 @@ $(document).ready(function(){
         $('#errorItem').fadeOut(100);
     });
     
+    // tier listners
+    // action plan
+    $('#data2 select').on('change', function() {
+        alert( this.value );
+    });
+    
+    // knowledge test plan
+    $('#data3 select').on('change', function() {
+        alert( this.value + "test" );
+    });
+    
     
 });
 
