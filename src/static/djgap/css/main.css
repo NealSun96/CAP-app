@@ -10,7 +10,7 @@ html, body {
 #container {
     position: fixed;
     width: 340px;
-    height: 280px;
+    height: auto;
     top: 50%;
     left: 50%;
     margin-top: -140px;
@@ -18,6 +18,7 @@ html, body {
 	background: #fff;
     border-radius: 3px;
     border: 1px solid #ccc;
+    //border-bottom: 5px solid #000;
     box-shadow: 1px 4px 15px 1px rgba(0, 0, 0, .25);
 	
 }
@@ -41,7 +42,7 @@ p a {
     float: right;
     margin-top: -13px;
     margin-right: 20px;
- -webkit-transition: all .4s ease;
+    -webkit-transition: all .4s ease;
     -moz-transition: all .4s ease;
     transition: all .4s ease;
 }
