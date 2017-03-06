@@ -32,17 +32,16 @@ html, body {
 }
 
 #navTop {
-    width: 100%;
+    width: 85%;
     height: 10%;
     background-color: #556270;
-    -webkit-box-shadow: 6px 14px 16px -11px rgba(0,0,0,0.75);
-    -moz-box-shadow: 6px 14px 16px -11px rgba(0,0,0,0.75);
-    box-shadow: 6px 14px 16px -11px rgba(0,0,0,0.75);
+    
+    float: left;
 }
 
 #navLeft{
     width:15%;
-    height:90%; 
+    height:100%; 
     background: #556270;
     float: left;
 }
@@ -63,31 +62,6 @@ html, body {
     width: 50%;
     float: right;
     height: 100%;   
-}
-
-.logo {
-    padding: 0;
-    margin: 0;
-    width: 30%;
-    background-color: #4ECDC4;
-    height: 100%;
-    float: left;
-
-}
-
-.logo img {
-    padding: 0;
-    margin: 0;
-    
-}
-.logo span {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    display:flex;
-    align-items: center;
-    justify-content: center;
 }
 
 #title {
@@ -160,7 +134,7 @@ html, body {
     background-color:#2caba2;
     border: 0px solid #000000;
     border-radius: 0;
-    margin-bottom: 40px;
+    margin-bottom: 58px;
 }
 
 #refresh span {
@@ -696,5 +670,9 @@ li {
 .blocked span:hover {
     background-color: #333;
     
+}
+
+.startTime, .startDate {
+    width: 25%;
 }
 

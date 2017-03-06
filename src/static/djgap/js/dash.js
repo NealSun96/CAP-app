@@ -61,6 +61,11 @@ $(document).ready(function(){
         $(this).timepicker({});
     });
     
+    $('.startDate').each(function() {
+        
+        $(this).datepicker();
+    });
+    
     $("#courseSave").click(function(){
         if (new_course) {
             setTimeout(function(){window.location.href = baseUrl + "/dashboard/"+auth+"/"+id;});
