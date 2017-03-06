@@ -75,13 +75,11 @@ $(document).ready(function(){
     });
     
     $("#planSave").click(function(){
-        updatePlan();
-        refresh();
+        editPlan();
     });
     
     $("#testUpload").click(function(){
-        uploadTest();
-        refresh();
+        editTest();
     });
     
     $("#enroll").click(function(){
@@ -96,10 +94,12 @@ $(document).ready(function(){
     // tier listners
     $('#data2 select').on('change', function() {
         ap_tier = this.value;
+        refresh();
     });
 
     $('#data3 select').on('change', function() {
         kt_tier = this.value
+        refresh();
     });
     
     
@@ -147,42 +147,88 @@ function editCourse() {
     })
 }
 
-function uploadTest() {
+function editPlan() {
+    var endPoint = baseUrl + "/api/v1/course/edit_assignments/"
+    + id + "/action_plan/" + ap_tier + "/";
+    var points = [];
+    $("#data2 li input").each(function() { if ($(this).val() != "") {points.push($(this).val())} });
+    var data = {
+            "action_points": points
+        }
+    $.ajax({
+        type: "POST",
+        url: endPoint,
+        data: JSON.stringify(data),
+        dataType: "json",
+        success: function(data){
+            refresh();
+        },
+        error: function(data){
+            error(data.responseText);
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("Authorization", "Apikey " + auth);
+            xhr.setRequestHeader("Content-Type", "application/json");
+        },
+        complete: function(){
+        }
+    })
+}
 
-    // questions are organized by id ex: q1, q2
-    $("#q1 .question").val("THIS IS HOW TO SET A QUESTION???");
-    // get the answer from database
-    var answer = 2;
-    // so the answer is option 2
-    if ($("#q1 .option2").prop('checked')) {
-        console.log("correct");
-    } else {
-        console.log("incorrect");
+function editTest() {
+    var endPoint = baseUrl + "/api/v1/course/edit_assignments/"
+    + id + "/knowledge_test/" + kt_tier + "/";
+    var questions = [];
+
+    for (var i = 0; i < 10; i++) {
+        var qbody = $("#q" + (i+1) + " .question").val();
+
+        if (qbody == "") continue;
+
+        var qscore = $("#q" + (i+1) + " .score").val();
+        var qkeys = [];
+        var qrightanswer = "";
+        for (var j = 0; j < 4; j++) {
+            qkeys.push($("#q" + (i+1) + " .opt" + (j+1)).val());
+            if ($("#q" + (i+1) + " .option" + (j+1)).prop('checked')) {
+                qrightanswer = $("#q" + (i+1) + " .opt" + (j+1)).val();
+            }
+        }
+        questions.push({
+            "question_body": qbody,
+            "score": qscore,
+            "answer_keys": qkeys,
+            "right_answer": qrightanswer,
+        })
     }
-    // to set the answer for q2 option2
-    $("#q1 .opt2").val("NEW OPTION")
-    
-    return false;
+    var data = {
+            "questions": questions
+        }
+    $.ajax({
+        type: "POST",
+        url: endPoint,
+        data: JSON.stringify(data),
+        dataType: "json",
+        success: function(data){
+            refresh();
+        },
+        error: function(data){
+            error(data.responseText);
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("Authorization", "Apikey " + auth);
+            xhr.setRequestHeader("Content-Type", "application/json");
+        },
+        complete: function(){
+        }
+    })
 }
 
-function populateTest() {
-    
-    
-}
-
-function populateActionPlan() {
-    
-    
-}
-
-function updatePlan() {
-    return false;
-}
 
 function refresh() {
     populateCourse();
     populateActionPlan();
-    populateTest();
+    populateKnowledgeTest();
 }
 
 function error(message) {
@@ -199,7 +245,6 @@ function populateCourse() {
             data: {},
             success: function(data){
                 for (var i = 0; i < data.objects.length; i++) {
-                    console.log(data.objects);
                     if (data.objects[i].id == id) {
                         $(".courseName").val(data.objects[i].course_name);
                         var time = data.objects[i].start_time
@@ -217,6 +262,85 @@ function populateCourse() {
             },
             error: function(data){
                 error("无法找到课程，请返回后刷新重试");
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
+}
+
+function populateActionPlan() {
+    if (!new_course) {
+        var endPoint = baseUrl + "/api/v1/course/get_assignments/"
+        + id + "/action_plan/" + ap_tier;
+        $.ajax({
+            type: "GET",
+            url: endPoint,
+            data: {},
+            success: function(data){
+                var i = 0;
+                var points = data.objects[0].action_points;
+                for (; points != null && i < points.length; i++) {
+                    $("#act" + (i+1)).val(points[i]);
+                }
+                for (; i < 10; i++) {
+                    $("#act" + (i+1)).val("");
+                }
+            },
+            error: function(data){
+                error(data.responseText);
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
+}
+
+function populateKnowledgeTest() {
+    if (!new_course) {
+        var endPoint = baseUrl + "/api/v1/course/get_assignments/"
+        + id + "/knowledge_test/" + kt_tier;
+        $.ajax({
+            type: "GET",
+            url: endPoint,
+            data: {},
+            success: function(data){
+                var i = 0;
+                var questions = data.objects[0].questions
+                for (; questions != null && i < questions.length; i++) {
+                    var question = questions[i];
+                    $("#q" + (i+1) + " .question").val(question.question);
+                    for (var j = 0; j < question.answer_keys.length; j++) {
+                        var answer_key = question.answer_keys[j]
+                        $("#q" + (i+1) + " .opt" + (j+1)).val(answer_key);
+                        if (answer_key == question.right_answer) {
+                            $("#q" + (i+1) + " .option" + (j+1)).prop('checked', true);
+                        }
+                        else {
+                            $("#q" + (i+1) + " .option" + (j+1)).prop('checked', false);
+                        }
+                    }
+                    $("#q" + (i+1) + " .score").val(question.score);
+                }
+                for ( ;i < 10; i++) {
+                    $("#q" + (i+1) + " .question").val("");
+                    for (var j = 0; j < 4; j++) {
+                        $("#q" + (i+1) + " .opt" + (j+1)).val("");
+                        $("#q" + (i+1) + " .option" + (j+1)).prop('checked', false);
+                    }
+                    $("#q" + (i+1) + " .score").val("");
+                }
+            },
+            error: function(data){
+                error(data.responseText);
             },
             beforeSend: function(xhr){
                 xhr.setRequestHeader("Authorization", "Apikey " + auth);

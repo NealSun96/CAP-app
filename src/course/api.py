@@ -127,16 +127,16 @@ class CourseResource(CorsResourceBase, ModelResource):
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
         accepted_levels = set(EmployeeTitle.TITLE_PERMS.keys()) - {EmployeeTitle.TITLE_TEACHER, EmployeeTitle.TITLE_UNKNOWN}
         a_level = kwargs['level']
         if a_level not in accepted_levels:
-            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment level'))
+            raise ImmediateHttpResponse(HttpBadRequest('错误的学员等级'))
 
         a_type = kwargs['type']
         if a_type not in ['action_plan', 'knowledge_test']:
-            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment type'))
+            raise ImmediateHttpResponse(HttpBadRequest('错误的作业类型'))
 
         objects = []
         if a_type == 'action_plan':
@@ -174,12 +174,12 @@ class CourseResource(CorsResourceBase, ModelResource):
 
         user_group = request.user.groups.first().name
         if user_group != "teacher":
-            raise ImmediateHttpResponse(HttpBadRequest('Not a teacher'))
+            raise ImmediateHttpResponse(HttpBadRequest('您的用户权限不属于教师，无法进行该操作'))
 
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
         deserialized = self.deserialize(request, request.body,
                                         format=request.META.get('CONTENT_TYPE', 'application/json'))
@@ -189,35 +189,35 @@ class CourseResource(CorsResourceBase, ModelResource):
         accepted_levels = set(EmployeeTitle.TITLE_PERMS.keys()) - {EmployeeTitle.TITLE_TEACHER, EmployeeTitle.TITLE_UNKNOWN}
         a_level = kwargs['level']
         if a_level not in accepted_levels:
-            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment level'))
+            raise ImmediateHttpResponse(HttpBadRequest('错误的学员等级'))
 
         a_type = kwargs['type']
         if a_type not in ['action_plan', 'knowledge_test']:
-            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment type'))
+            raise ImmediateHttpResponse(HttpBadRequest('错误的作业类型'))
 
         if a_type == 'action_plan':
             if len(bundle.data.get('action_points')) != len(set(bundle.data.get('action_points'))):
-                raise ImmediateHttpResponse(HttpBadRequest('Duplicate action points'))
+                raise ImmediateHttpResponse(HttpBadRequest('存在重复的action point'))
             try:
                 action_plan = ActionPlan.objects.get(course=course, level=a_level)
-                action_plan.action_points = bundle.data.get('action_points')
+                action_plan.action_points = json.dumps(bundle.data.get('action_points'))
                 action_plan.save()
             except ActionPlan.DoesNotExist:
-                ActionPlan(course=course, level=a_level, action_points=bundle.data.get('action_points')).save()
+                ActionPlan(course=course, level=a_level, action_points=json.dumps(bundle.data.get('action_points'))).save()
         elif a_type == 'knowledge_test':
             try:
                 knowledge_test = KnowledgeTest.objects.get(course=course, level=a_level)
             except KnowledgeTest.DoesNotExist:
                 knowledge_test = KnowledgeTest(course=course, level=a_level, time_span=0)
                 knowledge_test.save()
-            post_questions = json.loads(bundle.data.get('questions'))
+            post_questions = bundle.data.get('questions')
             questions = knowledge_test.questionordered_set.all()
             for q, post_q in zip(questions, post_questions):
                 q.score = post_q.get('score')
                 q.question.question_body = post_q.get('question_body')
                 answer_keys = post_q.get('answer_keys')
                 if len(answer_keys) != len(set(answer_keys)):
-                    raise ImmediateHttpResponse(HttpBadRequest('Duplicate answer keys in %s' % post_q.get('question_body')))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'问题：%s 之中含有重复的选项' % post_q.get('question_body')))
                 q.question.answer_keys = json.dumps(answer_keys)
                 q.question.right_answer = post_q.get('right_answer')
                 q.question.save()
@@ -226,7 +226,7 @@ class CourseResource(CorsResourceBase, ModelResource):
             for post_q in post_questions[len(questions):]:
                 answer_keys = post_q.get('answer_keys')
                 if len(answer_keys) != len(set(answer_keys)):
-                    raise ImmediateHttpResponse(HttpBadRequest('Duplicate answer keys in %s' % post_q.get('question_body')))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'问题：%s 之中含有重复的选项' % post_q.get('question_body')))
                 new_question = Question(question_body=post_q.get('question_body'),
                                         answer_keys=json.dumps(answer_keys),
                                         right_answer=post_q.get('right_answer'))
