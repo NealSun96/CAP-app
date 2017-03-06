@@ -40,6 +40,11 @@ $(document).ready(function() {
         $('#login').removeClass("hidden");
         $('#registerForm').addClass("hidden");
     });
+    
+    $("#cancelReg").click(function(){
+        $('#login').removeClass("hidden");
+        $('#registerForm').addClass("hidden");
+    });
 
 });
 
