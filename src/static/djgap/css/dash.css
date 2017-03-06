@@ -29,6 +29,7 @@ html, body {
     overflow-x: auto;
     overflow-y: auto;
     overflow-y: auto;
+    position: fixed;
 }
 
 #navTop {
@@ -284,7 +285,7 @@ li {
 
 
 .cLabel {
-    width: 45%;
+    width: 30%;
     height: 100%;
     padding-left: 20px;
     margin-right: 20px;
@@ -673,6 +674,7 @@ li {
 }
 
 .startTime, .startDate {
-    width: 25%;
+    width: 24.5%;
+    min-width: 24%;
 }
 

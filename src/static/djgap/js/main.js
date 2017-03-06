@@ -1,8 +1,17 @@
 
 $(document).ready(function() {
+    
+    var key = 'auth';
+    
+    var loginAuth = localStorage.getItem(key);
+    if (loginAuth != "") {
+        setTimeout(function() {window.location.href=baseUrl+"/courses/" + loginAuth;});
+    }
+    
     $('.invalid').click(function(){clearError();});
     
     $("#submit").click(function() {
+        
         var username = document.forms["login"]["username"].value;
         var password = document.forms["login"]["password"].value;
         var encodedString = btoa(username + ":" + password)
@@ -14,6 +23,9 @@ $(document).ready(function() {
             data: {},
             success: function(data){
                 var auth = username + ":" + data.objects[0].api_key;
+                if ($("#signedIn").prop('checked')) {
+                    localStorage.setItem(key,btoa(auth));
+                }
                 setTimeout(function() {window.location.href=baseUrl+"/courses/" + btoa(auth);});
             },
             error: function(data){
