@@ -4,18 +4,22 @@
     <head>
         <title>DashBoard</title>
         <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-        <link rel="stylesheet" href="{% static 'djgap/css/jquery.timepicker.min.css' %}">
+<!--        <link rel="stylesheet" href="{% static 'djgap/css/jquery.timepicker.min.css' %}">-->
+        <link rel="stylesheet" href="../../static/djgap/css/jquery.timepicker.min.css">
         
-        <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/dash.css' %}">
+<!--        <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/dash.css' %}">-->
+        <link rel="stylesheet" type="text/css" href="../../static/djgap/css/dash.css">
         
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         
-        <script src="{% static 'djgap/js/dash.js' %}"></script>
+<!--        <script src="{% static 'djgap/js/dash.js' %}"></script>-->
+        <script src="../../static/djgap/js/dash.js"></script>
         <script
 			  src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"
 			  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
 			  crossorigin="anonymous"></script>
-        <script src="{% static 'djgap/js/jquery.timepicker.min.js' %}"></script>
+<!--        <script src="{% static 'djgap/js/jquery.timepicker.min.js' %}"></script>-->
+        <script src="../../static/djgap/js/jquery.timepicker.min.js"></script>
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </head>
@@ -203,10 +207,46 @@
                     <button id="enroll" class="saveBtn">ENROLL</button>
                 </div>
                 <div id="data5" class="data">
+<!--
                     <div class="card">
                         <h2 class="field"><span class="cLabel">CLASS AVERAGE:</span><input  type="text" class="inputField courseAvg ronly" value=""></h2>
                         <h2 class="field"><span class="cLabel">CLASS MEDIAN:</span><input  type="text" class="inputField classMedian ronly" value=""></h2>
                         <h2 class="field"><span class="cLabel"># STUDENTS:</span><input  type="text" class="inputField courseNumStuds ronly" value=""></h2>
+                    </div>
+-->
+                    <div class="card">
+                        <table id="dataTable">
+                          <tr>
+                            <td class="cell header">HEADER 0-0</td>
+                            <td class="cell header">HEADER 0-1</td>
+                            <td class="cell header">HEADER 0-2</td>
+                          </tr>
+                          <tr>
+                            <td class="cell header">HEADER 1-0</td>
+                            <td class="cell">DATA 0-0</td>
+                            <td class="cell">DATA 0-1</td>
+                          </tr>
+                          <tr>
+                            <td class="cell header">HEADER 2-0</td>
+                            <td class="cell">DATA 1-0</td>
+                            <td class="cell">DATA 1-1</td>
+                          </tr>
+                          <tr>
+                            <td class="cell header">HEADER 3-0</td>
+                            <td class="cell">DATA 2-0</td>
+                            <td class="cell">DATA 2-1</td>
+                          </tr>
+                          <tr>
+                            <td class="cell header">HEADER 4-0</td>
+                            <td class="cell">DATA 3-0</td>
+                            <td class="cell">DATA 3-1</td>
+                          </tr>
+                          <tr>
+                            <td class="cell header">HEADER 5-0</td>
+                            <td class="cell">DATA 4-0</td>
+                            <td class="cell">DATA 4-1</td>
+                          </tr>
+                        </table>
                     </div>
                     <button id="calculateData" class="saveBtn">CALCULATE DATA</button>
                 </div>
