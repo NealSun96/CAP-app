@@ -1,6 +1,6 @@
+var baseUrl = getUrl();
 
 $(document).ready(function() {
-    var baseUrl = getUrl();
     var key = 'auth';
 
     var loginAuth = localStorage.getItem(key);
@@ -11,7 +11,6 @@ $(document).ready(function() {
     $('.invalid').click(function(){clearError();});
     
     $("#submit").click(function() {
-        
         var username = document.forms["login"]["username"].value;
         var password = document.forms["login"]["password"].value;
         var encodedString = btoa(username + ":" + password)
@@ -29,7 +28,7 @@ $(document).ready(function() {
                 setTimeout(function() {window.location.href=baseUrl+"/courses/" + btoa(auth);});
             },
             error: function(data){
-                error();
+                error("错误的用户名或密码");
             },
             beforeSend: function(xhr){
                 xhr.setRequestHeader("Authorization", "Basic " + encodedString);
@@ -48,12 +47,12 @@ $(document).ready(function() {
     });
     
     $("#registerForm #regBtn").click(function(){
+        clearError();
         registerUser();
-        $('#login').removeClass("hidden");
-        $('#registerForm').addClass("hidden");
     });
     
     $("#cancelReg").click(function(){
+        clearError();
         $('#login').removeClass("hidden");
         $('#registerForm').addClass("hidden");
     });
@@ -62,8 +61,39 @@ $(document).ready(function() {
 
 
 function registerUser() {
-    
-    // do register stuff
+    var firstName = document.forms["registerForm"]["firstName"].value;
+    var lastName = document.forms["registerForm"]["lastName"].value;
+    var username = document.forms["registerForm"]["regUsername"].value;
+    var password = document.forms["registerForm"]["regPassword"].value;
+    var endPoint = baseUrl + "/api/v1/register/?format=json";
+    var data = {
+            "first_name": firstName,
+            "last_name": lastName,
+            "username": username,
+            "password": password
+        }
+    $.ajax({
+        type: "POST",
+        url: endPoint,
+        data: JSON.stringify(data),
+        dataType: "html",
+        success: function(data){
+            $('#firstName').val("");
+            $('#lastName').val("");
+            $('#regUsername').val("");
+            $('#regPassword').val("");
+            $('#login').removeClass("hidden");
+            $('#registerForm').addClass("hidden");
+        },
+        error: function(data){
+            error(JSON.parse(data.responseText).error);
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("Content-Type", "application/json");
+        },
+        complete: function(){
+        }
+    })
 }
 
 function clearError() {
@@ -71,7 +101,8 @@ function clearError() {
     
 }
 
-function error() {
+function error(message) {
+    $('.invalid').text(message);
     $('.invalid').fadeIn(400);
 }
 

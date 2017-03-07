@@ -4,17 +4,15 @@
     <head>
         <title>Login</title>
         <link rel="stylesheet" type="text/css" href = "{% static 'djgap/css/main.css' %}">
-<!--        <link rel="stylesheet" type="text/css" href = "../../static/djgap/css/main.css">-->
-        
+
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         
         <script type="text/javascript" src="{% static 'djgap/js/main.js' %}"></script>
-<!--        <script type="text/javascript" src="../../static/djgap/js/main.js"></script>-->
     </head>
     
     <body>
         <div id="container" class="active">
-            <div class="invalid">Incorrect Username/Password!</div>
+            <div class="invalid"><span></span></div>
             <form id="login" method="" onsubmit="">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>

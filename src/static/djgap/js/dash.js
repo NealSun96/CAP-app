@@ -83,10 +83,13 @@ $(document).ready(function(){
     $("#testUpload").click(function(){
         editTest();
     });
-    
+
     $("#enroll").click(function(){
         enroll();
-        refresh();
+    });
+
+    $("#calculateData").click(function(){
+        calculateData();
     });
     
     $('#errorItem').click(function(){
@@ -111,7 +114,7 @@ function editCourse() {
     var endPoint;
     if (new_course) endPoint = baseUrl + "/api/v1/course/add_course/";
     else endPoint = baseUrl + "/api/v1/course/edit_course/" + id + "/";
-    var start_time = $('.startDate').val() + "T"+$('.startTime').val()+"+08:00";
+    var start_time = $('#courseStartDate').val() + "T"+$('#courseStartTime').val()+"+08:00";
     var data = {
             "course_name": $(".courseName").val(),
             "start_time": start_time,
@@ -252,6 +255,50 @@ function enroll() {
     }
 }
 
+function calculateData() {
+    var endPoint = baseUrl + "/api/v1/course/get_data/"+ id +"/";
+    var start_time = $('#dataStartDate').val() + "T"+$('#dataStartTime').val()+"+08:00";
+    var end_time = $('#dataEndDate').val() + "T"+$('#dataEndTime').val()+"+08:00";
+
+    var data = {
+            "start_time": start_time,
+            "end_time": end_time
+        }
+    $.ajax({
+        type: "POST",
+        url: endPoint,
+        data: JSON.stringify(data),
+        dataType: "json",
+        success: function(data){
+            console.log(data);
+            var all = data.objects[0];
+            var manager = data.objects[1];
+            var nonmanager = data.objects[2];
+            console.log(all);
+            console.log(manager);
+            console.log(nonmanager);
+            for (var i = 0; i < all.length; i++) {
+                $("#"+i+"0").html(all[i]);
+            }
+            for (i = 0; i < manager.length; i++) {
+                $("#"+i+"1").html(manager[i]);
+            }
+            for (i = 0; i < nonmanager.length; i++) {
+                $("#"+i+"2").html(nonmanager[i]);
+            }
+        },
+        error: function(data){
+            error(data.responseText);
+        },
+        beforeSend: function(xhr){
+            xhr.setRequestHeader("Authorization", "Apikey " + auth);
+            xhr.setRequestHeader("Content-Type", "application/json");
+        },
+        complete: function(){
+        }
+    })
+}
+
 
 function refresh() {
     populateCourse();
@@ -277,8 +324,8 @@ function populateCourse() {
                     if (data.objects[i].id == id) {
                         $(".courseName").val(data.objects[i].course_name);
                         var time = data.objects[i].start_time
-                        $(".startTime").val(time.split("T")[1]);
-                        $(".startDate").val(time.split("T")[0]);
+                        $("#courseStartTime").val(time.split("T")[1]);
+                        $("#courseStartDate").val(time.split("T")[0]);
                         $(".courseIns").val(teacher);
                         $("#courseDone").prop('checked', data.objects[i].done);
 
@@ -382,7 +429,6 @@ function populateKnowledgeTest() {
 }
 
 function populateEnrolls() {
-//    <input  type="text" class="inputField courseAvg ronly" value="">
     if (!new_course) {
         var endPoint = baseUrl + "/api/v1/course/get_enrolled/"+ id + "/";
         $.ajax({
@@ -390,10 +436,13 @@ function populateEnrolls() {
             url: endPoint,
             data: {},
             success: function(data){
-                $("#studList").empty();
+                $("#studentList tr").remove();
+                $("#studentList").append("<tr ><td class=\"cell header\">姓名</td><td class=\"cell header\">用户名</td><td class=\"cell header\">职位</td></tr>");
                 for (var i = 0; i < data.objects.length; i++) {
-                    var tag = "<li >" + data.objects[i] + "</li>";
-                    $("#studList").append(tag);
+                    var tag = "<tr ><td class=\"cell\">" + data.objects[i][0] +
+                    "</td><td class=\"cell\">" + data.objects[i][1] +
+                    "</td><td class=\"cell\">" + data.objects[i][2] + "</td></tr>";
+                    $("#studentList").append(tag);
                 }
             },
             error: function(data){
@@ -407,23 +456,6 @@ function populateEnrolls() {
             }
         })
     }
-}
-
-function exampleListToElement() {
-    // list of sutend name I want to add to a predefined <ol> within dashboard.html
-    var dummyStudents = ["Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar","Wilfred Derosier","Robyn Uyehara","Niesha Newbill","Analisa Hugo","Oralee Massingale","Setsuko Kotter","Patrica Sansone","Alice Leyba","Erica Donlan","Idell Callaway","Shoshana Killinger","TashaKaylor","Luella Pearson","Ricki Siegel","Heidy Jarrard","Irena Range","Brigette Perrin","Lawrence Caskey","Roberto Mcdaniel","Vaughn Tessier","ChinaColwell","Meda Rainville","Kellye Dollar"];
-    
-
-    // first loop through the list
-    for (var i = 0; i < dummyStudents.length; i++){
-        // construct html tag for the current student with class='student'
-        var tag = "<li class='student'>" + dummyStudents[i] + "</li>"
-        // apend it to the the sturent list using its iD
-        $("#studentList").append(tag);
-        // append will add tag to the end of the student list
-        // $("#studentList").html(tag) will replace the entire list with tag
-    }
-    
 }
 
 function getUrl() {

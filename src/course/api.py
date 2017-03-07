@@ -288,7 +288,8 @@ class CourseResource(CorsResourceBase, ModelResource):
         except ObjectDoesNotExist:
             raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
-        data = [enroll.user.get_full_name() + ", " + enroll.user.username for enroll in course.enrollment_set.all()]
+        data = [[enroll.user.get_full_name(), enroll.user.username, enroll.user.groups.first().name if enroll.user.groups.first() else "N/A"]
+                for enroll in course.enrollment_set.all() if enroll.start_time == course.start_time]
         data.sort()
         object_list = {
             'objects': data
@@ -316,15 +317,13 @@ class CourseResource(CorsResourceBase, ModelResource):
             .filter(start_time__lte=end_time)
 
         # KT average, KT completion days, KT time, D self improved rate, D completion days, D both improved rate
-        data_dict = {
-            "All": self.calc_data(enrollments)
-        }
+        data_list = [self.calc_data(enrollments)]
         for title in EmployeeTitle.TITLE_PERMS.keys():
             if title not in [EmployeeTitle.TITLE_TEACHER, EmployeeTitle.TITLE_UNKNOWN]:
-                data_dict[title] = self.calc_data(enrollments.filter(user__groups__name=title))
+                data_list.append(self.calc_data(enrollments.filter(user__groups__name=title)))
 
         object_list = {
-            'objects': data_dict
+            'objects': data_list
         }
         return self.create_response(request, object_list)
 
@@ -350,4 +349,4 @@ class CourseResource(CorsResourceBase, ModelResource):
                 d_count += 1
 
         return [x / kt_count if kt_count > 0 else "N/A" for x in [kt_total_first_score, kt_total_days, kt_total_time]]\
-               + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve, d_total_days, d_all_improve]]
+               + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve, d_all_improve, d_total_days]]

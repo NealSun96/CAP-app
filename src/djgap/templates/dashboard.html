@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <link rel="stylesheet" href="{% static 'djgap/css/jquery.timepicker.min.css' %}">
 <!--        <link rel="stylesheet" href="../../static/djgap/css/jquery.timepicker.min.css">-->
-        
+
         <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/dash.css' %}">
 <!--        <link rel="stylesheet" type="text/css" href="../../static/djgap/css/dash.css">-->
         
@@ -53,7 +53,7 @@
                 <div id="data1" class="data active">
                     <div id="courseInfo" class="card">
                         <h2 class="field"><span class="cLabel">COURSE NAME:</span><input  type="text" class="inputField courseName" value=""></h2>
-                        <h2 class="field"><span class="cLabel">START TIME:</span><input  type="text" class="inputField startTime" value=""> <input  type="text" class="inputField startDate" value=""></h2>
+                        <h2 class="field"><span class="cLabel">START TIME:</span><input  type="text" id="courseStartTime" class="inputField startTime" value=""> <input  type="text" id="courseStartDate" class="inputField startDate" value=""></h2>
                         <h2 class="field"><span class="cLabel">INSTRUCTOR:</span><input  type="text" class="inputField courseIns" value=""></h2>
                         <h2 class="field" for="checkbox"><span class="cLabel">DONE</span><input id='courseDone' class="checkBox" type="checkbox"></h2>
                     </div>
@@ -201,54 +201,65 @@
                     <div class="card">
                         <h2 class="field"><span class="cLabel">ADD ENROLL FILE:</span><input type="file" id='studentFile' accept="*/*"/></h2>
                         <h2 class="field"><span class="cLabel">ENROLLED STUDENTS:</span></h2>
-                        <ol id="studList">
-                        </ol>
+
+                        <table class="dataTable" id="studentList">
+                        </table>
                     </div>
                     <button id="enroll" class="saveBtn">ENROLL</button>
                 </div>
                 <div id="data5" class="data">
-<!--
                     <div class="card">
-                        <h2 class="field"><span class="cLabel">CLASS AVERAGE:</span><input  type="text" class="inputField courseAvg ronly" value=""></h2>
-                        <h2 class="field"><span class="cLabel">CLASS MEDIAN:</span><input  type="text" class="inputField classMedian ronly" value=""></h2>
-                        <h2 class="field"><span class="cLabel"># STUDENTS:</span><input  type="text" class="inputField courseNumStuds ronly" value=""></h2>
+                        <h2 class="field">&nbsp;&nbsp;&nbsp;数据范围：输入开课时间的范围，以覆盖需要统计的所有记录</h2>
+                        <h2 class="field"><span class="cLabel">开始时间</span><input  type="text" id="dataStartTime" class="inputField startTime" value=""> <input type="text" id="dataStartDate" class="inputField startDate" value=""></h2>
+                        <h2 class="field"><span class="cLabel">结束时间</span><input  type="text" id="dataEndTime" class="inputField startTime" value=""> <input type="text" id="dataEndDate" class="inputField startDate" value=""></h2>
                     </div>
--->
+                    <button id="calculateData" class="saveBtn">计算数据</button>
                     <div class="card">
-                        <table id="dataTable">
+                        <table class="dataTable">
                           <tr>
-                            <td class="cell header">HEADER 0-0</td>
-                            <td class="cell header">HEADER 0-1</td>
-                            <td class="cell header">HEADER 0-2</td>
+                            <td class="cell header"></td>
+                            <td class="cell header">全部学员</td>
+                            <td class="cell header">经理学员</td>
+                            <td class="cell header">非经理学员</td>
                           </tr>
                           <tr>
-                            <td class="cell header">HEADER 1-0</td>
-                            <td class="cell">DATA 0-0</td>
-                            <td class="cell">DATA 0-1</td>
+                            <td class="cell header">Knowledge Test 平均初次得分</td>
+                            <td class="cell" id="00"></td>
+                            <td class="cell" id="01"></td>
+                            <td class="cell" id="02"></td>
                           </tr>
                           <tr>
-                            <td class="cell header">HEADER 2-0</td>
-                            <td class="cell">DATA 1-0</td>
-                            <td class="cell">DATA 1-1</td>
+                            <td class="cell header">Knowledge Test 平均完成天数</td>
+                            <td class="cell" id="10"></td>
+                            <td class="cell" id="11"></td>
+                            <td class="cell" id="12"></td>
                           </tr>
                           <tr>
-                            <td class="cell header">HEADER 3-0</td>
-                            <td class="cell">DATA 2-0</td>
-                            <td class="cell">DATA 2-1</td>
+                            <td class="cell header">Knowledge Test 平均完成秒数</td>
+                            <td class="cell" id="20"></td>
+                            <td class="cell" id="21"></td>
+                            <td class="cell" id="22"></td>
                           </tr>
                           <tr>
-                            <td class="cell header">HEADER 4-0</td>
-                            <td class="cell">DATA 3-0</td>
-                            <td class="cell">DATA 3-1</td>
+                            <td class="cell header">Diagnosis 自我诊断明显进步比例</td>
+                            <td class="cell" id="30"></td>
+                            <td class="cell" id="31"></td>
+                            <td class="cell" id="32"></td>
                           </tr>
                           <tr>
-                            <td class="cell header">HEADER 5-0</td>
-                            <td class="cell">DATA 4-0</td>
-                            <td class="cell">DATA 4-1</td>
+                            <td class="cell header">Diagnosis 共同诊断明显进步比例</td>
+                            <td class="cell" id="40"></td>
+                            <td class="cell" id="41"></td>
+                            <td class="cell" id="42"></td>
+                          </tr>
+                          <tr>
+                            <td class="cell header">Diagnosis 平均完成天数</td>
+                            <td class="cell" id="50"></td>
+                            <td class="cell" id="51"></td>
+                            <td class="cell" id="52"></td>
                           </tr>
                         </table>
                     </div>
-                    <button id="calculateData" class="saveBtn">CALCULATE DATA</button>
                 </div>
             </div>
             
