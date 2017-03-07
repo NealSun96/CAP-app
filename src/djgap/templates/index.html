@@ -4,22 +4,38 @@
     <head>
         <title>Login</title>
         <link rel="stylesheet" type="text/css" href = "{% static 'djgap/css/main.css' %}">
+
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        
         <script type="text/javascript" src="{% static 'djgap/js/main.js' %}"></script>
     </head>
     
     <body>
-
         <div id="container" class="active">
+            <div class="invalid"><span></span></div>
             <form id="login" method="" onsubmit="">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
                 <div id="lower">
-                    <input type="checkbox"><label class="check" for="checkbox">Keep me logged in</label>
-                    <!--<input type="hidden" name="redirect" value="courses.html"> -->
+                    <input type="checkbox" id="signedIn"><label class="check" for="checkbox">Keep me logged in</label>
                     <input type="button" id="submit" value="Login">
+                    <input type="button" id="register" value="Register">
+                </div>
+            </form>
+            <form id="registerForm" method="" onsubmit="" class="hidden">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+                <label for="username">Username:</label>
+                <input type="text" id="regUsername" name="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="regPassword" name="password" required>
+                <div id="lower">
+                    <input type="button" id="regBtn" value="Register">
+                    <input type="button" id="cancelReg" value="Cancel">
                 </div>
             </form>
         </div>

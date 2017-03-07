@@ -25,20 +25,24 @@ html, body {
     padding: 0;
     margin: 0;
     position: fixed;
+    overflow: scroll;
+    overflow-x: auto;
+    overflow-y: auto;
+    overflow-y: auto;
+    position: fixed;
 }
 
 #navTop {
-    width: 100%;
+    width: 85%;
     height: 10%;
     background-color: #556270;
-    -webkit-box-shadow: 6px 14px 16px -11px rgba(0,0,0,0.75);
-    -moz-box-shadow: 6px 14px 16px -11px rgba(0,0,0,0.75);
-    box-shadow: 6px 14px 16px -11px rgba(0,0,0,0.75);
+    
+    float: left;
 }
 
 #navLeft{
     width:15%;
-    height:90%; 
+    height:100%; 
     background: #556270;
     float: left;
 }
@@ -59,31 +63,6 @@ html, body {
     width: 50%;
     float: right;
     height: 100%;   
-}
-
-.logo {
-    padding: 0;
-    margin: 0;
-    width: 30%;
-    background-color: #4ECDC4;
-    height: 100%;
-    float: left;
-
-}
-
-.logo img {
-    padding: 0;
-    margin: 0;
-    
-}
-.logo span {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    display:flex;
-    align-items: center;
-    justify-content: center;
 }
 
 #title {
@@ -151,12 +130,12 @@ html, body {
     padding: 0;
     margin: 0;
     width: 100%;
-    height: 40px;
+    height: 10%;
     transition: all 0.5s;
     background-color:#2caba2;
     border: 0px solid #000000;
     border-radius: 0;
-    margin-bottom: 40px;
+    margin-bottom: 58px;
 }
 
 #refresh span {
@@ -215,6 +194,11 @@ html, body {
     border-radius: 0;
 }
 
+li {
+    
+    margin: 10px;
+}
+
 .menuItem span {
     margin: 0;
     padding: 0;
@@ -232,6 +216,7 @@ html, body {
     align-items: center;
     //justify-content: center; 
     padding-left: 3%;
+    text-align: left;
     
 }
 
@@ -249,7 +234,7 @@ html, body {
     display: none;
     color: black;
     width: 99%;
-    height: 98%;
+    height: auto;
 }
 
 .active {
@@ -271,9 +256,7 @@ html, body {
     padding: 1%;
     margin-top: 1%;
     margin-left: 1%;
-    -webkit-box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
-    -moz-box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
-    box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
+    
 }
 
 
@@ -281,15 +264,28 @@ html, body {
     padding: 0;
     margin: 10px;
     padding: 20px;
-    width: 46.5%;
+    width: 98%;
     padding-left: 0;
     float: left;
     color: #555; 
-    border-bottom: 2px solid #aaa;
+    //border-bottom: 2px solid #aaa;
 }
 
+.checkBox {
+    
+    margin: 0;
+    padding: 0;
+    -ms-transform: scale(2); /* IE */
+    -moz-transform: scale(2); /* FF */
+    -webkit-transform: scale(2); /* Safari and Chrome */
+    -o-transform: scale(2); /* Opera */
+    margin-left: 5px;
+    
+}
+
+
 .cLabel {
-    width: 45%;
+    width: 30%;
     height: 100%;
     padding-left: 20px;
     margin-right: 20px;
@@ -298,34 +294,26 @@ html, body {
     float: left;
 }
 
-#actionPlan {
-    float: left;
-    width: 73%;
-    height: 28%;
-    background-color: #f0f0f0;
-    padding: 1%;
-    margin-top: 1%;
-    margin-left: 1%;
-    overflow: scroll;
-}
 
-#actionPlan .cLabel {
-    transition: all 0.5s;
-    width: 90%;
-    padding-bottom: 20px;
-    float: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-    margin-left: 20px;
-
-}
-
-#actionPlan .actPlan {
-    padding-left: 20px;
-    margin-left: 20px;
-    width: 90;
-    line-height: 150%
+#data2 .inputField {
+    width: 99%;
         
+}
+
+#data2 .cLabel {
+    width: auto;
+}
+
+#data3 .cLabel {
+    width: auto;
+}
+
+.dropdown {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    width: 10%;
+    padding-left: 10px;
+    margin-left: 20px;
 }
 
 #test {
@@ -478,6 +466,7 @@ html, body {
 .inputField {
     font-size: 14pt;   
     padding: 2px;
+    width: 50%; 
 }
 
 .ronly {
@@ -501,7 +490,7 @@ html, body {
     transition: all 0.1s;
     margin: 20px;
     width: 25%;
-    height: 8%;
+    height: 50px;
     border: none;
     font-size: 14pt;
     background-color: #FF6B6B;
@@ -522,19 +511,19 @@ html, body {
 
 .card {
 
-    height: 45%;
+    height: auto;
+    min-height: 200px;
     background-color: #dddddd;
     padding: 1%;
     margin-top: 1%;
     margin-left: 1%;
-    -webkit-box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
-    -moz-box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
-    box-shadow: 16px 2px 26px -13px rgba(0,0,0,0.75);
+    
     float: none;
     width: 95%;
     overflow: scroll;
     overflow-x: auto;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .card .field {
@@ -543,7 +532,8 @@ html, body {
 }
 
 .card textarea {
-    height: 80%;
+    height: 100%;
+    min-height: 200px;
     width: 96%;
     margin-left: 20px;
     margin-right: 20px;
@@ -574,3 +564,157 @@ html, body {
    padding-left: 20px;
 }
 
+#title .inputField {
+    width: auto;
+    min-width: 350px;
+}
+
+#errorItem {
+    padding: 0;
+    margin: 0;
+    width: 96%;
+    min-height: 40px;
+    height: auto;   
+    transition: all 0.5s;
+    background-color:#662332;
+    border: 0px solid #000000;
+    border-radius: 0;
+    display: none;
+    margin-top: 20px;
+    margin-left: 28px;
+}
+
+#errorItem span {
+    margin: 0;
+    padding: 0;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+    color: aliceblue;
+    font-family: colab;
+    font-size: 12pt;
+    letter-spacing: 3pt;
+    width: 97%;
+    height: 100%;
+    display:flex;
+    align-items: center;
+    //justify-content: center; 
+    padding-left: 3%;
+    word-wrap: break-word;
+    
+}
+
+#errorItem:hover{
+    filter: invert(100%);
+}
+
+.question {
+    
+    width: 98%;
+    padding: 5px;
+    margin: 5px;
+}
+
+.answer {
+    
+    margin-left: 20px;
+    width: 93%;
+}
+
+#data3 .checkbox {
+    margin-left: 20px;
+}
+
+#data3 .inputField {
+    font-size: 9pt;
+}
+
+#data3 .card {
+    
+    overflow: scroll;
+    max-height: 100%;
+    height: 85%;
+}
+
+#data3 {
+    max-height: 100%;
+    height: 100%;
+    height: 95%;
+    padding: 0;
+    margin: 0;
+}
+
+#studentFile {
+    
+    width: 50%;
+    height: 30px;
+}
+
+#data4 .cLabel {
+    
+    width: auto;
+    margin-right: 100px;
+}
+
+.blocked {
+    background-color: #333;
+    
+}
+
+.blocked:hover {
+    background-color: #333;
+    
+}
+.blocked span:hover {
+    background-color: #333;
+    
+}
+
+.startTime, .startDate {
+    width: 24.5%;
+    min-width: 24%;
+}
+
+.score {
+    width: 5%;
+    min-width: 5%;
+}
+
+.dataTable {
+    transition: all 0.5s;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border-radius: 10px;
+}
+
+.cell {
+    
+    padding: 25px;
+    font-size: 16pt;
+    border: 1px solid #555;
+    margin: 0;
+    background-color: #ddd;
+}
+
+.header {
+    transition: all 0.5s;
+    background-color: #556270;
+    color: aliceblue;
+    font-family: colab;  
+    color: #eee;
+    -webkit-font-smoothing: antialiased;
+    font-size: 20pt;
+    //border-radius: 10px;
+    //border-bottom-left-radius: 0;
+   //  border-bottom-right-radius: 0;
+}
+
+tr:hover .cell{
+    transition: all 0.5s;
+    filter: invert(100%);
+    filter: hue-rotate(100%);
+}

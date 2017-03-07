@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import json
 import base64
-import pytz
 
 from django.core.files.base import ContentFile
 from django.core.exceptions import ObjectDoesNotExist
@@ -26,7 +27,7 @@ from djgap.corsresource import CorsResourceBase
 class CourseResource(CorsResourceBase, ModelResource):
     class Meta:
         queryset = Course.objects.all()
-        fields = ["id", "course_name", "start_time"]
+        fields = ["id", "course_name", "start_time", "done"]
         allowed_method = ['get']
         resource_name = 'course'
         authorization = DjangoAuthorization()
@@ -51,29 +52,29 @@ class CourseResource(CorsResourceBase, ModelResource):
         self.is_authenticated(request)
         user_group = request.user.groups.first().name
         if user_group != "teacher":
-            raise ImmediateHttpResponse(HttpBadRequest('Not a teacher'))
+            raise ImmediateHttpResponse(HttpBadRequest('您的用户权限不属于教师，无法进行该操作'))
 
         deserialized = self.deserialize(request, request.body,
                                         format=request.META.get('CONTENT_TYPE', 'application/json'))
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
 
-        teacher = bundle.data.get('teacher')
+        teacher = request.user
         if bundle.data.get('teacher') != bundle.request.user.username:
             try:
                 other_teacher = User.objects.get(username=bundle.data.get('teacher'))
                 other_teacher_group = other_teacher.groups.first().name
                 if other_teacher_group != "teacher":
-                    raise ImmediateHttpResponse(HttpBadRequest('Assigned teacher is not a teacher'))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'%s的用户权限不属于教师' % bundle.data.get('teacher')))
             except ObjectDoesNotExist:
-                raise ImmediateHttpResponse(HttpNotFound('Assigned teacher does not exist'))
+                raise ImmediateHttpResponse(HttpNotFound(u'无法找到与%s匹配的用户' % bundle.data.get('teacher')))
             teacher = other_teacher
 
-        time = pytz.timezone('Asia/Shanghai').localize(bundle.data.get('start_time'))
+        course = Course(course_name=bundle.data.get('course_name'), start_time=bundle.data.get('start_time'),
+                        teacher=teacher, done=bundle.data.get('done'))
+        course.save()
 
-        Course(course_name=bundle.data.get('course_name'), start_time=time, teacher=teacher).save()
-
-        return self.create_response(request, {})
+        return self.create_response(request, {"id": course.id, "teacher": course.teacher.username})
 
     def edit_course(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
@@ -81,13 +82,12 @@ class CourseResource(CorsResourceBase, ModelResource):
 
         user_group = request.user.groups.first().name
         if user_group != "teacher":
-            raise ImmediateHttpResponse(HttpBadRequest('Not a teacher'))
+            raise ImmediateHttpResponse(HttpBadRequest('您的用户权限不属于教师，无法进行该操作'))
 
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
-
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
         deserialized = self.deserialize(request, request.body,
                                         format=request.META.get('CONTENT_TYPE', 'application/json'))
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
@@ -98,25 +98,27 @@ class CourseResource(CorsResourceBase, ModelResource):
                 other_teacher = User.objects.get(username=bundle.data.get('teacher'))
                 other_teacher_group = other_teacher.groups.first().name
                 if other_teacher_group != "teacher":
-                    raise ImmediateHttpResponse(HttpBadRequest('Assigned teacher is not a teacher'))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'%s的用户权限不属于教师' % bundle.data.get('teacher')))
             except ObjectDoesNotExist:
-                raise ImmediateHttpResponse(HttpNotFound('Assigned teacher does not exist'))
+                raise ImmediateHttpResponse(HttpNotFound(u'无法找到与%s匹配的用户' % bundle.data.get('teacher')))
             course.teacher = other_teacher
 
         course.course_name = bundle.data.get('course_name')
-        course.start_time = pytz.timezone('Asia/Shanghai').localize(bundle.data.get('start_time'))
+        course.start_time = bundle.data.get('start_time')
         course.done = bundle.data.get('done')
 
-        image_data = bundle.data.get('picture')
-        if isinstance(image_data, basestring) and image_data.startswith('data:image'):
-            format, imgstr = image_data.split(';base64,')
-            ext = format.split('/')[-1]
-            course.picture = ContentFile(base64.b64decode(imgstr), name=str(course.id) + '.' + ext)
-        else:
-            raise ImmediateHttpResponse(HttpBadRequest('Bad picture'))
+        # Image uploading is disabled for now
+        if False:
+            image_data = bundle.data.get('picture')
+            if isinstance(image_data, basestring) and image_data.startswith('data:image'):
+                format, imgstr = image_data.split(';base64,')
+                ext = format.split('/')[-1]
+                course.picture = ContentFile(base64.b64decode(imgstr), name=str(course.id) + '.' + ext)
+            else:
+                raise ImmediateHttpResponse(HttpBadRequest('Bad picture'))
         course.save()
 
-        return self.create_response(request, {})
+        return self.create_response(request, {"id": course.id, "teacher": course.teacher.username})
 
     def get_assignments(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
@@ -125,16 +127,16 @@ class CourseResource(CorsResourceBase, ModelResource):
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
         accepted_levels = set(EmployeeTitle.TITLE_PERMS.keys()) - {EmployeeTitle.TITLE_TEACHER, EmployeeTitle.TITLE_UNKNOWN}
         a_level = kwargs['level']
         if a_level not in accepted_levels:
-            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment level'))
+            raise ImmediateHttpResponse(HttpBadRequest('错误的学员等级'))
 
         a_type = kwargs['type']
         if a_type not in ['action_plan', 'knowledge_test']:
-            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment type'))
+            raise ImmediateHttpResponse(HttpBadRequest('错误的作业类型'))
 
         objects = []
         if a_type == 'action_plan':
@@ -172,12 +174,12 @@ class CourseResource(CorsResourceBase, ModelResource):
 
         user_group = request.user.groups.first().name
         if user_group != "teacher":
-            raise ImmediateHttpResponse(HttpBadRequest('Not a teacher'))
+            raise ImmediateHttpResponse(HttpBadRequest('您的用户权限不属于教师，无法进行该操作'))
 
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
         deserialized = self.deserialize(request, request.body,
                                         format=request.META.get('CONTENT_TYPE', 'application/json'))
@@ -187,35 +189,35 @@ class CourseResource(CorsResourceBase, ModelResource):
         accepted_levels = set(EmployeeTitle.TITLE_PERMS.keys()) - {EmployeeTitle.TITLE_TEACHER, EmployeeTitle.TITLE_UNKNOWN}
         a_level = kwargs['level']
         if a_level not in accepted_levels:
-            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment level'))
+            raise ImmediateHttpResponse(HttpBadRequest('错误的学员等级'))
 
         a_type = kwargs['type']
         if a_type not in ['action_plan', 'knowledge_test']:
-            raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment type'))
+            raise ImmediateHttpResponse(HttpBadRequest('错误的作业类型'))
 
         if a_type == 'action_plan':
             if len(bundle.data.get('action_points')) != len(set(bundle.data.get('action_points'))):
-                raise ImmediateHttpResponse(HttpBadRequest('Duplicate action points'))
+                raise ImmediateHttpResponse(HttpBadRequest('存在重复的action point'))
             try:
                 action_plan = ActionPlan.objects.get(course=course, level=a_level)
-                action_plan.action_points = bundle.data.get('action_points')
+                action_plan.action_points = json.dumps(bundle.data.get('action_points'))
                 action_plan.save()
             except ActionPlan.DoesNotExist:
-                ActionPlan(course=course, level=a_level, action_points=bundle.data.get('action_points')).save()
+                ActionPlan(course=course, level=a_level, action_points=json.dumps(bundle.data.get('action_points'))).save()
         elif a_type == 'knowledge_test':
             try:
                 knowledge_test = KnowledgeTest.objects.get(course=course, level=a_level)
             except KnowledgeTest.DoesNotExist:
                 knowledge_test = KnowledgeTest(course=course, level=a_level, time_span=0)
                 knowledge_test.save()
-            post_questions = json.loads(bundle.data.get('questions'))
+            post_questions = bundle.data.get('questions')
             questions = knowledge_test.questionordered_set.all()
             for q, post_q in zip(questions, post_questions):
                 q.score = post_q.get('score')
                 q.question.question_body = post_q.get('question_body')
                 answer_keys = post_q.get('answer_keys')
                 if len(answer_keys) != len(set(answer_keys)):
-                    raise ImmediateHttpResponse(HttpBadRequest('Duplicate answer keys in %s' % post_q.get('question_body')))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'问题：\"%s\"之中含有重复的选项' % post_q.get('question_body')))
                 q.question.answer_keys = json.dumps(answer_keys)
                 q.question.right_answer = post_q.get('right_answer')
                 q.question.save()
@@ -224,7 +226,7 @@ class CourseResource(CorsResourceBase, ModelResource):
             for post_q in post_questions[len(questions):]:
                 answer_keys = post_q.get('answer_keys')
                 if len(answer_keys) != len(set(answer_keys)):
-                    raise ImmediateHttpResponse(HttpBadRequest('Duplicate answer keys in %s' % post_q.get('question_body')))
+                    raise ImmediateHttpResponse(HttpBadRequest(u'问题：\"%s\"之中含有重复的选项' % post_q.get('question_body')))
                 new_question = Question(question_body=post_q.get('question_body'),
                                         answer_keys=json.dumps(answer_keys),
                                         right_answer=post_q.get('right_answer'))
@@ -245,12 +247,12 @@ class CourseResource(CorsResourceBase, ModelResource):
 
         user_group = request.user.groups.first().name
         if user_group != "teacher":
-            raise ImmediateHttpResponse(HttpBadRequest('Not a teacher'))
+            raise ImmediateHttpResponse(HttpBadRequest('您的用户权限不属于教师，无法进行该操作'))
 
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
         deserialized = self.deserialize(request, request.body,
                                         format=request.META.get('CONTENT_TYPE', 'application/json'))
@@ -262,17 +264,16 @@ class CourseResource(CorsResourceBase, ModelResource):
             _, str = file_data.split(';base64,')
             file_data = base64.b64decode(str)
         else:
-            raise ImmediateHttpResponse(HttpBadRequest('Bad file'))
+            raise ImmediateHttpResponse(HttpBadRequest('该文件无法被阅读'))
         rows = file_data.split("\n")
         rows = [x for x in rows if x != ""]
         for row in rows:
             try:
                 user = User.objects.get(username=row)
             except User.DoesNotExist:
-                raise ImmediateHttpResponse(HttpBadRequest('Username %s does not exist' % row))
-            for e in Enrollment.objects.filter(user=user).filter(course=course).all():
-                e.delete()
-            Enrollment(user=user, course=course, start_time=course.start_time).save()
+                raise ImmediateHttpResponse(HttpBadRequest(u'无法找到与%s匹配的用户' % row))
+            if not Enrollment.objects.filter(user=user).filter(course=course).filter(start_time=course.start_time).all():
+                Enrollment(user=user, course=course, start_time=course.start_time).save()
         object_list = {
             'objects': len(rows),
         }
@@ -285,12 +286,13 @@ class CourseResource(CorsResourceBase, ModelResource):
         try:
             course = Course.objects.get(id=kwargs['id'], teacher=request.user)
         except ObjectDoesNotExist:
-            raise ImmediateHttpResponse(HttpNotFound('Course does not exist'))
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
-        context = "\n".join(enroll.user.username for enroll in course.enrollment_set.all())
-
+        data = [[enroll.user.get_full_name(), enroll.user.username, enroll.user.groups.first().name if enroll.user.groups.first() else "N/A"]
+                for enroll in course.enrollment_set.all() if enroll.start_time == course.start_time]
+        data.sort()
         object_list = {
-            'objects': context
+            'objects': data
         }
         return self.create_response(request, object_list)
 
@@ -308,22 +310,20 @@ class CourseResource(CorsResourceBase, ModelResource):
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
 
-        start_time = pytz.timezone('Asia/Shanghai').localize(bundle.data.get('start_time'))
-        end_time = pytz.timezone('Asia/Shanghai').localize(bundle.data.get('end_time'))
+        start_time = bundle.data.get('start_time')
+        end_time = bundle.data.get('end_time')
 
         enrollments = course.enrollment_set.filter(start_time__gte=start_time)\
             .filter(start_time__lte=end_time)
 
         # KT average, KT completion days, KT time, D self improved rate, D completion days, D both improved rate
-        data_dict = {
-            "All": self.calc_data(enrollments)
-        }
+        data_list = [self.calc_data(enrollments)]
         for title in EmployeeTitle.TITLE_PERMS.keys():
             if title not in [EmployeeTitle.TITLE_TEACHER, EmployeeTitle.TITLE_UNKNOWN]:
-                data_dict[title] = self.calc_data(enrollments.filter(user__groups__name=title))
+                data_list.append(self.calc_data(enrollments.filter(user__groups__name=title)))
 
         object_list = {
-            'objects': data_dict
+            'objects': data_list
         }
         return self.create_response(request, object_list)
 
@@ -349,4 +349,4 @@ class CourseResource(CorsResourceBase, ModelResource):
                 d_count += 1
 
         return [x / kt_count if kt_count > 0 else "N/A" for x in [kt_total_first_score, kt_total_days, kt_total_time]]\
-               + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve, d_total_days, d_all_improve]]
+               + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve, d_all_improve, d_total_days]]
