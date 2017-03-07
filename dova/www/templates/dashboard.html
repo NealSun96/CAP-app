@@ -33,19 +33,19 @@
 
          <ion-item class="item-icon-left item-icon-right" id="f" ng-click="enrollment.feedback_status == 'Available' && toFeedback(enrollment.id, enrollment.feedback_status == 'Available')"
                    ng-style="{ color: enrollment.feedback_status == 'Completed' ? 'green' : enrollment.feedback_status == 'Available' ? 'red' : 'black' }">
-           <i class="icon ion-information"></i>Feedback: {{ enrollment.feedback_status }}
+           <i class="icon ion-information fixed-color"></i>Feedback: {{ enrollment.feedback_status }}
            <i class="icon ion-ios-arrow-right" ng-show="enrollment.feedback_status == 'Available'"></i>
          </ion-item>
          <ion-item class="item-icon-left item-icon-right" id="ap" ng-click="enrollment.action_plan_status == 'Available' && toActionPlan(enrollment.id)" ng-style="{ color: enrollment.action_plan_status == 'Completed' ? 'green' : enrollment.action_plan_status == 'Available' ? 'red' : 'black' }">
-           <i class="icon ion-ionic"></i>Action Plan: {{ enrollment.action_plan_status }}
+           <i class="icon ion-ionic fixed-color"></i>Action Plan: {{ enrollment.action_plan_status }}
            <i class="icon ion-ios-arrow-right" ng-show="enrollment.action_plan_status == 'Available'"></i>
          </ion-item>
          <ion-item class="item-icon-left item-icon-right" id="kt" ng-click="enrollment.knowledge_test_status == 'Available' && toKTest(enrollment.id)" ng-style="{ color: enrollment.knowledge_test_status == 'Completed' ? 'green' : enrollment.knowledge_test_status == 'Available' ? 'red' : 'black' }">
-           <i class="icon ion-ios-list-outline"></i>Knowledge Test: {{ enrollment.knowledge_test_status }}
+           <i class="icon ion-ios-list-outline fixed-color"></i>Knowledge Test: {{ enrollment.knowledge_test_status }}
            <i class="icon ion-ios-arrow-right" ng-show="enrollment.knowledge_test_status == 'Available'"></i>
          </ion-item>
          <ion-item class="item-icon-left item-icon-right" id="d" ng-click="enrollment.diagnosis_status == 'Available' && toDiagnosis(enrollment.id)" ng-style="{ color: enrollment.diagnosis_status == 'Completed' ? 'green' : enrollment.diagnosis_status == 'Available' ? 'red' : 'black' }">
-           <i class="icon ion-document"></i>Diagnosis: {{ enrollment.diagnosis_status }}
+           <i class="icon ion-document fixed-color"></i>Diagnosis: {{ enrollment.diagnosis_status }}
            <i class="icon ion-ios-arrow-right" ng-show="enrollment.diagnosis_status == 'Available'"></i>
          </ion-item>
        </div>
@@ -83,6 +83,9 @@
   }
   .course{
     overflow: hidden;
+  }
+  .fixed-color{
+    color: black;
   }
 </style>
 </ion-view>
