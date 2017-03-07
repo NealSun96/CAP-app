@@ -231,7 +231,6 @@ function enroll() {
     reader.readAsDataURL(file);
     function receivedText() {
         var endPoint = baseUrl + "/api/v1/course/enroll_students/" + id + "/";
-        console.log(reader.result);
         $.ajax({
             type: "POST",
             url: endPoint,
@@ -270,13 +269,9 @@ function calculateData() {
         data: JSON.stringify(data),
         dataType: "json",
         success: function(data){
-            console.log(data);
             var all = data.objects[0];
             var manager = data.objects[1];
             var nonmanager = data.objects[2];
-            console.log(all);
-            console.log(manager);
-            console.log(nonmanager);
             for (var i = 0; i < all.length; i++) {
                 $("#"+i+"0").html(all[i]);
             }
