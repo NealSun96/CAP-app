@@ -44,7 +44,7 @@ angular.module('app.controllers', [])
                 }
 
                 if (password.value.length < 8){
-                    errorText.innerHTML += "Password should be at least 8 characters long! <br>";
+                    errorText.innerHTML += "Password should be at least 8 characters long!";
                     changed = true;
                 }
 
