@@ -9854,3 +9854,15 @@ a.button {
   .fixed-color{
     color: black;
   }
+
+  /*knowledge_test css*/
+.knowledge-question{
+  background-color: lightgrey;
+  height: 46px;
+  line-height: 40px;
+  text-align: left;
+}
+.knowledge-question label{
+  display: inline-block;
+  vertical-align: middle;
+}

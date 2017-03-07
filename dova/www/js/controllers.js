@@ -285,8 +285,8 @@ angular.module('app.controllers', [])
         $http.get(url, config).then(function successCallback(response) {
             var questions = response.data.objects[0].questions;
             for (var i = 0; i < questions.length; i++) {
-                questions[i]['id'] = i;
-                questions[i]['display_id'] = i + 1;
+                //questions[i]['id'] = i;
+                //questions[i]['display_id'] = i + 1;
                 answers.push("");
             };
             $scope.questions = questions;
