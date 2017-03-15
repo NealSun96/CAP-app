@@ -4,6 +4,8 @@ angular.module('app.controllers', [])
     
     function ($scope, $stateParams, $http, $state, $rootScope) {
         var offline_debug = false;
+        $scope.selectedGroup = "Cardio";//default
+        
         $scope.signup = function() {
             if (offline_debug) {$state.go('login');}
 
@@ -56,6 +58,11 @@ angular.module('app.controllers', [])
                 ERRelement.style.visibility = "visible";
                 setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
             });
+        }
+
+        //print out the selected value from the dropdown
+        $scope.showSelectValue = function(mySelect) {
+            console.log(mySelect);
         }
     }])
 

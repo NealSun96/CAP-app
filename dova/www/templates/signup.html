@@ -31,6 +31,22 @@
         </label>
       </ion-list>
 
+      <label class="item item-input item-select">
+          <div class="input-label">Group</div>
+          <select ng-model="selectedGroup" ng-change="showSelectValue(selectedGroup)">
+            <option>Cardio</option>
+            <option>ENDO</option>
+            <option>PION</option>
+            <option>CRM</option>
+            <option>EP</option>
+            <option>Urology</option>
+            <option>Structural Hear</option>
+            <option>HK&amp;TW</option>
+            <option>Emerging Marketing</option>
+            <option>Others</option>
+          </select>
+        </label>
+
       <a ng-click="signup()" id="signup-button1" class="button button-stable  button-block">Sign up</a>
       <a ui-sref="login" id="signup-button4" class="button button-positive  button-block button-clear">Already have an account?</a>
 
