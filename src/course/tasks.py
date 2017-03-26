@@ -21,7 +21,11 @@ def task_check_assignment():
     Saves latest image from Flickr
     """
     notification_day_count = 1
-    email_context = "{} 的最晚递交时间是 {}"
+    title_context = "CAP任务提醒"
+    email_context = "尊敬的{}:\n"\
+                    "您好，\n" \
+                    "您的课程：{} 已有任务开放。开放的任务是：{}，请及时完成！\n" \
+                    "CAP APP"
 
     for course in Course.objects.all():
         if course.done:
@@ -30,6 +34,7 @@ def task_check_assignment():
         enrollments = course.enrollment_set.filter(start_time=course.start_time)
 
         for enrollment in enrollments:
+            per_email_context = ""
             current_date = datetime.now(pytz.timezone('Asia/Shanghai'))
 
             user_group = enrollment.user.groups.all()[0].name
@@ -41,18 +46,22 @@ def task_check_assignment():
             has_action_plan_answer = len(enrollment.actionplananswer_set.all()) > 0
             has_diagnosis = len(enrollment.diagnosis_set.all()) > 0
 
-            if knowledge_test_open_date - timedelta(notification_day_count) <= current_date < knowledge_test_open_date and \
+            if knowledge_test_open_date <= current_date < knowledge_test_open_date + timedelta(notification_day_count) and \
                 has_knowledge_test and not has_knowledge_test_answer:
-                email_context = email_context.format("知识评测", knowledge_test_open_date)
+                per_email_context = email_context.format(enrollment.user.first_name + " " + enrollment.user.last_name,
+                                                        course.course_name,
+                                                        "Knowledge Test")
 
-            if diagnosis_open_date - timedelta(notification_day_count) <= current_date < diagnosis_open_date and \
+            if diagnosis_open_date <= current_date < diagnosis_open_date + timedelta(notification_day_count) and \
                     has_action_plan_answer and not has_diagnosis:
-                email_context = email_context.format("自我诊断", diagnosis_open_date)
+                per_email_context = email_context.format(enrollment.user.first_name + " " + enrollment.user.last_name,
+                                                        course.course_name,
+                                                        "Diagnosis")
 
-            if email_context:
+            if per_email_context:
                 email = EmailMessage(
-                    '作业提醒',
-                    email_context,
+                    title_context,
+                    per_email_context,
                     None,
                     [enrollment.user.username]
                 )

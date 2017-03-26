@@ -16,7 +16,7 @@
             </div>
 
             <ion-list ng-repeat="choice in question.answer_keys">
-                <ion-radio name="{{ $index }}" ng-click="click($index, choice)">{{ $index + 1 }}. {{ choice }}</ion-radio>
+                <ion-radio name="{{ $parent.$index }}" ng-click="click($parent.$index, choice)">{{ $index + 1 }}. {{ choice }}</ion-radio>
             </ion-list>
         </div>
     </ion-list>
