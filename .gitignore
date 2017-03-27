@@ -4,7 +4,6 @@
 .DS_Store
 rest/
 dova/platforms/
-dova/plugins/
 dova/resources/
 celerybeat-schedule
 dump.rdb
