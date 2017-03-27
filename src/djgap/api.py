@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import IntegrityError
 from django.http import HttpResponse
 from tastypie import http
@@ -62,18 +62,13 @@ class RegisterResource(ModelResource):
             bundle = super(RegisterResource, self).obj_create(bundle, **kwargs)
             bundle.obj.set_password(bundle.data.get('password'))
             bundle.obj.save()
-            RegisterResource.assign_to_group(bundle.obj)
         except IntegrityError:
             raise BadRequest('该用户名已存在')
+        et = EmployeeTitle.objects.filter(username=bundle.data.get('username')).first()
+        if et and et.title == EmployeeTitle.TITLE_TEACHER:
+            group = EmployeeTitle.get_or_create_title_group(EmployeeTitle.TITLE_TEACHER)
+        else:
+            group = EmployeeTitle.get_or_create_title_group(bundle.data.get('bu'))
+        bundle.obj.groups.add(group)
+        bundle.obj.save()
         return bundle
-
-    @staticmethod
-    def assign_to_group(user):
-        try:
-            employee_title = EmployeeTitle.objects.get(username=user.username)
-            group = EmployeeTitle.get_or_create_title_group(employee_title.title)
-        except EmployeeTitle.DoesNotExist:
-            group = EmployeeTitle.get_or_create_title_group(EmployeeTitle.TITLE_UNKNOWN)
-
-        user.groups.add(group)
-        user.save()

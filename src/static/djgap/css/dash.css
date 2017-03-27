@@ -685,16 +685,16 @@ li {
 
 .dataTable {
     transition: all 0.5s;
-    width: 100%;
+    table-layout: fixed;
+    width: 150%;
     height: auto;
     margin: 0;
     border-radius: 10px;
 }
 
 .cell {
-    
     padding: 25px;
-    font-size: 16pt;
+    font-size: 12pt;
     border: 1px solid #555;
     margin: 0;
     background-color: #ddd;
@@ -707,7 +707,7 @@ li {
     font-family: colab;  
     color: #eee;
     -webkit-font-smoothing: antialiased;
-    font-size: 20pt;
+    font-size: 12pt;
     //border-radius: 10px;
     //border-bottom-left-radius: 0;
    //  border-bottom-right-radius: 0;
