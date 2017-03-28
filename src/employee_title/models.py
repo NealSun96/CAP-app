@@ -15,7 +15,7 @@ class EmployeeTitle(models.Model):
 
     @staticmethod
     def get_or_create_title_group(title):
-        title = title if title in EmployeeTitle.TITLES else EmployeeTitle.TITLE_OTHERS
+        title = title if title in EmployeeTitle.TITLES + [EmployeeTitle.TITLE_TEACHER] else EmployeeTitle.TITLE_OTHERS
         try:
             return Group.objects.get(name=title)
         except Group.DoesNotExist:

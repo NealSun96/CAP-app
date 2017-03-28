@@ -140,8 +140,10 @@ function editCourse() {
             else if (id != data.id) {
                 setTimeout(function(){window.location.href = baseUrl + "/dashboard/"+btoa(auth)+"/"+data.id;});
             }
-            else refresh();
-            saveNoti();
+            else {
+                refresh();
+                saveNoti();
+            }
         },
         error: function(data){
             error(data.responseText);
