@@ -3,7 +3,5 @@
 .idea
 .DS_Store
 rest/
-dova/platforms/
-dova/resources/
 celerybeat-schedule
 dump.rdb
