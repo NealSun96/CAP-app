@@ -37,14 +37,13 @@ def task_check_assignment():
             per_email_context = ""
             current_date = datetime.now(pytz.timezone('Asia/Shanghai'))
 
-            user_group = enrollment.user.groups.all()[0].name
             knowledge_test_open_date = (enrollment.start_time
                                         + timedelta(enrollment.course.KNOWLEDGE_TEST_OPEN_DAYS))
             diagnosis_open_date = (enrollment.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS))
-            has_knowledge_test = len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) > 0
-            has_knowledge_test_answer = len(enrollment.knowledgetestanswer_set.all()) > 0
-            has_action_plan_answer = len(enrollment.actionplananswer_set.all()) > 0
-            has_diagnosis = len(enrollment.diagnosis_set.all()) > 0
+            has_knowledge_test = enrollment.course.knowledgetest_set.count() > 0
+            has_knowledge_test_answer = enrollment.knowledgetestanswer_set.count() > 0
+            has_action_plan_answer = enrollment.actionplananswer_set.count() > 0
+            has_diagnosis = enrollment.diagnosis_set.count() > 0
 
             if knowledge_test_open_date <= current_date < knowledge_test_open_date + timedelta(notification_day_count) and \
                 has_knowledge_test and not has_knowledge_test_answer:

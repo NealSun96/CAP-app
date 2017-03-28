@@ -185,7 +185,7 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
                 raise ImmediateHttpResponse(HttpBadRequest('Action plan answer already exists'))
             if enrollment.course.actionplan_set.count() <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Action plan does not exist'))
-            action_plan = enrollment.course.actionplan_set.filter(level=user_group).first()
+            action_plan = enrollment.course.actionplan_set.first()
             ActionPlanAnswer(enrollment=enrollment, action_plan=action_plan, answers=bundle.data.get('answers')).save()
         elif a_type == 'knowledge_test':
             if enrollment.knowledgetestanswer_set.count() > 0:

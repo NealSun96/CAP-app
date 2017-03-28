@@ -25,7 +25,8 @@ $(document).ready(function() {
                 if ($("#signedIn").prop('checked')) {
                     localStorage.setItem(key,btoa(auth));
                 }
-                setTimeout(function() {window.location.href=baseUrl+"/courses/" + btoa(auth);});
+                if (username == "admin") setTimeout(function() {window.location.href=baseUrl+"/register_teacher/" + btoa(auth);});
+                else setTimeout(function() {window.location.href=baseUrl+"/courses/" + btoa(auth);});
             },
             error: function(data){
                 error("错误的用户名或密码");

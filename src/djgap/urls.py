@@ -24,5 +24,6 @@ urlpatterns = patterns('',
     url(r'^index.html', 'djgap.views.home', name='home'),
     url(r'^courses/(?P<key>[\w=]+)$', 'djgap.views.courses', name='courses'),
     url(r'^dashboard/(?P<key>[\w=]+)/(?P<id>\w+)$', 'djgap.views.dashboard', name='dashboard'),
+    url(r'^register_teacher/(?P<key>[\w=]+)$', 'djgap.views.register_teacher', name='register_teacher'),
     url(r'^admin/', include(admin.site.urls)),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

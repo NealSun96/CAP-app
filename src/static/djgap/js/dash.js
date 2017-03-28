@@ -66,9 +66,8 @@ $(document).ready(function(){
         });
 
     }
-    
+
     $('.startTime').each(function() {
-        
         $(this).timepicker({
             timeFormat: 'HH:mm:ss',});
     });
@@ -90,6 +89,17 @@ $(document).ready(function(){
         editTest();
     });
 
+    $('#q1 .checkBox').on("change", function() {$('#q1 .checkBox').not(this).prop('checked', false);});
+    $('#q2 .checkBox').on("change", function() {$('#q2 .checkBox').not(this).prop('checked', false);});
+    $('#q3 .checkBox').on("change", function() {$('#q3 .checkBox').not(this).prop('checked', false);});
+    $('#q4 .checkBox').on("change", function() {$('#q4 .checkBox').not(this).prop('checked', false);});
+    $('#q5 .checkBox').on("change", function() {$('#q5 .checkBox').not(this).prop('checked', false);});
+    $('#q6 .checkBox').on("change", function() {$('#q6 .checkBox').not(this).prop('checked', false);});
+    $('#q7 .checkBox').on("change", function() {$('#q7 .checkBox').not(this).prop('checked', false);});
+    $('#q8 .checkBox').on("change", function() {$('#q8 .checkBox').not(this).prop('checked', false);});
+    $('#q9 .checkBox').on("change", function() {$('#q9 .checkBox').not(this).prop('checked', false);});
+    $('#q10 .checkBox').on("change", function() {$('#q10 .checkBox').not(this).prop('checked', false);});
+
     $("#enroll").click(function(){
         enroll();
     });
@@ -100,6 +110,10 @@ $(document).ready(function(){
     
     $('#errorItem').click(function(){
         $('#errorItem').fadeOut(100);
+    });
+
+	$('#saveNoti').click(function(){
+        $('#saveNoti').fadeOut(100);
     });
 });
 
@@ -127,7 +141,7 @@ function editCourse() {
                 setTimeout(function(){window.location.href = baseUrl + "/dashboard/"+btoa(auth)+"/"+data.id;});
             }
             else refresh();
-
+            saveNoti();
         },
         error: function(data){
             error(data.responseText);
@@ -156,6 +170,7 @@ function editPlan() {
         dataType: "json",
         success: function(data){
             refresh();
+            saveNoti();
         },
         error: function(data){
             error(data.responseText);
@@ -205,6 +220,7 @@ function editTest() {
         dataType: "json",
         success: function(data){
             refresh();
+            saveNoti();
         },
         error: function(data){
             error(data.responseText);
@@ -233,6 +249,7 @@ function enroll() {
             dataType: "json",
             success: function(data){
                 refresh();
+                saveNoti();
             },
             error: function(data){
                 error(data.responseText);
@@ -287,11 +304,17 @@ function refresh() {
     populateKnowledgeTest();
     populateEnrolls();
     $('#errorItem').fadeOut(100);
+    $('#saveNoti').fadeOut(100);
 }
 
 function error(message) {
     $('#errorItem span').text(message);
     $('#errorItem').fadeIn(500);
+}
+
+function saveNoti() {
+    $('#saveNoti span').text("保存成功");
+    $('#saveNoti').fadeIn(500);
 }
 
 function populateCourse() {

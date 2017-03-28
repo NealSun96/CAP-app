@@ -311,6 +311,7 @@ class CourseResource(CorsResourceBase, ModelResource):
         for title in EmployeeTitle.TITLES:
             data_list.append(self.calc_data(enrollments.filter(user__groups__name=title)))
 
+        data_list = [list(map(lambda n: "{0:.2f}".format(round(n, 2)) if not isinstance(n, str) and not isinstance(n, int) else n, data)) for data in data_list]
         object_list = {
             'objects': data_list
         }

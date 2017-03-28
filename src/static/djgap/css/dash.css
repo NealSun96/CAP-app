@@ -683,6 +683,15 @@ li {
     min-width: 5%;
 }
 
+.enrollTable {
+    transition: all 0.5s;
+    table-layout: fixed;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border-radius: 10px;
+}
+
 .dataTable {
     transition: all 0.5s;
     table-layout: fixed;
@@ -717,4 +726,47 @@ tr:hover .cell{
     transition: all 0.5s;
     filter: invert(100%);
     filter: hue-rotate(100%);
+}
+
+#saveNoti {
+    padding: 0;
+    margin: 0;
+    width: 96%;
+    min-height: 40px;
+    height: auto;
+    transition: all 0.5s;
+    background-color:#379b4b;
+    border: 0px solid #000000;
+    border-radius: 0;
+    display: none;
+    margin-top: 20px;
+    margin-left: 28px;
+}
+
+#saveNoti span {
+    margin: 0;
+    padding: 0;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+    color: aliceblue;
+    font-family: colab;
+    font-size: 12pt;
+    letter-spacing: 3pt;
+    width: 97%;
+    height: 100%;
+    display:flex;
+    align-items: center;
+    //justify-content: center;
+    padding-left: 3%;
+    word-wrap: break-word;
+
+}
+
+
+#saveNoti:hover{
+    filter: invert(100%);
 }

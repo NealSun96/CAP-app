@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    {% load staticfiles %}
+    <head>
+        <title>添加教师</title>
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+        <script type="text/javascript" src="{% static 'djgap/js/atp.js' %}"></script>
+    </head>
+
+    <body>
+        <div>
+            <h2 id="error"></h2>
+            <h2 class="field"><span class="cLabel">上传教师邮箱名单:</span><input type="file" id='teacherFile' accept="*/*"/></h2>
+            <button id="upload">上传</button>
+            <h2 class="field"><span class="cLabel" id="titleLabel">现存教师邮箱名单:<br></span></h2>
+        </div>
+
+    </body>
+
+</html>
