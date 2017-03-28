@@ -57,13 +57,12 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             if enrollment.course.picture:
                 bundle.data['picture_path'] = enrollment.course.picture.url
 
-            has_feedback = len(enrollment.feedback_set.all()) > 0
+            has_feedback = enrollment.feedback_set.count() > 0
             bundle.data['feedback_status'] = "Completed" if has_feedback else "Available"
             bundle.data['feedback_color'] = "{color: 'green'}" if has_feedback else "{color: 'red'}"
 
-            user_group = request.user.groups.all()[0].name
-            has_action_plan = len(enrollment.course.actionplan_set.filter(level=user_group).all()) > 0
-            has_action_plan_answer = len(enrollment.actionplananswer_set.all()) > 0
+            has_action_plan = enrollment.course.actionplan_set.count() > 0
+            has_action_plan_answer = enrollment.actionplananswer_set.count() > 0
             bundle.data['action_plan_status'] = "Completed" if has_action_plan_answer else "Available" \
                 if has_action_plan else "Unavailable"
             bundle.data['action_plan_color'] = "{color: 'green'}" if has_action_plan_answer else "{color: 'red'}" \
@@ -73,8 +72,8 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             knowledge_test_open_date = (enrollment.start_time
                                        + timedelta(enrollment.course.KNOWLEDGE_TEST_OPEN_DAYS))
             knowledge_test_open_string = knowledge_test_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
-            has_knowledge_test = len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) > 0
-            has_knowledge_test_answer = len(enrollment.knowledgetestanswer_set.all()) > 0
+            has_knowledge_test = enrollment.course.knowledgetest_set.count() > 0
+            has_knowledge_test_answer = enrollment.knowledgetestanswer_set.count() > 0
             bundle.data['knowledge_test_status'] = 'Completed' if has_knowledge_test_answer else \
                 'Available' if has_knowledge_test and current_date >= knowledge_test_open_date else \
                 ('Open at %s' % knowledge_test_open_string) if has_knowledge_test else 'Unavailable'
@@ -84,7 +83,7 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
 
             diagnosis_open_date = (enrollment.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS))
             diagnosis_open_string = diagnosis_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
-            has_diagnosis = len(enrollment.diagnosis_set.all()) > 0
+            has_diagnosis = enrollment.diagnosis_set.count() > 0
             bundle.data['diagnosis_status'] = 'Completed' if has_diagnosis else \
                 'Available' if has_action_plan_answer and current_date >= diagnosis_open_date else \
                 'Open at %s' % diagnosis_open_string if has_action_plan_answer else 'Unavailable'
@@ -113,27 +112,26 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             raise ImmediateHttpResponse(HttpBadRequest('Wrong assignment type'))
         objects = []
 
-        user_group = request.user.groups.all()[0].name
         if a_type == 'action_plan':
-            if len(enrollment.course.actionplan_set.filter(level=user_group).all()) <= 0:
+            if enrollment.course.actionplan_set.count() <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Action plan does not exist'))
 
-            if len(enrollment.actionplananswer_set.all()) > 0:
+            if enrollment.actionplananswer_set.count() > 0:
                 raise ImmediateHttpResponse(HttpBadRequest('Action plan already submitted'))
 
-            action_plan = enrollment.course.actionplan_set.filter(level=user_group).all()[0]
+            action_plan = enrollment.course.actionplan_set.first()
             bundle = self.build_bundle(obj=action_plan, request=request)
             # bundle.data['action_plan_id'] = action_plan.id
             bundle.data['action_points'] = json.loads(action_plan.action_points)
             objects.append(bundle)
         elif a_type == 'knowledge_test':
-            if len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) <= 0:
+            if enrollment.course.knowledgetest_set.count() <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Knowledge test does not exist'))
 
-            if len(enrollment.knowledgetestanswer_set.all()) > 0:
+            if enrollment.knowledgetestanswer_set.count() > 0:
                 raise ImmediateHttpResponse(HttpBadRequest('Knowledge test already submitted'))
 
-            knowledge_test = enrollment.course.knowledgetest_set.filter(level=user_group).all()[0]
+            knowledge_test = enrollment.course.knowledgetest_set.first()
             bundle = self.build_bundle(obj=knowledge_test, request=request)
             # bundle.data['knowledge_test_id'] = knowledge_test.id
             bundle.data['questions'] = [{
@@ -143,13 +141,13 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             } for question in knowledge_test.questionordered_set.all()]
             objects.append(bundle)
         else:
-            if len(enrollment.actionplananswer_set.all()) <= 0:
+            if enrollment.actionplananswer_set.count() <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Diagnosis form does not exist'))
 
-            if len(enrollment.diagnosis_set.all()) > 0:
+            if enrollment.diagnosis_set.count() > 0:
                 raise ImmediateHttpResponse(HttpBadRequest('Diagnosis already submitted'))
 
-            diagnosis = enrollment.actionplananswer_set.all()[0]
+            diagnosis = enrollment.actionplananswer_set.first()
             bundle = self.build_bundle(obj=diagnosis, request=request)
             bundle.data['diagnosis_points'] = json.loads(diagnosis.answers)
             objects.append(bundle)
@@ -178,27 +176,26 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
 
-        user_group = request.user.groups.all()[0].name
         if a_type == 'feedback':
-            if len(enrollment.feedback_set.all()) > 0:
+            if enrollment.feedback_set.count() > 0:
                 raise ImmediateHttpResponse(HttpBadRequest('Feedback already exists'))
             Feedback(enrollment=enrollment, feedbacks=bundle.data.get('feedbacks')).save()
         elif a_type == 'action_plan':
-            if len(enrollment.actionplananswer_set.all()) > 0:
+            if enrollment.actionplananswer_set.count() > 0:
                 raise ImmediateHttpResponse(HttpBadRequest('Action plan answer already exists'))
-            if len(enrollment.course.actionplan_set.filter(level=user_group).all()) <= 0:
+            if enrollment.course.actionplan_set.count() <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Action plan does not exist'))
-            action_plan = enrollment.course.actionplan_set.filter(level=user_group).first()
+            action_plan = enrollment.course.actionplan_set.first()
             ActionPlanAnswer(enrollment=enrollment, action_plan=action_plan, answers=bundle.data.get('answers')).save()
         elif a_type == 'knowledge_test':
-            if len(enrollment.knowledgetestanswer_set.all()) > 0:
+            if enrollment.knowledgetestanswer_set.count() > 0:
                 raise ImmediateHttpResponse(HttpBadRequest('Knowledge test answer already exists'))
-            if len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) <= 0:
+            if enrollment.course.knowledgetest_set.count() <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Knowledge test does not exist'))
-            knowledge_test = enrollment.course.knowledgetest_set.filter(level=user_group).first()
-            if len(enrollment.knowledgeteststart_set.all()) <= 0:
+            knowledge_test = enrollment.course.knowledgetest_set.first()
+            if enrollment.knowledgeteststart_set.count() <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Knowledge test start time does not exist'))
-            if len(enrollment.knowledgetestfirstscore_set.all()) <= 0:
+            if enrollment.knowledgetestfirstscore_set.count() <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Knowledge test first score does not exist'))
 
             time_now = datetime.now(pytz.timezone('Asia/Shanghai'))
@@ -207,9 +204,9 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
                                 time_taken=dtime.seconds, first_score=enrollment.knowledgetestfirstscore_set.first().first_score,
                                 final_score=bundle.data.get('final_score'), completion_date=time_now).save()
         elif a_type == 'diagnosis':
-            if len(enrollment.diagnosis_set.all()) > 0:
+            if enrollment.diagnosis_set.count() > 0:
                 raise ImmediateHttpResponse(HttpBadRequest('Diagnosis already exists'))
-            if len(enrollment.actionplananswer_set.all()) <= 0:
+            if enrollment.actionplananswer_set.count() <= 0:
                 raise ImmediateHttpResponse(HttpNotFound('Diagnosis form does not exist'))
             Diagnosis(enrollment=enrollment, self_diagnosis=bundle.data.get('self_diagnosis'),
                       other_diagnosis=bundle.data.get('other_diagnosis'),
@@ -232,11 +229,10 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
 
         answers = json.loads(bundle.data.get("answers"))
-        user_group = request.user.groups.all()[0].name
-        if len(enrollment.course.knowledgetest_set.filter(level=user_group).all()) <= 0:
+        if enrollment.course.knowledgetest_set.count() <= 0:
             raise ImmediateHttpResponse(HttpNotFound('Knowledge test does not exist'))
-        knowledge_test = enrollment.course.knowledgetest_set.filter(level=user_group).first()
-        if not answers or answers and len(knowledge_test.questionordered_set.all()) != len(answers):
+        knowledge_test = enrollment.course.knowledgetest_set.first()
+        if not answers or answers and knowledge_test.questionordered_set.count() != len(answers):
             raise ImmediateHttpResponse(HttpBadRequest('Bad answers'))
 
         score = 0
@@ -257,7 +253,7 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             enrollment = Enrollment.objects.get(id=kwargs['id'], user=request.user)
         except ObjectDoesNotExist:
             raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
-        if len(enrollment.knowledgeteststart_set.all()) <= 0:
+        if enrollment.knowledgeteststart_set.count() <= 0:
             KnowledgeTestStart(enrollment=enrollment, start_time=datetime.now(pytz.timezone('Asia/Shanghai'))).save()
         else:
             kts = KnowledgeTestStart.objects.get(enrollment=enrollment)
@@ -274,7 +270,7 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             enrollment = Enrollment.objects.get(id=kwargs['id'], user=request.user)
         except ObjectDoesNotExist:
             raise ImmediateHttpResponse(HttpNotFound('Enrollment does not exist'))
-        if len(enrollment.knowledgetestfirstscore_set.all()) > 0:
+        if enrollment.knowledgetestfirstscore_set.count()> 0:
             return self.create_response(request, {})
 
         deserialized = self.deserialize(request, request.body,

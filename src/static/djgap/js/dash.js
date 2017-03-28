@@ -4,8 +4,6 @@ var auth = atob(params[0]);
 var teacher = auth.split(":")[0];
 var id = params[1];
 var new_course = id == "new_course";
-var ap_tier = "manager";
-var kt_tier = "manager";
 
 var reader  = new FileReader();
 
@@ -27,6 +25,13 @@ $(document).ready(function(){
        event.preventDefault();
        }
     });
+
+    var titles = ["全部学员", "Cardio", "ENDO", "PION", "CRM", "EP", "Urology",
+              "Structural Hear", "HK&TW", "Emerging Marketing", "Others"];
+    for (var i=0; i < 11; i++) {
+        $("#dataRowTitle").append('<td class="cell header">'+titles[i]+'</td>');
+  	    $('#dataTable tr').not($('#dataRowTitle')).append('<td class="cell" id="' + i + '"></td>');
+    }
 
     if (!new_course) {
         refresh();
@@ -56,13 +61,13 @@ $(document).ready(function(){
                 var id = $(this).attr('id');
                 $("#data"+id).addClass("active");
                 $(this).addClass("menuItemActive");
+                refresh();
             }
         });
 
     }
-    
+
     $('.startTime').each(function() {
-        
         $(this).timepicker({
             timeFormat: 'HH:mm:ss',});
     });
@@ -84,6 +89,17 @@ $(document).ready(function(){
         editTest();
     });
 
+    $('#q1 .checkBox').on("change", function() {$('#q1 .checkBox').not(this).prop('checked', false);});
+    $('#q2 .checkBox').on("change", function() {$('#q2 .checkBox').not(this).prop('checked', false);});
+    $('#q3 .checkBox').on("change", function() {$('#q3 .checkBox').not(this).prop('checked', false);});
+    $('#q4 .checkBox').on("change", function() {$('#q4 .checkBox').not(this).prop('checked', false);});
+    $('#q5 .checkBox').on("change", function() {$('#q5 .checkBox').not(this).prop('checked', false);});
+    $('#q6 .checkBox').on("change", function() {$('#q6 .checkBox').not(this).prop('checked', false);});
+    $('#q7 .checkBox').on("change", function() {$('#q7 .checkBox').not(this).prop('checked', false);});
+    $('#q8 .checkBox').on("change", function() {$('#q8 .checkBox').not(this).prop('checked', false);});
+    $('#q9 .checkBox').on("change", function() {$('#q9 .checkBox').not(this).prop('checked', false);});
+    $('#q10 .checkBox').on("change", function() {$('#q10 .checkBox').not(this).prop('checked', false);});
+
     $("#enroll").click(function(){
         enroll();
     });
@@ -95,19 +111,10 @@ $(document).ready(function(){
     $('#errorItem').click(function(){
         $('#errorItem').fadeOut(100);
     });
-    
-    // tier listners
-    $('#data2 select').on('change', function() {
-        ap_tier = this.value;
-        refresh();
-    });
 
-    $('#data3 select').on('change', function() {
-        kt_tier = this.value
-        refresh();
+	$('#saveNoti').click(function(){
+        $('#saveNoti').fadeOut(100);
     });
-    
-    
 });
 
 function editCourse() {
@@ -133,8 +140,10 @@ function editCourse() {
             else if (id != data.id) {
                 setTimeout(function(){window.location.href = baseUrl + "/dashboard/"+btoa(auth)+"/"+data.id;});
             }
-            else refresh();
-
+            else {
+                refresh();
+                saveNoti();
+            }
         },
         error: function(data){
             error(data.responseText);
@@ -150,7 +159,7 @@ function editCourse() {
 
 function editPlan() {
     var endPoint = baseUrl + "/api/v1/course/edit_assignments/"
-    + id + "/action_plan/" + ap_tier + "/";
+    + id + "/action_plan/";
     var points = [];
     $("#data2 li input").each(function() { if ($(this).val() != "") {points.push($(this).val())} });
     var data = {
@@ -163,6 +172,7 @@ function editPlan() {
         dataType: "json",
         success: function(data){
             refresh();
+            saveNoti();
         },
         error: function(data){
             error(data.responseText);
@@ -178,7 +188,7 @@ function editPlan() {
 
 function editTest() {
     var endPoint = baseUrl + "/api/v1/course/edit_assignments/"
-    + id + "/knowledge_test/" + kt_tier + "/";
+    + id + "/knowledge_test/";
     var questions = [];
 
     for (var i = 0; i < 10; i++) {
@@ -212,6 +222,7 @@ function editTest() {
         dataType: "json",
         success: function(data){
             refresh();
+            saveNoti();
         },
         error: function(data){
             error(data.responseText);
@@ -240,6 +251,7 @@ function enroll() {
             dataType: "json",
             success: function(data){
                 refresh();
+                saveNoti();
             },
             error: function(data){
                 error(data.responseText);
@@ -269,17 +281,10 @@ function calculateData() {
         data: JSON.stringify(data),
         dataType: "json",
         success: function(data){
-            var all = data.objects[0];
-            var manager = data.objects[1];
-            var nonmanager = data.objects[2];
-            for (var i = 0; i < all.length; i++) {
-                $("#"+i+"0").html(all[i]);
-            }
-            for (i = 0; i < manager.length; i++) {
-                $("#"+i+"1").html(manager[i]);
-            }
-            for (i = 0; i < nonmanager.length; i++) {
-                $("#"+i+"2").html(nonmanager[i]);
+            for (var i = 0; i < data.objects.length; i++) {
+                for (var j = 0; j < data.objects[i].length; j++) {
+                    $("#dataRow"+j+" #"+i).html(data.objects[i][j]);
+                }
             }
         },
         error: function(data){
@@ -300,11 +305,18 @@ function refresh() {
     populateActionPlan();
     populateKnowledgeTest();
     populateEnrolls();
+    $('#errorItem').fadeOut(100);
+    $('#saveNoti').fadeOut(100);
 }
 
 function error(message) {
     $('#errorItem span').text(message);
     $('#errorItem').fadeIn(500);
+}
+
+function saveNoti() {
+    $('#saveNoti span').text("保存成功");
+    $('#saveNoti').fadeIn(500);
 }
 
 function populateCourse() {
@@ -347,7 +359,7 @@ function populateCourse() {
 function populateActionPlan() {
     if (!new_course) {
         var endPoint = baseUrl + "/api/v1/course/get_assignments/"
-        + id + "/action_plan/" + ap_tier;
+        + id + "/action_plan/";
         $.ajax({
             type: "GET",
             url: endPoint,
@@ -378,7 +390,7 @@ function populateActionPlan() {
 function populateKnowledgeTest() {
     if (!new_course) {
         var endPoint = baseUrl + "/api/v1/course/get_assignments/"
-        + id + "/knowledge_test/" + kt_tier;
+        + id + "/knowledge_test/";
         $.ajax({
             type: "GET",
             url: endPoint,

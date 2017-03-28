@@ -37,8 +37,8 @@ class CourseResource(CorsResourceBase, ModelResource):
         return [
             url(r"^(?P<resource_name>%s)/add_course%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('add_course'), name="api_add_course"),
             url(r"^(?P<resource_name>%s)/edit_course/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('edit_course'), name="api_edit_course"),
-            url(r"^(?P<resource_name>%s)/get_assignments/(?P<id>\d+)/(?P<type>\w+)/(?P<level>[\w-]+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
-            url(r"^(?P<resource_name>%s)/edit_assignments/(?P<id>\d+)/(?P<type>\w+)/(?P<level>[\w-]+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('edit_assignments'), name="api_edit_assignments"),
+            url(r"^(?P<resource_name>%s)/get_assignments/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
+            url(r"^(?P<resource_name>%s)/edit_assignments/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('edit_assignments'), name="api_edit_assignments"),
             url(r"^(?P<resource_name>%s)/enroll_students/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('enroll_students'), name="api_enroll_students"),
             url(r"^(?P<resource_name>%s)/get_enrolled/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_enrolled'), name="api_get_enrolled"),
             url(r"^(?P<resource_name>%s)/get_data/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_data'), name="api_get_data"),
@@ -129,29 +129,24 @@ class CourseResource(CorsResourceBase, ModelResource):
         except ObjectDoesNotExist:
             raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
-        accepted_levels = set(EmployeeTitle.TITLE_PERMS.keys()) - {EmployeeTitle.TITLE_TEACHER, EmployeeTitle.TITLE_UNKNOWN}
-        a_level = kwargs['level']
-        if a_level not in accepted_levels:
-            raise ImmediateHttpResponse(HttpBadRequest('错误的学员等级'))
-
         a_type = kwargs['type']
         if a_type not in ['action_plan', 'knowledge_test']:
             raise ImmediateHttpResponse(HttpBadRequest('错误的作业类型'))
 
         objects = []
         if a_type == 'action_plan':
-            if len(course.actionplan_set.filter(level=a_level).all()) <= 0:
+            if course.actionplan_set.count() <= 0:
                 bundle = self.build_bundle(request=request)
             else:
-                action_plan = course.actionplan_set.filter(level=a_level).first()
+                action_plan = course.actionplan_set.first()
                 bundle = self.build_bundle(obj=action_plan, request=request)
                 bundle.data['action_points'] = json.loads(action_plan.action_points)
             objects.append(bundle)
         elif a_type == 'knowledge_test':
-            if len(course.knowledgetest_set.filter(level=a_level).all()) <= 0:
+            if course.knowledgetest_set.count() <= 0:
                 bundle = self.build_bundle(request=request)
             else:
-                knowledge_test = course.knowledgetest_set.filter(level=a_level).first()
+                knowledge_test = course.knowledgetest_set.first()
                 bundle = self.build_bundle(obj=knowledge_test, request=request)
                 bundle.data['questions'] = [{
                     'ordering': question.ordering,
@@ -186,11 +181,6 @@ class CourseResource(CorsResourceBase, ModelResource):
         deserialized = self.alter_deserialized_detail_data(request, deserialized)
         bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
 
-        accepted_levels = set(EmployeeTitle.TITLE_PERMS.keys()) - {EmployeeTitle.TITLE_TEACHER, EmployeeTitle.TITLE_UNKNOWN}
-        a_level = kwargs['level']
-        if a_level not in accepted_levels:
-            raise ImmediateHttpResponse(HttpBadRequest('错误的学员等级'))
-
         a_type = kwargs['type']
         if a_type not in ['action_plan', 'knowledge_test']:
             raise ImmediateHttpResponse(HttpBadRequest('错误的作业类型'))
@@ -199,16 +189,16 @@ class CourseResource(CorsResourceBase, ModelResource):
             if len(bundle.data.get('action_points')) != len(set(bundle.data.get('action_points'))):
                 raise ImmediateHttpResponse(HttpBadRequest('存在重复的action point'))
             try:
-                action_plan = ActionPlan.objects.get(course=course, level=a_level)
+                action_plan = ActionPlan.objects.get(course=course)
                 action_plan.action_points = json.dumps(bundle.data.get('action_points'))
                 action_plan.save()
             except ActionPlan.DoesNotExist:
-                ActionPlan(course=course, level=a_level, action_points=json.dumps(bundle.data.get('action_points'))).save()
+                ActionPlan(course=course, action_points=json.dumps(bundle.data.get('action_points'))).save()
         elif a_type == 'knowledge_test':
             try:
-                knowledge_test = KnowledgeTest.objects.get(course=course, level=a_level)
+                knowledge_test = KnowledgeTest.objects.get(course=course)
             except KnowledgeTest.DoesNotExist:
-                knowledge_test = KnowledgeTest(course=course, level=a_level, time_span=0)
+                knowledge_test = KnowledgeTest(course=course, time_span=0)
                 knowledge_test.save()
             post_questions = bundle.data.get('questions')
             questions = knowledge_test.questionordered_set.all()
@@ -318,10 +308,10 @@ class CourseResource(CorsResourceBase, ModelResource):
 
         # KT average, KT completion days, KT time, D self improved rate, D completion days, D both improved rate
         data_list = [self.calc_data(enrollments)]
-        for title in EmployeeTitle.TITLE_PERMS.keys():
-            if title not in [EmployeeTitle.TITLE_TEACHER, EmployeeTitle.TITLE_UNKNOWN]:
-                data_list.append(self.calc_data(enrollments.filter(user__groups__name=title)))
+        for title in EmployeeTitle.TITLES:
+            data_list.append(self.calc_data(enrollments.filter(user__groups__name=title)))
 
+        data_list = [list(map(lambda n: "{0:.2f}".format(round(n, 2)) if not isinstance(n, str) and not isinstance(n, int) else n, data)) for data in data_list]
         object_list = {
             'objects': data_list
         }

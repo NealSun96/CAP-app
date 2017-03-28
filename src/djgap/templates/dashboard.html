@@ -49,11 +49,12 @@
                 
             </div>
             <div id="info">
+	            <div id="saveNoti"><span></span></div>
                 <div id="errorItem"><span></span></div>
                 <div id="data1" class="data active">
                     <div id="courseInfo" class="card">
                         <h2 class="field"><span class="cLabel">COURSE NAME:</span><input  type="text" class="inputField courseName" value=""></h2>
-                        <h2 class="field"><span class="cLabel">START TIME:</span><input  type="text" id="courseStartTime" class="inputField startTime" value=""> <input  type="text" id="courseStartDate" class="inputField startDate" value=""></h2>
+                        <h2 class="field"><span class="cLabel">START TIME:</span><input  type="text" id="courseStartDate" class="inputField startDate" value=""><input  type="text" id="courseStartTime" class="inputField startTime" value=""> </h2>
                         <h2 class="field"><span class="cLabel">INSTRUCTOR:</span><input  type="text" class="inputField courseIns" value=""></h2>
                         <h2 class="field" for="checkbox"><span class="cLabel">DONE</span><input id='courseDone' class="checkBox" type="checkbox"></h2>
                     </div>
@@ -63,10 +64,6 @@
                     <div class="card">
                         <h2 class="field">
                             <span class="cLabel">ACTION PLAN:</span>
-                            <select class="dropdown">
-                              <option value="manager">经理</option>
-                              <option value="non-manager">非经理</option>
-                            </select>
                         </h2><br>
                         <ol>
                             <li><input id="act1" type="text" class="inputField" value=""></li>
@@ -86,10 +83,6 @@
                 <div id="data3" class="data">
                     <div class="card">
                         <h2 class="field"><span class="cLabel">KNOWLEDGE TEST:</span>
-                            <select class="dropdown">
-                              <option value="manager">经理</option>
-                              <option value="non-manager">非经理</option>
-                            </select>
                         </h2><br>
                         <ol id="questionList">
                             <li id="q1">
@@ -202,7 +195,7 @@
                         <h2 class="field"><span class="cLabel">ADD ENROLL FILE:</span><input type="file" id='studentFile' accept="*/*"/></h2>
                         <h2 class="field"><span class="cLabel">ENROLLED STUDENTS:</span></h2>
 
-                        <table class="dataTable" id="studentList">
+                        <table class="studentTable" id="studentList">
                         </table>
                     </div>
                     <button id="enroll" class="saveBtn">ENROLL</button>
@@ -215,48 +208,27 @@
                     </div>
                     <button id="calculateData" class="saveBtn">计算数据</button>
                     <div class="card">
-                        <table class="dataTable">
-                          <tr>
+                        <table class="dataTable" id="dataTable">
+                          <tr id="dataRowTitle">
                             <td class="cell header"></td>
-                            <td class="cell header">全部学员</td>
-                            <td class="cell header">经理学员</td>
-                            <td class="cell header">非经理学员</td>
                           </tr>
-                          <tr>
+                          <tr id="dataRow0">
                             <td class="cell header">Knowledge Test 平均初次得分</td>
-                            <td class="cell" id="00"></td>
-                            <td class="cell" id="01"></td>
-                            <td class="cell" id="02"></td>
                           </tr>
-                          <tr>
+                          <tr id="dataRow1">
                             <td class="cell header">Knowledge Test 平均完成天数</td>
-                            <td class="cell" id="10"></td>
-                            <td class="cell" id="11"></td>
-                            <td class="cell" id="12"></td>
                           </tr>
-                          <tr>
+                          <tr id="dataRow2">
                             <td class="cell header">Knowledge Test 平均完成秒数</td>
-                            <td class="cell" id="20"></td>
-                            <td class="cell" id="21"></td>
-                            <td class="cell" id="22"></td>
                           </tr>
-                          <tr>
+                          <tr id="dataRow3">
                             <td class="cell header">Diagnosis 自我诊断明显进步比例</td>
-                            <td class="cell" id="30"></td>
-                            <td class="cell" id="31"></td>
-                            <td class="cell" id="32"></td>
                           </tr>
-                          <tr>
+                          <tr id="dataRow4">
                             <td class="cell header">Diagnosis 共同诊断明显进步比例</td>
-                            <td class="cell" id="40"></td>
-                            <td class="cell" id="41"></td>
-                            <td class="cell" id="42"></td>
                           </tr>
-                          <tr>
+                          <tr id="dataRow5">
                             <td class="cell header">Diagnosis 平均完成天数</td>
-                            <td class="cell" id="50"></td>
-                            <td class="cell" id="51"></td>
-                            <td class="cell" id="52"></td>
                           </tr>
                         </table>
                     </div>
