@@ -4,6 +4,7 @@ var auth = atob(params[0]);
 var teacher = auth.split(":")[0];
 var id = params[1];
 var new_course = id == "new_course";
+var date = new Date();
 
 var reader  = new FileReader();
 
@@ -48,7 +49,7 @@ $(document).ready(function(){
 
     
     if (new_course) {
-        $("#1 span").text("NEW COURSE");
+        $("#1 span").text("新建课程");
         $("#2").addClass("blocked");
         $("#3").addClass("blocked");
         $("#4").addClass("blocked");
@@ -68,11 +69,13 @@ $(document).ready(function(){
     }
 
     $('.startTime').each(function() {
+        $(this).val('00:00:00');
         $(this).timepicker({
             timeFormat: 'HH:mm:ss',});
     });
     
     $('.startDate').each(function() {
+        $(this).val(new String(date.getFullYear())+"-"+(("0" + date.getMonth()).slice(-2))+"-"+date.getDate());
         $(this).datepicker(
         { dateFormat: 'yy-mm-dd' });
     });
@@ -444,7 +447,7 @@ function populateEnrolls() {
             data: {},
             success: function(data){
                 $("#studentList tr").remove();
-                $("#studentList").append("<tr ><td class=\"cell header\">姓名</td><td class=\"cell header\">用户名</td><td class=\"cell header\">职位</td></tr>");
+                $("#studentList").append("<tr ><td class=\"cell header\">姓名</td><td class=\"cell header\">Email</td><td class=\"cell header\">BU</td></tr>");
                 for (var i = 0; i < data.objects.length; i++) {
                     var tag = "<tr ><td class=\"cell\">" + data.objects[i][0] +
                     "</td><td class=\"cell\">" + data.objects[i][1] +
