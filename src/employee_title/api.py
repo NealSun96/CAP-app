@@ -52,7 +52,8 @@ class EmployeeTitleResource(CorsResourceBase, ModelResource):
         rows = file_data.split("\n")
         rows = [x for x in rows if x != ""]
         for row in rows:
-            EmployeeTitle(username=row, title=EmployeeTitle.TITLE_TEACHER).save()
+            if EmployeeTitle.objects.filter(username=row, title=EmployeeTitle.TITLE_TEACHER).count() == 0:
+                EmployeeTitle(username=row, title=EmployeeTitle.TITLE_TEACHER).save()
         object_list = {
             'objects': len(rows),
         }
