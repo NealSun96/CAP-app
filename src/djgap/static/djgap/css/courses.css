@@ -84,6 +84,8 @@ ul li {
     margin-left: 250px;
     margin-top: 25px;
     margin-bottom: 30px;
+    float: right;
+    margin-right: 5px;
 }
 
 .logout span {

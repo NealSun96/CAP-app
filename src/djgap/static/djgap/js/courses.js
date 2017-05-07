@@ -1,16 +1,5 @@
 $(document).ready(function() {
     
-    // center div
-    $(function() {
-        $('#content').css({
-            'position' : 'absolute',
-            'left' : '50%',
-            'top' : '50%',
-            'margin-left' : function() {return -$(this).outerWidth()/2},
-            'margin-top' : function() {return -$(this).outerHeight()/2}
-        });
-    });
-    
     var auth = getAuth();
     var courses = [];
     var baseUrl = getUrl();
@@ -44,6 +33,18 @@ $(document).ready(function() {
         localStorage.removeItem('auth');
         setTimeout(function(){window.location.href = baseUrl + "/index.html"});
     });
+    
+    // center div
+    $(function() {
+        $('#content').css({
+            'position' : 'absolute',
+            'left' : '50%',
+            'top' : '50%',
+            'margin-left' : function() {return -$(this).outerWidth()/2},
+            'margin-top' : function() {return -$(this).outerHeight()/2}
+        });
+    });
+    
 });
 
 function getAuth() {
