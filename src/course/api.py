@@ -256,7 +256,7 @@ class CourseResource(CorsResourceBase, ModelResource):
         else:
             raise ImmediateHttpResponse(HttpBadRequest('该文件无法被阅读'))
         rows = file_data.split("\n")
-        rows = [x for x in rows if x != ""]
+        rows = [x.rstrip() for x in rows if x != ""]
         for row in rows:
             try:
                 user = User.objects.get(username=row)
