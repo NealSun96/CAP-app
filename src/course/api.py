@@ -339,4 +339,4 @@ class CourseResource(CorsResourceBase, ModelResource):
                 d_count += 1
 
         return [x / kt_count if kt_count > 0 else "N/A" for x in [kt_total_first_score, kt_total_days, kt_total_time]]\
-               + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve, d_all_improve, d_total_days]]
+               + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve * 100, d_all_improve * 100, d_total_days]]

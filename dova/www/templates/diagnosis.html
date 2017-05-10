@@ -1,4 +1,4 @@
-<ion-view view-title="diagnosis" id="knowledge_test_page" ng-init="loadDiagnosis()" cache-view="false">
+<ion-view view-title="Diagnosis" id="knowledge_test_page" ng-init="loadDiagnosis()" cache-view="false">
     <!-- <ion-content padding="true" class="has-header"></ion-content> -->
     <ion-nav-buttons class="has-header" side="right">
         <button ng-click="submit()" class="button button-icon icon No Icon" ng-if="count==limit"> Submit</button>
@@ -13,7 +13,7 @@
 
         <div class="row">
             <label class="col col-30">
-                <span class="input-label">Me</span>
+                <span class="input-label">自我诊断</span>
             </label>
             <ion-list ng-repeat="option in options">
                 <ion-radio name="{{ point.self_id }}" ng-click="click(point.id, point.self_id, option)">{{ option }}</ion-radio>
@@ -22,7 +22,7 @@
 
         <div class="row">
             <label class="col col-30">
-                <span class="input-label">My Supervisor</span>
+                <span class="input-label">共同诊断</span>
             </label>
             <ion-list ng-repeat="option in options">
                 <ion-radio name="{{ point.other_id }}" ng-click="click(point.id, point.other_id, option)">{{ option }}</ion-radio>

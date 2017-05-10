@@ -1,4 +1,4 @@
-<ion-view view-title="Signup" hide-back-button="true" id="page2">
+<ion-view view-title="注册" hide-back-button="true" id="page2">
   <ion-content padding="true" class="has-header" scroll="true">
     <form id="signup-form3" class="list center-form" style="max-width: 500px; display: block; margin: 0 auto;">
 
@@ -22,8 +22,8 @@
           <input type="text" id="lastNameField" placeholder="" ng-model="$parent.reg_lastname">
         </label>
         <label class="item item-input" id="signup-input3">
-          <span class="input-label">Username</span>
-          <input type="text" id="usernameField" placeholder="" ng-model="$parent.reg_username">
+          <span class="input-label">Email</span>
+          <input type="text" autocorrect="off" autocapitalize="none" id="usernameField" placeholder="" ng-model="$parent.reg_username">
         </label>
         <label class="item item-input bottom-input" id="signup-input4">
           <span class="input-label">Password</span>
@@ -47,8 +47,8 @@
           </select>
         </label>
 
-      <a ng-click="signup()" id="signup-button1" class="button button-stable  button-block">Sign up</a>
-      <a ui-sref="login" id="signup-button4" class="button button-positive  button-block button-clear">Already have an account?</a>
+      <a ng-click="signup()" id="signup-button1" class="button button-stable  button-block">注册</a>
+      <a ui-sref="login" id="signup-button4" class="button button-positive  button-block button-clear">已有账户?</a>
 
     </form>
   </ion-content>

@@ -16,10 +16,11 @@ angular.module('app.controllers', [])
                 "password": $scope.reg_password,
                 "bu": $scope.selectedGroup
             };
-            $http.post("https://812b15ed.ngrok.io/api/v1/register/", data).then(function successCallback(response) {
+            $http.post("http://106.14.154.226:8000/api/v1/register/", data).then(function successCallback(response) {
                 $rootScope.register_success = true;
                 $state.go('login');
             }, function errorCallback(response) {
+                var changed = false;
                 $rootScope.checkConnection();
 
                 //get tags
@@ -32,26 +33,29 @@ angular.module('app.controllers', [])
                 errorText.innerHTML = "";//reset error text
 
                 if (firstName.value.length == 0){ 
-                    errorText.innerHTML += "First Name should not be left Empty! <br>";
+                    errorText.innerHTML += "请填写First Name！<br>";
                     changed = true;
                 }
 
                 if (lastName.value.length == 0){ 
-                    errorText.innerHTML += "Last Name should not be left Empty! <br>";
+                    errorText.innerHTML += "请填写Last Name！<br>";
                     changed = true;
                 }
 
                 if (username.value.length < 3){ 
-                    errorText.innerHTML += "Username should be at least 3 characters long! <br>";
+                    errorText.innerHTML += "Email必须超过三个字符！<br>";
                     changed = true;
                 }
 
-                if (password.value.length < 8){
-                    errorText.innerHTML += "Password should be at least 8 characters long!";
+                if (password.value.length < 4){
+                    errorText.innerHTML += "Password必须超过四个字符！";
                     changed = true;
                 }
 
-                if(!changed) errorText.innerHTML = "Signup Error!";
+                if(!changed) {
+                    errorText.innerHTML = response.data.error;
+                    if (errorText.innerHTML == "") errorText.innerHTML = "注册发生错误！";
+                }
                 $rootScope.register_success = false;
 
                 //show error box
@@ -81,7 +85,7 @@ angular.module('app.controllers', [])
             }
         };
 
-        $http.get("https://812b15ed.ngrok.io/api/v1/login/", config).then(function successCallback(response) {
+        $http.get("http://106.14.154.226:8000/api/v1/login/", config).then(function successCallback(response) {
             $rootScope.api_auth = $scope.username + ":" + response.data.objects[0].api_key;
             $scope.saveData();
             $state.go('dashboard');
@@ -90,8 +94,8 @@ angular.module('app.controllers', [])
 
                 var errorText = document.getElementById("error-text");
 
-                if (response.status >= 500) errorText.innerHTML = "Server inaccessible, Please try again later.";
-                if(response.status == 401) errorText.innerHTML = "Wrong Username and/or Password, Try Again!";
+                if (response.status >= 500) errorText.innerHTML = "服务器出现错误，请稍后重试！";
+                if(response.status == 401) errorText.innerHTML = "错误的Email或密码，请重试！";
 
                 $rootScope.register_success = false;
 
@@ -129,7 +133,7 @@ angular.module('app.controllers', [])
         };
 
         $scope.show_detail = [];
-        $http.get("https://812b15ed.ngrok.io/api/v1/enrollment/enrollments/", config)
+        $http.get("http://106.14.154.226:8000/api/v1/enrollment/enrollments/", config)
         .then(function successCallback(response) {
             $rootScope.enrollments = response.data.objects;
             for (var i = 0; i < response.data.objects.length; i++) $scope.show_detail.push(true);
@@ -220,7 +224,7 @@ angular.module('app.controllers', [])
             answers.push($scope.feedback_page_text_area);
             var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
             var data = {"feedbacks": angular.toJson(answers)}
-            var url = "https://812b15ed.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/feedback/";
+            var url = "http://106.14.154.226:8000/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/feedback/";
             $http.post(url, data, config).then(function successCallback(response) {
                 $state.go('dashboard');
             }, function errorCallback(response) {
@@ -240,7 +244,7 @@ angular.module('app.controllers', [])
             }
         };
 
-        var url = "https://812b15ed.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/action_plan/";
+        var url = "http://106.14.154.226:8000/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/action_plan/";
         $http.get(url, config).then(function successCallback(response) {
             $scope.action_points = [];
             var action_points = response.data.objects[0].action_points;
@@ -268,7 +272,7 @@ angular.module('app.controllers', [])
         };
     var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
     var data = {"answers": angular.toJson(answers)}
-    var url = "https://812b15ed.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/action_plan/";
+    var url = "http://106.14.154.226:8000/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/action_plan/";
     $http.post(url, data, config).then(function successCallback(response) {
         $state.go('dashboard');
     }, function errorCallback(response) {
@@ -287,7 +291,7 @@ angular.module('app.controllers', [])
             }
         };
 
-        var url = "https://812b15ed.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
+        var url = "http://106.14.154.226:8000/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
         $http.get(url, config).then(function successCallback(response) {
             var questions = response.data.objects[0].questions;
             for (var i = 0; i < questions.length; i++) {
@@ -301,7 +305,7 @@ angular.module('app.controllers', [])
             $scope.questions = [];
         });
 
-        $http.post("http://812b15ed.ngrok.io/api/v1/enrollment/record_start/" + $rootScope.enrollment_in_handle + "/", {}, config).then(function successCallback(response) {
+        $http.post("http://106.14.154.226:8000/api/v1/enrollment/record_start/" + $rootScope.enrollment_in_handle + "/", {}, config).then(function successCallback(response) {
         }, function errorCallback(response) {});
     };
     init();
@@ -333,7 +337,7 @@ angular.module('app.controllers', [])
             }
         };
 
-        var url = "https://812b15ed.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/diagnosis/";
+        var url = "http://106.14.154.226:8000/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/diagnosis/";
         $http.get(url, config).then(function successCallback(response) {
             $scope.diagnosis_points = [];
             var diagnosis_points = response.data.objects[0].diagnosis_points;
@@ -369,7 +373,7 @@ angular.module('app.controllers', [])
         if (offline_debug) {$state.go('dashboard');}
         var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
         var data = {"self_diagnosis": angular.toJson(self_diagnosis), "other_diagnosis": angular.toJson(other_diagnosis)}
-        var url = "https://812b15ed.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/diagnosis/";
+        var url = "http://106.14.154.226:8000/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/diagnosis/";
         $http.post(url, data, config).then(function successCallback(response) {
             $state.go('dashboard');
         }, function errorCallback(response) {
@@ -381,22 +385,22 @@ angular.module('app.controllers', [])
     function ($scope, $stateParams, $http, $rootScope, $state, $ionicViewSwitcher) {
         var init = function() {
             $scope.passed = false;
-            $scope.score_message = "Calculating...";
+            $scope.score_message = "批改答卷中...";
             var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
             var data = {"answers": angular.toJson($rootScope.knowledge_test_answers)}
-            var url = "http://812b15ed.ngrok.io/api/v1/enrollment/check_mark/" + $rootScope.enrollment_in_handle + "/";
+            var url = "http://106.14.154.226:8000/api/v1/enrollment/check_mark/" + $rootScope.enrollment_in_handle + "/";
             $http.post(url, data, config).then(function successCallback(response) {
                 var score = response.data.objects[0];
                 var total_score = response.data.objects[1];
-                var passed = score * 1.0 / total_score >= 0.8;
+                var passed = score * 1.0 / total_score >= response.data.objects[2];
 
                 data = {"first_score": score}
-                url = "https://812b15ed.ngrok.io/api/v1/enrollment/first_score/" + $rootScope.enrollment_in_handle + "/";
+                url = "http://106.14.154.226:8000/api/v1/enrollment/first_score/" + $rootScope.enrollment_in_handle + "/";
                 $http.post(url, data, config).then(function successCallback(response) {
                     $scope.score = score;
-                    $scope.score_message = "Your current score is: " + score + "/" + total_score;
+                    $scope.score_message = "你的得分是：" + score + "/" + total_score;
                     $scope.passed = passed;
-                    $scope.extra_message = passed ? "You can choose to go back and retry, or to submit." : "You score is too low for the test to be submitted. Please retry.";
+                    $scope.extra_message = passed ? "你可以返回重试，或者提交答卷" : "你的得分未达到提交标准，请返回重试";
                 }, function errorCallback(response) {});
             }, function errorCallback(response) {
             });
@@ -406,7 +410,7 @@ angular.module('app.controllers', [])
         $scope.submit = function() {
             var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
             var data = {"answers": angular.toJson($rootScope.knowledge_test_answers), "final_score": $scope.score}
-            var url = "https://812b15ed.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
+            var url = "http://106.14.154.226:8000/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
             $http.post(url, data, config).then(function successCallback(response) {
                 $ionicViewSwitcher.nextDirection('back');
                 $state.go('dashboard');
@@ -420,7 +424,7 @@ angular.module('app.controllers', [])
     $rootScope.checkConnection = function(){
         if(window.Connection){
             if(navigator.connection.type == Connection.NONE) {
-                alert("No Internet Connection, Please make sure you are connected.");
+                alert("未能检测到网络连接，请检查设备设置！");
                 return true;
             }
         }
