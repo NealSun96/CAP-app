@@ -32,26 +32,26 @@ angular.module('app.controllers', [])
                 errorText.innerHTML = "";//reset error text
 
                 if (firstName.value.length == 0){ 
-                    errorText.innerHTML += "First Name should not be left Empty! <br>";
+                    errorText.innerHTML += "请填写First Name！<br>";
                     changed = true;
                 }
 
                 if (lastName.value.length == 0){ 
-                    errorText.innerHTML += "Last Name should not be left Empty! <br>";
+                    errorText.innerHTML += "请填写Last Name！<br>";
                     changed = true;
                 }
 
                 if (username.value.length < 3){ 
-                    errorText.innerHTML += "Username should be at least 3 characters long! <br>";
+                    errorText.innerHTML += "Email必须超过三个字符！<br>";
                     changed = true;
                 }
 
-                if (password.value.length < 8){
-                    errorText.innerHTML += "Password should be at least 8 characters long!";
+                if (password.value.length < 4){
+                    errorText.innerHTML += "Password必须超过四个字符！";
                     changed = true;
                 }
 
-                if(!changed) errorText.innerHTML = "Signup Error!";
+                if(!changed) errorText.innerHTML = "注册发生错误！";
                 $rootScope.register_success = false;
 
                 //show error box
@@ -90,8 +90,8 @@ angular.module('app.controllers', [])
 
                 var errorText = document.getElementById("error-text");
 
-                if (response.status >= 500) errorText.innerHTML = "Server inaccessible, Please try again later.";
-                if(response.status == 401) errorText.innerHTML = "Wrong Username and/or Password, Try Again!";
+                if (response.status >= 500) errorText.innerHTML = "服务器出现错误，请稍后重试！";
+                if(response.status == 401) errorText.innerHTML = "错误的Email或密码，请重试！";
 
                 $rootScope.register_success = false;
 
@@ -388,15 +388,15 @@ angular.module('app.controllers', [])
             $http.post(url, data, config).then(function successCallback(response) {
                 var score = response.data.objects[0];
                 var total_score = response.data.objects[1];
-                var passed = score * 1.0 / total_score >= 0.8;
+                var passed = score * 1.0 / total_score >= response.data.objects[2];
 
                 data = {"first_score": score}
                 url = "https://812b15ed.ngrok.io/api/v1/enrollment/first_score/" + $rootScope.enrollment_in_handle + "/";
                 $http.post(url, data, config).then(function successCallback(response) {
                     $scope.score = score;
-                    $scope.score_message = "Your current score is: " + score + "/" + total_score;
+                    $scope.score_message = "你的得分是：" + score + "/" + total_score;
                     $scope.passed = passed;
-                    $scope.extra_message = passed ? "You can choose to go back and retry, or to submit." : "You score is too low for the test to be submitted. Please retry.";
+                    $scope.extra_message = passed ? "你可以返回重试，或者提交答卷" : "你的得分未达到提交标准，请返回重试";
                 }, function errorCallback(response) {});
             }, function errorCallback(response) {
             });
@@ -420,7 +420,7 @@ angular.module('app.controllers', [])
     $rootScope.checkConnection = function(){
         if(window.Connection){
             if(navigator.connection.type == Connection.NONE) {
-                alert("No Internet Connection, Please make sure you are connected.");
+                alert("未能检测到网络连接，请检查设备设置！");
                 return true;
             }
         }

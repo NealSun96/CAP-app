@@ -54,9 +54,9 @@
                 <div id="data1" class="data active">
                     <div id="courseInfo" class="card">
                         <h4 class="field"><span class="cLabel">课程名称：</span><input  type="text" class="inputField courseName" value=""></h4>
-                        <h4 class="field"><span class="cLabel">开始时间：（改变此处将开始新课程。当前课程里的学生无法在app中看见此课程，但所有的数据都会保留。改回原先的开始时间会重现对应的数据。建议只在课程结束的情况下更改时间。Action Plan和Knowledge Test的开放时间基于此时间。）</span><input  type="text" id="courseStartDate" class="inputField startDate" value=""><input  type="text" id="courseStartTime" class="inputField startTime" value=""> </h4>
-                        <h4 class="field"><span class="cLabel">教师：（建议设置为你的用户名／Email。设置为他人的用户名／Email时，该课程将自动移交给对方，无法再于此处更改。）</span><input  type="text" class="inputField courseIns" value=""></h4>
-                        <h4 class="field" for="checkbox"><span class="cLabel">结束课程：（选择此处以结束课程。当前课程里的学生无法在app中看见此课程，但所有的数据都会保留。）</span><input id='courseDone' class="checkBox" type="checkbox"></h4>
+                        <h4 class="field"><span class="cLabel">开始时间：（改变时间将自动开始新课程，当前课程里的学生无法在app中看见此课程，但所有的数据都会保留。建议只在课程结束的情况下更改时间。Knowledge Test和Diagnosis的开放时间在此时间的30天和90天之后。）</span><input  type="text" id="courseStartDate" class="inputField startDate" value=""><input  type="text" id="courseStartTime" class="inputField startTime" value=""> </h4>
+                        <h4 class="field"><span class="cLabel">教师：（建议设置为你的Email。设置为他人的Email时，该课程将自动移交给对方，无法再于此处更改。）</span><input  type="text" class="inputField courseIns" value=""></h4>
+                        <h4 class="field" for="checkbox"><span class="cLabel">结束课程：（选择此处以结束课程，当前课程里的学生无法在app中看见此课程，但所有的数据都会保留。）</span><input id='courseDone' class="checkBox" type="checkbox"></h4>
                     </div>
                     <button id="courseSave" class="saveBtn">保存</button>
                 </div>
@@ -192,7 +192,7 @@
                 </div>
                 <div id="data4" class="data">
                     <div class="card">
-                        <h4 class="field"><span class="cLabel">上传学生名单：（将所有学生的email输入文档，每行一个。建议使用一个txt文件作为名单。增添学生时，加入该学生的email，重新上传文件即可。）</span><input type="file" id='studentFile' accept="*/*"/></h4>
+                        <h4 class="field"><span class="cLabel">上传学生名单：（将所有学生的email输入文档，每行一个。建议使用一个txt文件作为名单，增添学生时，在文档中加入该学生的email，重新上传文件即可。）</span><input type="file" id='studentFile' accept="*/*"/></h4>
                         <h4 class="field"><span class="cLabel">当前学生:</span></h4>
 
                         <table class="studentTable" id="studentList">

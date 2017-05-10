@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 import pytz
 from datetime import datetime, timedelta
@@ -15,6 +17,7 @@ from tastypie.utils import trailing_slash, dict_strip_unicode_keys
 from .models import Enrollment
 from feedback.models import Feedback
 from action_plan_answer.models import ActionPlanAnswer
+from knowledge_test.models import KnowledgeTest
 from knowledge_test_answer.models import KnowledgeTestAnswer
 from knowledge_test_first_score.models import KnowledgeTestFirstScore
 from knowledge_test_start.models import KnowledgeTestStart
@@ -58,13 +61,13 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
                 bundle.data['picture_path'] = enrollment.course.picture.url
 
             has_feedback = enrollment.feedback_set.count() > 0
-            bundle.data['feedback_status'] = "Completed" if has_feedback else "Available"
+            bundle.data['feedback_status'] = "已完成" if has_feedback else "未完成"
             bundle.data['feedback_color'] = "{color: 'green'}" if has_feedback else "{color: 'red'}"
 
             has_action_plan = enrollment.course.actionplan_set.count() > 0
             has_action_plan_answer = enrollment.actionplananswer_set.count() > 0
-            bundle.data['action_plan_status'] = "Completed" if has_action_plan_answer else "Available" \
-                if has_action_plan else "Unavailable"
+            bundle.data['action_plan_status'] = "已完成" if has_action_plan_answer else "未完成" \
+                if has_action_plan else "未开放"
             bundle.data['action_plan_color'] = "{color: 'green'}" if has_action_plan_answer else "{color: 'red'}" \
                 if has_action_plan else "{color: 'black'}"
 
@@ -74,9 +77,9 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             knowledge_test_open_string = knowledge_test_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_knowledge_test = enrollment.course.knowledgetest_set.count() > 0
             has_knowledge_test_answer = enrollment.knowledgetestanswer_set.count() > 0
-            bundle.data['knowledge_test_status'] = 'Completed' if has_knowledge_test_answer else \
-                'Available' if has_knowledge_test and current_date >= knowledge_test_open_date else \
-                ('Open at %s' % knowledge_test_open_string) if has_knowledge_test else 'Unavailable'
+            bundle.data['knowledge_test_status'] = '已完成' if has_knowledge_test_answer else \
+                '未完成' if has_knowledge_test and current_date >= knowledge_test_open_date else \
+                ('开放于%s' % knowledge_test_open_string) if has_knowledge_test else '未开放'
             bundle.data['knowledge_test_color'] = "{color: 'green'}" if has_knowledge_test_answer else \
                 "{color: 'red'}" if has_knowledge_test and current_date >= knowledge_test_open_date else \
                 "{color: 'black'}"
@@ -84,9 +87,9 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             diagnosis_open_date = (enrollment.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS))
             diagnosis_open_string = diagnosis_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_diagnosis = enrollment.diagnosis_set.count() > 0
-            bundle.data['diagnosis_status'] = 'Completed' if has_diagnosis else \
-                'Available' if has_action_plan_answer and current_date >= diagnosis_open_date else \
-                'Open at %s' % diagnosis_open_string if has_action_plan_answer else 'Unavailable'
+            bundle.data['diagnosis_status'] = '已完成' if has_diagnosis else \
+                '未完成' if has_action_plan_answer and current_date >= diagnosis_open_date else \
+                '开放于%s' % diagnosis_open_string if has_action_plan_answer else '未开放'
             bundle.data['diagnosis_color'] = "{color: 'green'}" if has_diagnosis else \
                 "{color: 'red'}" if has_action_plan_answer and current_date >= diagnosis_open_date else \
                 "{color: 'black'}"
@@ -242,7 +245,7 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             total_score += question.score
 
         return self.create_response(request, {
-            'objects': [score, total_score]
+            'objects': [score, total_score, KnowledgeTest.PASS_MARK]
         })
 
     def record_start(self, request, **kwargs):
