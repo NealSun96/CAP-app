@@ -42,4 +42,5 @@
     <splash src="resources/ios/splash/Default~iphone.png" width="320" height="480"/>
   </platform>
   <icon src="resources/ios/icon/icon-small@3x.png"/>
+  <preference name="target-device" value="tablet"/>
 </widget>
