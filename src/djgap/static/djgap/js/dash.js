@@ -118,6 +118,9 @@ $(document).ready(function(){
 	$('#saveNoti').click(function(){
         $('#saveNoti').fadeOut(100);
     });
+    
+    // add to the dropdown menu
+    $(".startDate").append("<option value = \"value1\">NEW VALUE</option>");
 });
 
 function editCourse() {
@@ -475,4 +478,15 @@ function getUrl() {
 function getAuthAndID() {
     var params = document.URL.split("/");
     return [params[params.length - 2], params[params.length - 1]];
+}
+
+function sDate(option) {
+    // this is how to test what value
+    
+    if (option.value === "NULL") {
+        console.log("null");
+    }
+    else if (option.value === "value1") {
+        console.log("value1");
+    }
 }

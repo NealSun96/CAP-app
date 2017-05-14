@@ -678,6 +678,10 @@ li {
     min-width: 24%;
 }
 
+.startDate {
+    padding-bottom: 3.5px;
+}
+
 .score {
     width: 5%;
     min-width: 5%;
@@ -770,3 +774,4 @@ tr:hover .cell{
 #saveNoti:hover{
     filter: invert(100%);
 }
+

@@ -4,22 +4,25 @@
     <head>
         <title>课程面板</title>
         <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+        
         <link rel="stylesheet" href="{% static 'djgap/css/jquery.timepicker.min.css' %}">
-<!--        <link rel="stylesheet" href="../../static/djgap/css/jquery.timepicker.min.css">-->
+<!--        <link rel="stylesheet" href="../static/djgap/css/jquery.timepicker.min.css">-->
 
         <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/dash.css' %}">
-<!--        <link rel="stylesheet" type="text/css" href="../../static/djgap/css/dash.css">-->
+<!--        <link rel="stylesheet" type="text/css" href="../static/djgap/css/dash.css">-->
         
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         
         <script src="{% static 'djgap/js/dash.js' %}"></script>
-<!--        <script src="../../static/djgap/js/dash.js"></script>-->
+<!--        <script src="../static/djgap/js/dash.js"></script>-->
+        
         <script
 			  src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"
 			  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
 			  crossorigin="anonymous"></script>
+        
         <script src="{% static 'djgap/js/jquery.timepicker.min.js' %}"></script>
-<!--        <script src="../../static/djgap/js/jquery.timepicker.min.js"></script>-->
+<!--        <script src="../static/djgap/js/jquery.timepicker.min.js"></script>-->
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </head>
@@ -54,7 +57,12 @@
                 <div id="data1" class="data active">
                     <div id="courseInfo" class="card">
                         <h4 class="field"><span class="cLabel">课程名称：</span><input  type="text" class="inputField courseName" value=""></h4>
-                        <h4 class="field"><span class="cLabel">开始时间：（改变时间将自动开始新课程，当前课程里的学生无法在app中看见此课程，但所有的数据都会保留。建议只在课程结束的情况下更改时间。Knowledge Test和Diagnosis的开放时间在此时间的30天和90天之后。）</span><input  type="text" id="courseStartDate" class="inputField startDate" value=""><input  type="text" id="courseStartTime" class="inputField startTime" value=""> </h4>
+                        <h4 class="field"><span class="cLabel">开始时间：（改变时间将自动开始新课程，当前课程里的学生无法在app中看见此课程，但所有的数据都会保留。建议只在课程结束的情况下更改时间。Knowledge Test和Diagnosis的开放时间在此时间的30天和90天之后。）</span>
+                            <select class="inputField startDate" name = "startDate" onchange="sDate(this);"> 
+                                <option value="NULL" selected = "selected">Select a Start Date</option>
+                            </select>
+                            <input  type="text" id="courseStartTime" class="inputField startTime" value="">
+                        </h4>
                         <h4 class="field"><span class="cLabel">教师：（建议设置为你的Email。设置为他人的Email时，该课程将自动移交给对方，无法再于此处更改。）</span><input  type="text" class="inputField courseIns" value=""></h4>
                         <h4 class="field" for="checkbox"><span class="cLabel">结束课程：（选择此处以结束课程，当前课程里的学生无法在app中看见此课程，但所有的数据都会保留。）</span><input id='courseDone' class="checkBox" type="checkbox"></h4>
                     </div>
