@@ -54,6 +54,8 @@ $(document).ready(function(){
         $("#3").addClass("blocked");
         $("#4").addClass("blocked");
         $("#5").addClass("blocked");
+        $("#6").addClass("blocked");
+        $("#7").addClass("blocked");
     } else {
         $(".menuItem").click(function(){
             if (!$(".menuItem").hasClass('.error')){
@@ -117,6 +119,14 @@ $(document).ready(function(){
 
 	$('#saveNoti').click(function(){
         $('#saveNoti').fadeOut(100);
+    });
+    
+    $('#dropDownSave').click(function(){
+        // do something when drop down save button is clicked
+    });
+    
+    $('#courseDateSave').click(function(){
+        // do something when course save date is clicked
     });
     
     // add to the dropdown menu

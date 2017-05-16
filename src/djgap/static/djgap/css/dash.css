@@ -581,7 +581,7 @@ li {
     border-radius: 0;
     display: none;
     margin-top: 20px;
-    margin-left: 28px;
+    margin-left: 22px;
 }
 
 #errorItem span {
@@ -676,6 +676,10 @@ li {
 .startTime, .startDate {
     width: 24.5%;
     min-width: 24%;
+}
+
+#data1 .startTime {
+    width: 50%;
 }
 
 .startDate {
@@ -775,3 +779,8 @@ tr:hover .cell{
     filter: invert(100%);
 }
 
+#data6 .card, #data7 .card {
+    
+    min-height: 0;
+    height: 10%;
+}
