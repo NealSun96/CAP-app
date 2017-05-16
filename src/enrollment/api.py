@@ -48,7 +48,8 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
         self.is_authenticated(request)
 
         # Do the query.
-        enrollments = Enrollment.objects.filter(user=request.user).filter(course__done=False).filter(course__start_time=F('start_time'))
+        enrollments = Enrollment.objects.filter(user=request.user).filter(course__done=False)
+            #.filter(course__start_time=F('start_time'))
 
         objects = []
 

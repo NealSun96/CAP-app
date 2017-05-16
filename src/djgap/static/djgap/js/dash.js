@@ -54,6 +54,8 @@ $(document).ready(function(){
         $("#3").addClass("blocked");
         $("#4").addClass("blocked");
         $("#5").addClass("blocked");
+        $("#teacherEmail").val(teacher);
+        $("#courseDone").attr("disabled", true);
     } else {
         $(".menuItem").click(function(){
             if (!$(".menuItem").hasClass('.error')){
@@ -422,7 +424,7 @@ function populateKnowledgeTest() {
                         $("#q" + (i+1) + " .opt" + (j+1)).val("");
                         $("#q" + (i+1) + " .option" + (j+1)).prop('checked', false);
                     }
-                    $("#q" + (i+1) + " .score").val("");
+                    $("#q" + (i+1) + " .score").val(10);
                 }
             },
             error: function(data){
@@ -447,11 +449,15 @@ function populateEnrolls() {
             data: {},
             success: function(data){
                 $("#studentList tr").remove();
-                $("#studentList").append("<tr ><td class=\"cell header\">姓名</td><td class=\"cell header\">Email</td><td class=\"cell header\">BU</td></tr>");
+                $("#studentList").append("<tr ><td class=\"cell header\">姓名</td><td class=\"cell header\">Email</td><td class=\"cell header\">BU</td><td class=\"cell header\">Feedback</td><td class=\"cell header\">Action Plan</td><td class=\"cell header\">Knowledge Test</td><td class=\"cell header\">Diagnosis</td></tr>");
                 for (var i = 0; i < data.objects.length; i++) {
                     var tag = "<tr ><td class=\"cell\">" + data.objects[i][0] +
                     "</td><td class=\"cell\">" + data.objects[i][1] +
-                    "</td><td class=\"cell\">" + data.objects[i][2] + "</td></tr>";
+                    "</td><td class=\"cell\">" + data.objects[i][2] +
+                    "</td><td class=\"cell\">" + data.objects[i][3] +
+                    "</td><td class=\"cell\">" + data.objects[i][4] +
+                    "</td><td class=\"cell\">" + data.objects[i][5] +
+                    "</td><td class=\"cell\">" + data.objects[i][6] + "</td></tr>";
                     $("#studentList").append(tag);
                 }
             },
