@@ -4,22 +4,25 @@
     <head>
         <title>课程面板</title>
         <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+        
         <link rel="stylesheet" href="{% static 'djgap/css/jquery.timepicker.min.css' %}">
-<!--        <link rel="stylesheet" href="../../static/djgap/css/jquery.timepicker.min.css">-->
+<!--        <link rel="stylesheet" href="../static/djgap/css/jquery.timepicker.min.css">-->
 
         <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/dash.css' %}">
-<!--        <link rel="stylesheet" type="text/css" href="../../static/djgap/css/dash.css">-->
+<!--        <link rel="stylesheet" type="text/css" href="../static/djgap/css/dash.css">-->
         
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         
         <script src="{% static 'djgap/js/dash.js' %}"></script>
-<!--        <script src="../../static/djgap/js/dash.js"></script>-->
+<!--        <script src="../static/djgap/js/dash.js"></script>-->
+        
         <script
 			  src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"
 			  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
 			  crossorigin="anonymous"></script>
+        
         <script src="{% static 'djgap/js/jquery.timepicker.min.js' %}"></script>
-<!--        <script src="../../static/djgap/js/jquery.timepicker.min.js"></script>-->
+<!--        <script src="../static/djgap/js/jquery.timepicker.min.js"></script>-->
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </head>
@@ -36,6 +39,8 @@
                 <button id="3" class="menuItem"><span>编辑Knowledge Test</span></button>
                 <button id="4" class="menuItem"><span>注册学生</span></button>
                 <button id="5" class="menuItem"><span>数据统计</span></button>
+                <button id="6" class="menuItem"><span>DROP DOWN</span></button>
+                <button id="7" class="menuItem"><span>DATE PICKER</span></button>
             </div>
             <div id="navTop">
                 <div class="left">
@@ -236,8 +241,22 @@
                         </table>
                     </div>
                 </div>
+                <div id="data6" class="data">
+                    <div class="card">
+                        <select class="inputField startDate" name = "startDate" onchange="sDate(this);"> 
+                            <option value="NULL" selected = "selected">Select a Start Date</option>
+                        </select>
+                    </div>
+                    <button id="dropDownSave" class="saveBtn">注册学生</button>
+                </div>
+
+                <div id="data7" class="data">
+                    <div class="card">
+                        <input  type="text" id="courseStartDate" class="inputField startDate" value="">
+                    </div>
+                    <button id="courseDateSave" class="saveBtn">注册学生</button>
+                </div>
             </div>
-            
         </div>
     </body>
 </html>

@@ -54,6 +54,8 @@ $(document).ready(function(){
         $("#3").addClass("blocked");
         $("#4").addClass("blocked");
         $("#5").addClass("blocked");
+        $("#6").addClass("blocked");
+        $("#7").addClass("blocked");
         $("#teacherEmail").val(teacher);
         $("#courseDone").attr("disabled", true);
     } else {
@@ -120,6 +122,17 @@ $(document).ready(function(){
 	$('#saveNoti').click(function(){
         $('#saveNoti').fadeOut(100);
     });
+    
+    $('#dropDownSave').click(function(){
+        // do something when drop down save button is clicked
+    });
+    
+    $('#courseDateSave').click(function(){
+        // do something when course save date is clicked
+    });
+    
+    // add to the dropdown menu
+    $(".startDate").append("<option value = \"value1\">NEW VALUE</option>");
 });
 
 function editCourse() {
@@ -481,4 +494,15 @@ function getUrl() {
 function getAuthAndID() {
     var params = document.URL.split("/");
     return [params[params.length - 2], params[params.length - 1]];
+}
+
+function sDate(option) {
+    // this is how to test what value
+    
+    if (option.value === "NULL") {
+        console.log("null");
+    }
+    else if (option.value === "value1") {
+        console.log("value1");
+    }
 }
