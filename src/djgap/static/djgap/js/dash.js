@@ -132,6 +132,7 @@ $(document).ready(function(){
         $('#courseStartDate').val($('#newCourseStartDate').val());
         $('#courseStartTime').val($('#newCourseStartTime').val());
         editCourse();
+        populateEnrollTimes();
     });
 });
 
