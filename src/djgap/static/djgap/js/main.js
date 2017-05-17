@@ -29,7 +29,7 @@ $(document).ready(function() {
                 else setTimeout(function() {window.location.href=baseUrl+"/courses/" + btoa(auth);});
             },
             error: function(data){
-                error("错误的用户名或密码");
+                error("错误的Email或密码");
             },
             beforeSend: function(xhr){
                 xhr.setRequestHeader("Authorization", "Basic " + encodedString);
