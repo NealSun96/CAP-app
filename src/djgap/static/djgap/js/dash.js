@@ -184,7 +184,7 @@ function editPlan() {
     var data = {
             "action_points": points
         }
-    if (points.size() > 0) {
+    if (points.length > 0) {
         $.ajax({
             type: "POST",
             url: endPoint,
@@ -236,7 +236,7 @@ function editTest() {
     var data = {
             "questions": questions
         }
-    if (questions.size() > 0) {
+    if (questions.length > 0) {
         $.ajax({
             type: "POST",
             url: endPoint,
