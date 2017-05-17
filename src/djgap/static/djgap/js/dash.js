@@ -513,7 +513,7 @@ function populateEnrollTimes() {
                      + data.objects[i][1] + "</td></tr>"
                 }
                 $(".enrollTimesSelect").append(tag);
-                $('.enrollTimesSelect>option:eq('+selectedIndex+')').prop('selected', true);
+                $('.enrollTimesSelect').val($('.enrollTimesSelect>option:eq('+selectedIndex+')').val());
                 $("#enrollTimesTable").append(tableRows);
             },
             error: function(data){
