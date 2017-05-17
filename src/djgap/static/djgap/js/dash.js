@@ -184,25 +184,27 @@ function editPlan() {
     var data = {
             "action_points": points
         }
-    $.ajax({
-        type: "POST",
-        url: endPoint,
-        data: JSON.stringify(data),
-        dataType: "json",
-        success: function(data){
-            refresh();
-            saveNoti();
-        },
-        error: function(data){
-            error(data.responseText);
-        },
-        beforeSend: function(xhr){
-            xhr.setRequestHeader("Authorization", "Apikey " + auth);
-            xhr.setRequestHeader("Content-Type", "application/json");
-        },
-        complete: function(){
-        }
-    })
+    if (points.size() > 0) {
+        $.ajax({
+            type: "POST",
+            url: endPoint,
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function(data){
+                refresh();
+                saveNoti();
+            },
+            error: function(data){
+                error(data.responseText);
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
 }
 
 function editTest() {
@@ -234,25 +236,27 @@ function editTest() {
     var data = {
             "questions": questions
         }
-    $.ajax({
-        type: "POST",
-        url: endPoint,
-        data: JSON.stringify(data),
-        dataType: "json",
-        success: function(data){
-            refresh();
-            saveNoti();
-        },
-        error: function(data){
-            error(data.responseText);
-        },
-        beforeSend: function(xhr){
-            xhr.setRequestHeader("Authorization", "Apikey " + auth);
-            xhr.setRequestHeader("Content-Type", "application/json");
-        },
-        complete: function(){
-        }
-    })
+    if (questions.size() > 0) {
+        $.ajax({
+            type: "POST",
+            url: endPoint,
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function(data){
+                refresh();
+                saveNoti();
+            },
+            error: function(data){
+                error(data.responseText);
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
 }
 
 function enroll() {
