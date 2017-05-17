@@ -80,7 +80,7 @@ $(document).ready(function(){
     });
     
     $('.startDate').each(function() {
-        $(this).val(new String(date.getFullYear())+"-"+(("0" + date.getMonth()).slice(-2))+"-"+date.getDate());
+        $(this).val(new String(date.getFullYear())+"-"+(("0" + (date.getMonth()+1)).slice(-2))+"-"+date.getDate());
         $(this).datepicker(
         { dateFormat: 'yy-mm-dd' });
     });
