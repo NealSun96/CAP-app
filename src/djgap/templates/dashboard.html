@@ -4,22 +4,25 @@
     <head>
         <title>课程面板</title>
         <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+        
         <link rel="stylesheet" href="{% static 'djgap/css/jquery.timepicker.min.css' %}">
-<!--        <link rel="stylesheet" href="../../static/djgap/css/jquery.timepicker.min.css">-->
+<!--        <link rel="stylesheet" href="../static/djgap/css/jquery.timepicker.min.css">-->
 
         <link rel="stylesheet" type="text/css" href="{% static 'djgap/css/dash.css' %}">
-<!--        <link rel="stylesheet" type="text/css" href="../../static/djgap/css/dash.css">-->
+<!--        <link rel="stylesheet" type="text/css" href="../static/djgap/css/dash.css">-->
         
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         
         <script src="{% static 'djgap/js/dash.js' %}"></script>
-<!--        <script src="../../static/djgap/js/dash.js"></script>-->
+<!--        <script src="../static/djgap/js/dash.js"></script>-->
+        
         <script
 			  src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"
 			  integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
 			  crossorigin="anonymous"></script>
+        
         <script src="{% static 'djgap/js/jquery.timepicker.min.js' %}"></script>
-<!--        <script src="../../static/djgap/js/jquery.timepicker.min.js"></script>-->
+<!--        <script src="../static/djgap/js/jquery.timepicker.min.js"></script>-->
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     </head>
@@ -34,6 +37,8 @@
                 <button id="1" class="menuItem menuItemActive"><span>编辑课程</span></button>
                 <button id="2" class="menuItem"><span>编辑Action Plan</span></button>
                 <button id="3" class="menuItem"><span>编辑Knowledge Test</span></button>
+                <button id="7" class="menuItem"><span>添加课时</span></button>
+                <button id="6" class="menuItem"><span>管理课时</span></button>
                 <button id="4" class="menuItem"><span>注册学生</span></button>
                 <button id="5" class="menuItem"><span>数据统计</span></button>
             </div>
@@ -54,9 +59,9 @@
                 <div id="data1" class="data active">
                     <div id="courseInfo" class="card">
                         <h4 class="field"><span class="cLabel">课程名称：</span><input  type="text" class="inputField courseName" value=""></h4>
-                        <h4 class="field"><span class="cLabel">开始时间：（改变时间将自动开始新课程，当前课程里的学生无法在app中看见此课程，但所有的数据都会保留。建议只在课程结束的情况下更改时间。Knowledge Test和Diagnosis的开放时间在此时间的30天和90天之后。）</span><input  type="text" id="courseStartDate" class="inputField startDate" value=""><input  type="text" id="courseStartTime" class="inputField startTime" value=""> </h4>
-                        <h4 class="field"><span class="cLabel">教师：（建议设置为你的Email。设置为他人的Email时，该课程将自动移交给对方，无法再于此处更改。）</span><input  type="text" class="inputField courseIns" value=""></h4>
-                        <h4 class="field" for="checkbox"><span class="cLabel">结束课程：（选择此处以结束课程，当前课程里的学生无法在app中看见此课程，但所有的数据都会保留。）</span><input id='courseDone' class="checkBox" type="checkbox"></h4>
+                        <h4 class="field" id="classStartTimeField" hidden><span class="cLabel">开始时间：（Knowledge Test和Diagnosis的开放时间在此时间的30天和90天之后。）</span><input  type="text" id="courseStartDate" class="inputField startDate" value=""><input  type="text" id="courseStartTime" class="inputField startTime" value=""> </h4>
+                        <h4 class="field"><span class="cLabel">教师：（建议设置为你的Email。设置为他人的Email时，该课程将自动移交给对方，无法再于此处更改。）</span><input id="teacherEmail" type="text" class="inputField courseIns" value=""></h4>
+                        <h4 class="field" for="checkbox" id="classDoneField"><span class="cLabel">结束课程：（选择此处以结束课程，课程里的学生无法在app中看见此课程，但所有的数据都会保留。）</span><input id='courseDone' class="checkBox" type="checkbox"></h4>
                     </div>
                     <button id="courseSave" class="saveBtn">保存</button>
                 </div>
@@ -193,18 +198,23 @@
                 <div id="data4" class="data">
                     <div class="card">
                         <h4 class="field"><span class="cLabel">上传学生名单：（将所有学生的email输入文档，每行一个。建议使用一个txt文件作为名单，增添学生时，在文档中加入该学生的email，重新上传文件即可。）</span><input type="file" id='studentFile' accept="*/*"/></h4>
+                    </div>
+                    <button id="enroll" class="saveBtn">注册学生</button>
+                    <div class="card">
                         <h4 class="field"><span class="cLabel">当前学生:</span></h4>
-
                         <table class="studentTable" id="studentList">
                         </table>
                     </div>
-                    <button id="enroll" class="saveBtn">注册学生</button>
                 </div>
                 <div id="data5" class="data">
                     <div class="card">
-                        <h4 class="field">&nbsp;&nbsp;&nbsp;数据范围：（输入开课时间的范围。比如：计算三月课程里的所有数据，输入3月1日到3月31日；计算本年度课程的所有数据，输入1月1日到当前日期。）</h4>
-                        <h4 class="field"><span class="cLabel">最早开课时间</span><input type="text" id="dataStartDate" class="inputField startDate" value=""><input  type="text" id="dataStartTime" class="inputField startTime" value=""> </h4>
-                        <h4 class="field"><span class="cLabel">最晚开课时间</span><input type="text" id="dataEndDate" class="inputField startDate" value=""><input  type="text" id="dataEndTime" class="inputField startTime" value=""> </h4>
+                        <h4 class="field">&nbsp;&nbsp;&nbsp;数据范围：（选择需要计算数据的课时范围。）</h4>
+                        <h4 class="field"><span class="cLabel">最早课时（包括）</span>
+                            <select class="inputField startDate enrollTimesSelect" id="dataStartDate"></select>
+                        </h4>
+                        <h4 class="field"><span class="cLabel">最晚课时（包括）</span>
+                            <select class="inputField startDate enrollTimesSelect" id="dataEndDate"></select>
+                        </h4>
                     </div>
                     <button id="calculateData" class="saveBtn">计算数据</button>
                     <div class="card">
@@ -215,26 +225,49 @@
                           <tr id="dataRow0">
                             <td class="cell header">Knowledge Test 平均初次得分</td>
                           </tr>
-                          <tr id="dataRow1">
-                            <td class="cell header">Knowledge Test 平均完成天数</td>
+                            <tr id="dataRow1">
+                            <td class="cell header">Knowledge Test 平均最终得分</td>
                           </tr>
                           <tr id="dataRow2">
-                            <td class="cell header">Knowledge Test 平均完成秒数</td>
+                            <td class="cell header">Knowledge Test 平均完成天数</td>
                           </tr>
                           <tr id="dataRow3">
-                            <td class="cell header">Diagnosis 自我诊断明显进步比例（%）</td>
+                            <td class="cell header">Knowledge Test 平均完成秒数</td>
                           </tr>
                           <tr id="dataRow4">
-                            <td class="cell header">Diagnosis 共同诊断明显进步比例（%）</td>
+                            <td class="cell header">Diagnosis 自我诊断明显进步比例（%）</td>
                           </tr>
                           <tr id="dataRow5">
+                            <td class="cell header">Diagnosis 共同诊断明显进步比例（%）</td>
+                          </tr>
+                          <tr id="dataRow6">
                             <td class="cell header">Diagnosis 平均完成天数</td>
                           </tr>
                         </table>
                     </div>
                 </div>
+                <div id="data6" class="data">
+                    <div class="card">
+                    <h4 class="field"><span class="cLabel">改变课程开始时间：（改变此处以改变当前正在被管理的课时。不同的课时有不同的学员列表， 但有相同的作业。）</span>
+                        <select class="inputField startDate enrollTimesSelect" id="enrollTimesSelect" onchange="sDate(this);">
+                        </select>
+                    </h4>
+
+                    </div>
+                    <button id="dropDownSave" class="saveBtn">保存</button>
+                </div>
+
+                <div id="data7" class="data">
+                    <div class="card">
+                        <h4 class="field"><span class="cLabel">添加新课时：（Knowledge Test和Diagnosis的开放时间在此时间的30天和90天之后。添加新课时会保存已有数据的课时，但没有学员参与的课时会自动删除。）</span><input  type="text" id="newCourseStartDate" class="inputField startDate" value=""><input  type="text" id="newCourseStartTime" class="inputField startTime" value=""> </h4>
+                    </div>
+                    <button id="courseDateSave" class="saveBtn">保存</button>
+                    <div class="card">
+                        <h4 class="field"><span class="cLabel">已存在课时：</span></h4>
+                        <table class="enrollTimesTable" id="enrollTimesTable"></table>
+                    </div>
+                </div>
             </div>
-            
         </div>
     </body>
 </html>

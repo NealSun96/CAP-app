@@ -35,6 +35,7 @@ class CourseResource(CorsResourceBase, ModelResource):
 
     def prepend_urls(self):
         return [
+            url(r"^(?P<resource_name>%s)/get_enroll_times/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_enroll_times'), name="api_get_enroll_times"),
             url(r"^(?P<resource_name>%s)/add_course%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('add_course'), name="api_add_course"),
             url(r"^(?P<resource_name>%s)/edit_course/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('edit_course'), name="api_edit_course"),
             url(r"^(?P<resource_name>%s)/get_assignments/(?P<id>\d+)/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_assignments'), name="api_get_assignments"),
@@ -46,6 +47,32 @@ class CourseResource(CorsResourceBase, ModelResource):
 
     def authorized_read_list(self, object_list, bundle):
         return object_list.filter(teacher=bundle.request.user)
+
+    def get_enroll_times(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+
+        try:
+            course = Course.objects.get(id=kwargs['id'], teacher=request.user)
+        except ObjectDoesNotExist:
+            raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
+
+        time_dict = {}
+        for enroll in course.enrollment_set.all():
+            stime = enroll.start_time
+            if time_dict.has_key(stime):
+                time_dict[stime][1] += 1
+            else:
+                time_dict[stime] = [stime, 1, stime == course.start_time]
+        if not time_dict.has_key(course.start_time):
+            time_dict[course.start_time] = [course.start_time, 0, True]
+
+        output = time_dict.values()
+        output.sort(key=lambda x: x[0], reverse=True)
+        object_list = {
+            'objects': output,
+        }
+        return self.create_response(request, object_list)
 
     def add_course(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
@@ -278,7 +305,14 @@ class CourseResource(CorsResourceBase, ModelResource):
         except ObjectDoesNotExist:
             raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
-        data = [[enroll.user.get_full_name(), enroll.user.username, enroll.user.groups.first().name if enroll.user.groups.first() else "N/A"]
+        data = [[enroll.user.get_full_name(),
+                 enroll.user.username,
+                 enroll.user.groups.first().name if enroll.user.groups.first() else "N/A",
+                 "已完成" if enroll.feedback_set.first() else "",
+                 "已完成" if enroll.actionplananswer_set.first() else "",
+                 "已完成" if enroll.knowledgetestanswer_set.first() else "",
+                 "已完成" if enroll.diagnosis_set.first() else "",
+                 ]
                 for enroll in course.enrollment_set.all() if enroll.start_time == course.start_time]
         data.sort()
         object_list = {
@@ -318,7 +352,7 @@ class CourseResource(CorsResourceBase, ModelResource):
         return self.create_response(request, object_list)
 
     def calc_data(self, querys):
-        kt_total_first_score, kt_total_days, kt_total_time, kt_count = 0, 0, 0, 0.0
+        kt_total_first_score, kt_total_final_score, kt_total_days, kt_total_time, kt_count = 0, 0, 0, 0, 0.0
         d_self_improve, d_total_days, d_all_improve, d_count = 0, 0, 0, 0.0
 
         for enroll in querys:
@@ -326,6 +360,7 @@ class CourseResource(CorsResourceBase, ModelResource):
 
             if enroll.knowledgetestanswer_set.all() and enroll.knowledgetestfirstscore_set.all() and enroll.knowledgeteststart_set.all():
                 kt_total_first_score += enroll.knowledgetestfirstscore_set.first().first_score
+                kt_total_final_score += enroll.knowledgetestanswer_set.first().final_score
                 kt_total_days += (enroll.knowledgetestanswer_set.first().completion_date - start_date).days
                 kt_total_time += enroll.knowledgetestanswer_set.first().time_taken
                 kt_count += 1
@@ -338,5 +373,5 @@ class CourseResource(CorsResourceBase, ModelResource):
                 d_all_improve += 1 if (3, 3) in zip(self_diagnosis, other_diagnosis) else 0
                 d_count += 1
 
-        return [x / kt_count if kt_count > 0 else "N/A" for x in [kt_total_first_score, kt_total_days, kt_total_time]]\
+        return [x / kt_count if kt_count > 0 else "N/A" for x in [kt_total_first_score, kt_total_final_score, kt_total_days, kt_total_time]]\
                + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve * 100, d_all_improve * 100, d_total_days]]

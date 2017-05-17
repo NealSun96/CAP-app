@@ -31,7 +31,7 @@ def task_check_assignment():
         if course.done:
             continue
 
-        enrollments = course.enrollment_set.filter(start_time=course.start_time)
+        enrollments = course.enrollment_set
 
         for enrollment in enrollments:
             per_email_context = ""

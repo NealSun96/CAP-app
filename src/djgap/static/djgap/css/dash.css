@@ -566,7 +566,7 @@ li {
 
 #title .inputField {
     width: auto;
-    min-width: 350px;
+    min-width: 580px;
 }
 
 #errorItem {
@@ -581,7 +581,7 @@ li {
     border-radius: 0;
     display: none;
     margin-top: 20px;
-    margin-left: 28px;
+    margin-left: 22px;
 }
 
 #errorItem span {
@@ -769,4 +769,14 @@ tr:hover .cell{
 
 #saveNoti:hover{
     filter: invert(100%);
+}
+
+#data6 .card, #data7 .card {
+    
+    min-height: 0;
+    height: 10%;
+}
+
+#enrollTimesSelect{
+    width: 25%;
 }

@@ -54,6 +54,11 @@ $(document).ready(function(){
         $("#3").addClass("blocked");
         $("#4").addClass("blocked");
         $("#5").addClass("blocked");
+        $("#6").addClass("blocked");
+        $("#7").addClass("blocked");
+        $("#teacherEmail").val(teacher);
+        $("#classStartTimeField").show();
+        $("#classDoneField").hide();
     } else {
         $(".menuItem").click(function(){
             if (!$(".menuItem").hasClass('.error')){
@@ -75,7 +80,7 @@ $(document).ready(function(){
     });
     
     $('.startDate').each(function() {
-        $(this).val(new String(date.getFullYear())+"-"+(("0" + date.getMonth()).slice(-2))+"-"+date.getDate());
+        $(this).val(new String(date.getFullYear())+"-"+(("0" + (date.getMonth()+1)).slice(-2))+"-"+date.getDate());
         $(this).datepicker(
         { dateFormat: 'yy-mm-dd' });
     });
@@ -117,6 +122,17 @@ $(document).ready(function(){
 
 	$('#saveNoti').click(function(){
         $('#saveNoti').fadeOut(100);
+    });
+    
+    $('#dropDownSave').click(function(){
+        editCourse();
+    });
+    
+    $('#courseDateSave').click(function(){
+        $('#courseStartDate').val($('#newCourseStartDate').val());
+        $('#courseStartTime').val($('#newCourseStartTime').val());
+        editCourse();
+        populateEnrollTimes();
     });
 });
 
@@ -168,25 +184,27 @@ function editPlan() {
     var data = {
             "action_points": points
         }
-    $.ajax({
-        type: "POST",
-        url: endPoint,
-        data: JSON.stringify(data),
-        dataType: "json",
-        success: function(data){
-            refresh();
-            saveNoti();
-        },
-        error: function(data){
-            error(data.responseText);
-        },
-        beforeSend: function(xhr){
-            xhr.setRequestHeader("Authorization", "Apikey " + auth);
-            xhr.setRequestHeader("Content-Type", "application/json");
-        },
-        complete: function(){
-        }
-    })
+    if (points.length > 0) {
+        $.ajax({
+            type: "POST",
+            url: endPoint,
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function(data){
+                refresh();
+                saveNoti();
+            },
+            error: function(data){
+                error(data.responseText);
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
 }
 
 function editTest() {
@@ -218,25 +236,27 @@ function editTest() {
     var data = {
             "questions": questions
         }
-    $.ajax({
-        type: "POST",
-        url: endPoint,
-        data: JSON.stringify(data),
-        dataType: "json",
-        success: function(data){
-            refresh();
-            saveNoti();
-        },
-        error: function(data){
-            error(data.responseText);
-        },
-        beforeSend: function(xhr){
-            xhr.setRequestHeader("Authorization", "Apikey " + auth);
-            xhr.setRequestHeader("Content-Type", "application/json");
-        },
-        complete: function(){
-        }
-    })
+    if (questions.length > 0) {
+        $.ajax({
+            type: "POST",
+            url: endPoint,
+            data: JSON.stringify(data),
+            dataType: "json",
+            success: function(data){
+                refresh();
+                saveNoti();
+            },
+            error: function(data){
+                error(data.responseText);
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
 }
 
 function enroll() {
@@ -271,9 +291,8 @@ function enroll() {
 
 function calculateData() {
     var endPoint = baseUrl + "/api/v1/course/get_data/"+ id +"/";
-    var start_time = $('#dataStartDate').val() + "T"+$('#dataStartTime').val()+"+08:00";
-    var end_time = $('#dataEndDate').val() + "T"+$('#dataEndTime').val()+"+08:00";
-
+    var start_time = $('#dataStartDate').val();
+    var end_time = $('#dataEndDate').val();
     var data = {
             "start_time": start_time,
             "end_time": end_time
@@ -308,6 +327,7 @@ function refresh() {
     populateActionPlan();
     populateKnowledgeTest();
     populateEnrolls();
+    populateEnrollTimes();
     $('#errorItem').fadeOut(100);
     $('#saveNoti').fadeOut(100);
 }
@@ -339,7 +359,7 @@ function populateCourse() {
                         $(".courseIns").val(teacher);
                         $("#courseDone").prop('checked', data.objects[i].done);
 
-                        $(".inpTitle").val(data.objects[i].course_name)
+                        $(".inpTitle").val(data.objects[i].course_name+"（"+time.split("T")[0]+"）")
                         $(".inpTitle").attr('size', $(".inpTitle").val().length);
 
                         break;
@@ -422,7 +442,7 @@ function populateKnowledgeTest() {
                         $("#q" + (i+1) + " .opt" + (j+1)).val("");
                         $("#q" + (i+1) + " .option" + (j+1)).prop('checked', false);
                     }
-                    $("#q" + (i+1) + " .score").val("");
+                    $("#q" + (i+1) + " .score").val(10);
                 }
             },
             error: function(data){
@@ -447,13 +467,58 @@ function populateEnrolls() {
             data: {},
             success: function(data){
                 $("#studentList tr").remove();
-                $("#studentList").append("<tr ><td class=\"cell header\">姓名</td><td class=\"cell header\">Email</td><td class=\"cell header\">BU</td></tr>");
+                $("#studentList").append("<tr ><td class=\"cell header\">姓名</td><td class=\"cell header\">Email</td><td class=\"cell header\">BU</td><td class=\"cell header\">Feedback</td><td class=\"cell header\">Action Plan</td><td class=\"cell header\">Knowledge Test</td><td class=\"cell header\">Diagnosis</td></tr>");
                 for (var i = 0; i < data.objects.length; i++) {
                     var tag = "<tr ><td class=\"cell\">" + data.objects[i][0] +
                     "</td><td class=\"cell\">" + data.objects[i][1] +
-                    "</td><td class=\"cell\">" + data.objects[i][2] + "</td></tr>";
+                    "</td><td class=\"cell\">" + data.objects[i][2] +
+                    "</td><td class=\"cell\">" + data.objects[i][3] +
+                    "</td><td class=\"cell\">" + data.objects[i][4] +
+                    "</td><td class=\"cell\">" + data.objects[i][5] +
+                    "</td><td class=\"cell\">" + data.objects[i][6] + "</td></tr>";
                     $("#studentList").append(tag);
                 }
+            },
+            error: function(data){
+                error(data.responseText);
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
+}
+
+function populateEnrollTimes() {
+    if (!new_course) {
+        var endPoint = baseUrl + "/api/v1/course/get_enroll_times/"+ id + "/";
+        $.ajax({
+            type: "GET",
+            url: endPoint,
+            data: {},
+            success: function(data){
+                $(".enrollTimesSelect option").remove();
+                $("#enrollTimesTable tr").remove();
+                $("#enrollTimesTable").append("<tr><td class=\"cell header\">课时</td><td class=\"cell header\">学员人数</td></tr>")
+                var tag = "";
+                var tableRows = "";
+                var selectedIndex = 0;
+                for (var i = 0; i < data.objects.length; i++) {
+                    tag += "<option value=\""+ data.objects[i][0] + "\">"
+                    + data.objects[i][0].split("T")[0] + " " +  data.objects[i][0].split("T")[1]
+                    + " " + data.objects[i][1] +
+                    "个学员</option>";
+                    if (data.objects[i][2]) selectedIndex = i;
+                    tableRows += "<tr><td class=\"cell\">"+ data.objects[i][0].split("T")[0]
+                     + " " +  data.objects[i][0].split("T")[1]+ "</td><td class=\"cell\">"
+                     + data.objects[i][1] + "</td></tr>"
+                }
+                $(".enrollTimesSelect").append(tag);
+                $('.enrollTimesSelect').val($('.enrollTimesSelect>option:eq('+selectedIndex+')').val());
+                $("#enrollTimesTable").append(tableRows);
             },
             error: function(data){
                 error(data.responseText);
@@ -475,4 +540,9 @@ function getUrl() {
 function getAuthAndID() {
     var params = document.URL.split("/");
     return [params[params.length - 2], params[params.length - 1]];
+}
+
+function sDate(option) {
+    $("#courseStartTime").val(option.value.split("T")[1]);
+    $("#courseStartDate").val(option.value.split("T")[0]);
 }

@@ -29,7 +29,7 @@ $(document).ready(function() {
                 else setTimeout(function() {window.location.href=baseUrl+"/courses/" + btoa(auth);});
             },
             error: function(data){
-                error("错误的用户名或密码");
+                error("错误的Email或密码");
             },
             beforeSend: function(xhr){
                 xhr.setRequestHeader("Authorization", "Basic " + encodedString);
@@ -45,21 +45,38 @@ $(document).ready(function() {
         clearError();
         $('#login').addClass("hidden");
         $('#registerForm').removeClass("hidden");
+        center();
+        
     });
     
     $("#registerForm #regBtn").click(function(){
         clearError();
         registerUser();
+        center();
     });
     
     $("#cancelReg").click(function(){
         clearError();
         $('#login').removeClass("hidden");
         $('#registerForm').addClass("hidden");
+        center();
     });
+    
+    center();
 
 });
 
+function center() {
+    $(function() {
+        $('#container').css({
+            'position' : 'absolute',
+            'left' : '50%',
+            'top' : '50%',
+            'margin-left' : function() {return -$(this).outerWidth()/2},
+            'margin-top' : function() {return -$(this).outerHeight()/2}
+        });
+    });
+}
 
 function registerUser() {
     var firstName = document.forms["registerForm"]["firstName"].value;

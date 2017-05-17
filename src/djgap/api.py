@@ -63,7 +63,7 @@ class RegisterResource(ModelResource):
             bundle.obj.set_password(bundle.data.get('password'))
             bundle.obj.save()
         except IntegrityError:
-            raise BadRequest('该用户名已存在')
+            raise BadRequest('该Email已存在')
         et = EmployeeTitle.objects.filter(username=bundle.data.get('username')).first()
         if et and et.title == EmployeeTitle.TITLE_TEACHER:
             group = EmployeeTitle.get_or_create_title_group(EmployeeTitle.TITLE_TEACHER)
