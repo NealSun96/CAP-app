@@ -63,10 +63,14 @@ class CourseResource(CorsResourceBase, ModelResource):
             if time_dict.has_key(stime):
                 time_dict[stime][1] += 1
             else:
-                time_dict[stime] = [stime, 1]
+                time_dict[stime] = [stime, 1, stime == course.start_time]
+        if not time_dict.has_key(course.start_time):
+            time_dict[course.start_time] = [course.start_time, 0, True]
 
+        output = time_dict.values()
+        output.sort(key=lambda x: x[0], reverse=True)
         object_list = {
-            'objects': time_dict.values(),
+            'objects': output,
         }
         return self.create_response(request, object_list)
 

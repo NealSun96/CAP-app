@@ -78,22 +78,26 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             knowledge_test_open_string = knowledge_test_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_knowledge_test = enrollment.course.knowledgetest_set.count() > 0
             has_knowledge_test_answer = enrollment.knowledgetestanswer_set.count() > 0
-            bundle.data['knowledge_test_status'] = '已完成' if has_knowledge_test_answer else \
-                '未完成' if has_knowledge_test and current_date >= knowledge_test_open_date else \
-                ('开放于%s' % knowledge_test_open_string) if has_knowledge_test else '未开放'
-            bundle.data['knowledge_test_color'] = "{color: 'green'}" if has_knowledge_test_answer else \
-                "{color: 'red'}" if has_knowledge_test and current_date >= knowledge_test_open_date else \
-                "{color: 'black'}"
+            if has_knowledge_test_answer:
+                bundle.data['knowledge_test_status'], bundle.data['knowledge_test_color'] = '已完成', "{color: 'green'}"
+            elif not has_knowledge_test or not has_feedback or not has_action_plan_answer:
+                bundle.data['knowledge_test_status'], bundle.data['knowledge_test_color'] = '未开放', "{color: 'black'}"
+            elif current_date >= knowledge_test_open_date:
+                bundle.data['knowledge_test_status'], bundle.data['knowledge_test_color'] = '未完成', "{color: 'red'}"
+            else:
+                bundle.data['knowledge_test_status'], bundle.data['knowledge_test_color'] = '开放于%s' % knowledge_test_open_string, "{color: 'black'}"
 
             diagnosis_open_date = (enrollment.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS))
             diagnosis_open_string = diagnosis_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_diagnosis = enrollment.diagnosis_set.count() > 0
-            bundle.data['diagnosis_status'] = '已完成' if has_diagnosis else \
-                '未完成' if has_action_plan_answer and current_date >= diagnosis_open_date else \
-                '开放于%s' % diagnosis_open_string if has_action_plan_answer else '未开放'
-            bundle.data['diagnosis_color'] = "{color: 'green'}" if has_diagnosis else \
-                "{color: 'red'}" if has_action_plan_answer and current_date >= diagnosis_open_date else \
-                "{color: 'black'}"
+            if has_diagnosis:
+                bundle.data['diagnosis_status'], bundle.data['diagnosis_color'] = '已完成', "{color: 'green'}"
+            elif not has_feedback or not has_action_plan_answer:
+                bundle.data['diagnosis_status'], bundle.data['diagnosis_color'] = '未开放', "{color: 'black'}"
+            elif current_date >= diagnosis_open_date:
+                bundle.data['diagnosis_status'], bundle.data['diagnosis_color'] = '未完成', "{color: 'red'}"
+            else:
+                bundle.data['diagnosis_status'], bundle.data['diagnosis_color'] = '开放于%s' % diagnosis_open_string, "{color: 'black'}"
             objects.append(bundle)
 
         object_list = {

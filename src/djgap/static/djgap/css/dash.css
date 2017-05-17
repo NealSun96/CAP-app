@@ -566,7 +566,7 @@ li {
 
 #title .inputField {
     width: auto;
-    min-width: 350px;
+    min-width: 580px;
 }
 
 #errorItem {
@@ -678,14 +678,6 @@ li {
     min-width: 24%;
 }
 
-#data1 .startTime {
-    width: 50%;
-}
-
-.startDate {
-    padding-bottom: 3.5px;
-}
-
 .score {
     width: 5%;
     min-width: 5%;
@@ -783,4 +775,8 @@ tr:hover .cell{
     
     min-height: 0;
     height: 10%;
+}
+
+#enrollTimesSelect{
+    width: 25%;
 }

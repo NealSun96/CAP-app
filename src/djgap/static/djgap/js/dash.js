@@ -57,7 +57,8 @@ $(document).ready(function(){
         $("#6").addClass("blocked");
         $("#7").addClass("blocked");
         $("#teacherEmail").val(teacher);
-        $("#courseDone").attr("disabled", true);
+        $("#classStartTimeField").show();
+        $("#classDoneField").hide();
     } else {
         $(".menuItem").click(function(){
             if (!$(".menuItem").hasClass('.error')){
@@ -124,15 +125,14 @@ $(document).ready(function(){
     });
     
     $('#dropDownSave').click(function(){
-        // do something when drop down save button is clicked
+        editCourse();
     });
     
     $('#courseDateSave').click(function(){
-        // do something when course save date is clicked
+        $('#courseStartDate').val($('#newCourseStartDate').val());
+        $('#courseStartTime').val($('#newCourseStartTime').val());
+        editCourse();
     });
-    
-    // add to the dropdown menu
-    $(".startDate").append("<option value = \"value1\">NEW VALUE</option>");
 });
 
 function editCourse() {
@@ -286,9 +286,8 @@ function enroll() {
 
 function calculateData() {
     var endPoint = baseUrl + "/api/v1/course/get_data/"+ id +"/";
-    var start_time = $('#dataStartDate').val() + "T"+$('#dataStartTime').val()+"+08:00";
-    var end_time = $('#dataEndDate').val() + "T"+$('#dataEndTime').val()+"+08:00";
-
+    var start_time = $('#dataStartDate').val();
+    var end_time = $('#dataEndDate').val();
     var data = {
             "start_time": start_time,
             "end_time": end_time
@@ -323,6 +322,7 @@ function refresh() {
     populateActionPlan();
     populateKnowledgeTest();
     populateEnrolls();
+    populateEnrollTimes();
     $('#errorItem').fadeOut(100);
     $('#saveNoti').fadeOut(100);
 }
@@ -354,7 +354,7 @@ function populateCourse() {
                         $(".courseIns").val(teacher);
                         $("#courseDone").prop('checked', data.objects[i].done);
 
-                        $(".inpTitle").val(data.objects[i].course_name)
+                        $(".inpTitle").val(data.objects[i].course_name+"（"+time.split("T")[0]+"）")
                         $(".inpTitle").attr('size', $(".inpTitle").val().length);
 
                         break;
@@ -487,6 +487,47 @@ function populateEnrolls() {
     }
 }
 
+function populateEnrollTimes() {
+    if (!new_course) {
+        var endPoint = baseUrl + "/api/v1/course/get_enroll_times/"+ id + "/";
+        $.ajax({
+            type: "GET",
+            url: endPoint,
+            data: {},
+            success: function(data){
+                $(".enrollTimesSelect option").remove();
+                $("#enrollTimesTable tr").remove();
+                $("#enrollTimesTable").append("<tr><td class=\"cell header\">课时</td><td class=\"cell header\">学员人数</td></tr>")
+                var tag = "";
+                var tableRows = "";
+                var selectedIndex = 0;
+                for (var i = 0; i < data.objects.length; i++) {
+                    tag += "<option value=\""+ data.objects[i][0] + "\">"
+                    + data.objects[i][0].split("T")[0] + " " +  data.objects[i][0].split("T")[1]
+                    + " " + data.objects[i][1] +
+                    "个学员</option>";
+                    if (data.objects[i][2]) selectedIndex = i;
+                    tableRows += "<tr><td class=\"cell\">"+ data.objects[i][0].split("T")[0]
+                     + " " +  data.objects[i][0].split("T")[1]+ "</td><td class=\"cell\">"
+                     + data.objects[i][1] + "</td></tr>"
+                }
+                $(".enrollTimesSelect").append(tag);
+                $('.enrollTimesSelect>option:eq('+selectedIndex+')').prop('selected', true);
+                $("#enrollTimesTable").append(tableRows);
+            },
+            error: function(data){
+                error(data.responseText);
+            },
+            beforeSend: function(xhr){
+                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            complete: function(){
+            }
+        })
+    }
+}
+
 function getUrl() {
     return location.protocol + "//" + location.hostname + (location.port && ":" + location.port);
 }
@@ -497,12 +538,6 @@ function getAuthAndID() {
 }
 
 function sDate(option) {
-    // this is how to test what value
-    
-    if (option.value === "NULL") {
-        console.log("null");
-    }
-    else if (option.value === "value1") {
-        console.log("value1");
-    }
+    $("#courseStartTime").val(option.value.split("T")[1]);
+    $("#courseStartDate").val(option.value.split("T")[0]);
 }
