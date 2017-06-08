@@ -25,7 +25,7 @@ def task_check_assignment():
     email_context = "尊敬的{}:\n"\
                     "您好，\n" \
                     "您的课程：{} 已有任务开放。开放的任务是：{}，请及时完成！\n" \
-                    "CAP APP"
+                    "C3／能力加速营"
 
     for course in Course.objects.all():
         if course.done:

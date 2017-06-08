@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for djgap project.
 
@@ -133,7 +134,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Shanghai'
 
-DEFAULT_FROM_EMAIL = 'noreply@capapp.com'
+DEFAULT_FROM_EMAIL = 'C3／能力加速营'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.sendgrid.net'
