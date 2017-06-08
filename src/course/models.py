@@ -14,5 +14,5 @@ class Course(models.Model):
     course_name = models.CharField(max_length=100)
     start_time = models.DateTimeField()
     done = models.BooleanField(default=False)
-    teacher = models.ForeignKey(settings.AUTH_USER_MODEL)
+    teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     picture = models.ImageField(upload_to=get_image_path, blank=True, null=True)
