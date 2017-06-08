@@ -3,7 +3,7 @@ from enrollment.models import Enrollment
 
 
 class Answer(models.Model):
-    enrollment = models.ForeignKey(Enrollment)
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
