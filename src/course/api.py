@@ -22,6 +22,7 @@ from knowledge_test.models import KnowledgeTest
 from question.models import Question
 from question_ordered.models import QuestionOrdered
 from djgap.corsresource import CorsResourceBase
+from djgap.settings import EMAIL_TEST
 
 
 class CourseResource(CorsResourceBase, ModelResource):
@@ -43,6 +44,7 @@ class CourseResource(CorsResourceBase, ModelResource):
             url(r"^(?P<resource_name>%s)/enroll_students/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('enroll_students'), name="api_enroll_students"),
             url(r"^(?P<resource_name>%s)/get_enrolled/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_enrolled'), name="api_get_enrolled"),
             url(r"^(?P<resource_name>%s)/get_data/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_data'), name="api_get_data"),
+            url(r"^(?P<resource_name>%s)/test_email%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('test_email'), name="api_test_email"),
         ]
 
     def authorized_read_list(self, object_list, bundle):
@@ -375,3 +377,18 @@ class CourseResource(CorsResourceBase, ModelResource):
 
         return [x / kt_count if kt_count > 0 else "N/A" for x in [kt_total_first_score, kt_total_final_score, kt_total_days, kt_total_time]]\
                + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve * 100, d_all_improve * 100, d_total_days]]
+
+    def test_email(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+
+        from django.core.mail import EmailMessage
+
+        email = EmailMessage(
+            "test title",
+            "test context",
+            None,
+            [EMAIL_TEST]
+        )
+        email.send()
+        return self.create_response(request, {})

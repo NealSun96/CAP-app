@@ -74,7 +74,8 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
 
             current_date = datetime.now(pytz.timezone('Asia/Shanghai'))
             knowledge_test_open_date = (enrollment.start_time
-                                       + timedelta(enrollment.course.KNOWLEDGE_TEST_OPEN_DAYS))
+                                       + timedelta(enrollment.course.KNOWLEDGE_TEST_OPEN_DAYS)).\
+                astimezone(pytz.timezone('Asia/Shanghai'))
             knowledge_test_open_string = knowledge_test_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_knowledge_test = enrollment.course.knowledgetest_set.count() > 0
             has_knowledge_test_answer = enrollment.knowledgetestanswer_set.count() > 0
@@ -87,7 +88,8 @@ class EnrollmentResource(CorsResourceBase, ModelResource):
             else:
                 bundle.data['knowledge_test_status'], bundle.data['knowledge_test_color'] = '开放于%s' % knowledge_test_open_string, "{color: 'black'}"
 
-            diagnosis_open_date = (enrollment.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS))
+            diagnosis_open_date = (enrollment.start_time + timedelta(enrollment.course.DIAGNOSIS_OPEN_DAYS)).\
+                astimezone(pytz.timezone('Asia/Shanghai'))
             diagnosis_open_string = diagnosis_open_date.strftime(enrollment.OPEN_DATE_FORMAT)
             has_diagnosis = enrollment.diagnosis_set.count() > 0
             if has_diagnosis:
