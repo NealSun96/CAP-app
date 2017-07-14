@@ -20,7 +20,7 @@ def task_check_assignment():
     """
     Saves latest image from Flickr
     """
-    notification_day_count = 1
+    notification_day_count = 2
     title_context = "CAP任务提醒"
     email_context = "尊敬的{}:\n"\
                     "您好，\n" \
@@ -31,7 +31,7 @@ def task_check_assignment():
         if course.done:
             continue
 
-        enrollments = course.enrollment_set
+        enrollments = course.enrollment_set.all()
 
         for enrollment in enrollments:
             per_email_context = ""
