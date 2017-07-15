@@ -9,29 +9,29 @@
     </div>
 
 
-    <img src=img/logo2.png alt="can't display img" style="display:block; margin: 0 auto;">
+    <img src=img/logo2.png alt="can't display img" style="display:block; margin: 0 auto; padding-top: 10px;">
 
       <ion-list id="signup-list4">
 
-        <label class="item item-input top-input" id="signup-input1">
+        <label class="item item-input item-stacked-label top-input" id="signup-input1">
           <span class="input-label">First Name</span>
           <input type="text" id="firstNameField" placeholder="" ng-model="$parent.reg_firstname">
         </label>
-        <label class="item item-input" id="signup-input2">
+        <label class="item item-input item-stacked-label" id="signup-input2">
           <span class="input-label">Last Name</span>
           <input type="text" id="lastNameField" placeholder="" ng-model="$parent.reg_lastname">
         </label>
-        <label class="item item-input" id="signup-input3">
+        <label class="item item-input item-stacked-label" id="signup-input3">
           <span class="input-label">Email</span>
           <input type="text" autocorrect="off" autocapitalize="none" id="usernameField" placeholder="" ng-model="$parent.reg_username">
         </label>
-        <label class="item item-input bottom-input" id="signup-input4">
+        <label class="item item-input item-stacked-label " id="signup-input4">
           <span class="input-label">Password</span>
           <input type="password" id="passwordField" placeholder="" ng-model="$parent.reg_password">
         </label>
       </ion-list>
 
-      <label class="item item-input item-select">
+      <label class="item item-input item-select bottom-input">
           <div class="input-label">BU</div>
           <select ng-model="selectedGroup" ng-change="showSelectValue(selectedGroup)" dir="rtl">
             <option>Cardio</option>
@@ -54,7 +54,7 @@
   </ion-content>
 <style type="text/css">
   .center-form{
-    
+  /*margin-left: 10px;*/
   position: absolute;
   top: 45vh;
   left: 50%;
@@ -90,6 +90,13 @@
         color:white;
         margin:0px;
     }
+}
+
+/*@media (max-width: 320px){*/
+  #signup-form3 label{
+    margin-left: 15px;
+    width: 100%;
+  /*}*/
 }
 </style>
 </ion-view>

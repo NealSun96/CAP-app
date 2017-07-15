@@ -4,7 +4,7 @@
 
 
 
-    <form id="login-form4" class="list center-form" style="max-width: 500px; display: block; margin: 0 auto;">
+    <form id="login-form4" class="list center-form">
 
 
       <!-- some error message to display when login fails -->
@@ -16,15 +16,16 @@
       <img src=img/logo2.png alt="can't display img" style="display:block; margin: 0 auto;">
 
       <ion-list id="login-list5">
-        <label class="item item-input top-input" id="login-input4">
+        <label class="item item-input item-stacked-label top-input" id="login-input4">
           <span class="input-label">Email</span>
-          <input type="text" autocorrect="off" autocapitalize="none" placeholder="Email" ng-model="$parent.username">
+          <input type="text" autocorrect="off" autocapitalize="none" placeholder="" ng-model="$parent.username">
         </label>
-        <label class="item item-input bottom-input" id="login-input5">
+        <label class="item item-input item-stacked-label bottom-input" id="login-input5">
           <span class="input-label">Password</span>
-          <input type="password" placeholder="Password" ng-model="$parent.password">
+          <input type="password" placeholder="" ng-model="$parent.password">
         </label>
       </ion-list>
+
       <div class="spacer" style="height: 40px;"></div>
       <a id="login-button2" class="button button-positive  button-block" ng-click="login()">登陆</a>
       <a ui-sref="signup" id="login-button3" class="button button-positive  button-block button-clear">新学员注册</a>
@@ -33,7 +34,7 @@
   </ion-content>
   <style type="text/css">
   .center-form{
-    
+  margin-left: 10px;
   position: absolute;
   top: 45vh;
   left: 50%;
