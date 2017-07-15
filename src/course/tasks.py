@@ -20,7 +20,7 @@ def task_check_assignment():
     """
     Saves latest image from Flickr
     """
-    notification_day_count = 2
+    notification_day_count = 1
     title_context = "CAP任务提醒"
     email_context = "尊敬的{}:\n"\
                     "您好，\n" \

@@ -5,6 +5,7 @@ import base64
 
 from django.core.files.base import ContentFile
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMessage
 from django.conf.urls import url
 from django.contrib.auth.models import User
 from tastypie.authentication import ApiKeyAuthentication
@@ -22,7 +23,6 @@ from knowledge_test.models import KnowledgeTest
 from question.models import Question
 from question_ordered.models import QuestionOrdered
 from djgap.corsresource import CorsResourceBase
-from djgap.settings import EMAIL_TEST
 
 
 class CourseResource(CorsResourceBase, ModelResource):
@@ -379,16 +379,18 @@ class CourseResource(CorsResourceBase, ModelResource):
                + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve * 100, d_all_improve * 100, d_total_days]]
 
     def test_email(self, request, **kwargs):
-        self.method_check(request, allowed=['get'])
+        self.method_check(request, allowed=['post'])
         self.is_authenticated(request)
 
-        from django.core.mail import EmailMessage
+        deserialized = self.deserialize(request, request.body,
+                                        format=request.META.get('CONTENT_TYPE', 'application/json'))
+        deserialized = self.alter_deserialized_detail_data(request, deserialized)
+        bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
 
-        email = EmailMessage(
+        EmailMessage(
             "test title",
             "test context",
             None,
-            [EMAIL_TEST]
-        )
-        email.send()
+            [bundle.data.get('email')]
+        ).send()
         return self.create_response(request, {})
