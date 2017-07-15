@@ -141,4 +141,4 @@ EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = get_env_variable('SENDGRID_PASSWORD')
-EMAIL_TEST = get_env_variable('EMAIL_TEST')
+EMAIL_TEST = 'nealsun0428@gmail.com'
