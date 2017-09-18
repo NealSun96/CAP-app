@@ -56,6 +56,12 @@ angular.module('app.routes', [])
     controller: 'diagnosisCtrl'
   })
 
+  .state('forgot_password', {
+    url: '/forgot_password',
+    templateUrl: 'templates/forgot_password.html',
+    controller: 'forgot_passwordCtrl'
+  })
+
   .state('check_knowledge_test', {
     url: '/check_knowledge_test',
     templateUrl: 'templates/check_knowledge_test.html',

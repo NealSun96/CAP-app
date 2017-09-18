@@ -419,6 +419,12 @@ angular.module('app.controllers', [])
         }
     }])
 
+.controller('forgot_passwordCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+    function ($scope, $stateParams, $http, $rootScope, $state) {
+        
+
+}])
+
 .run(function($rootScope){
     //check connection to Internet
     $rootScope.checkConnection = function(){
