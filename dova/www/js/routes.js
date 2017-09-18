@@ -20,11 +20,11 @@ angular.module('app.routes', [])
     controller: 'loginCtrl'
   })
 
-  .state('courseOne', {
-    url: '/CourseOne',
-    templateUrl: 'templates/courseOne.html',
-    controller: 'courseOneCtrl'
-  })
+  // .state('courseOne', {
+  //   url: '/CourseOne',
+  //   templateUrl: 'templates/courseOne.html',
+  //   controller: 'courseOneCtrl'
+  // })
 
   .state('dashboard', {
     url: '/dash',
@@ -60,6 +60,12 @@ angular.module('app.routes', [])
     url: '/forgot_password',
     templateUrl: 'templates/forgot_password.html',
     controller: 'forgot_passwordCtrl'
+  })
+
+  .state('change_password', {
+    url: '/change_password',
+    templateUrl: 'templates/change_password.html',
+    controller: 'change_passwordCtrl'
   })
 
   .state('check_knowledge_test', {

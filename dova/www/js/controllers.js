@@ -421,6 +421,12 @@ angular.module('app.controllers', [])
 
 .controller('forgot_passwordCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
     function ($scope, $stateParams, $http, $rootScope, $state) {
+
+
+}])
+
+.controller('change_passwordCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+    function ($scope, $stateParams, $http, $rootScope, $state) {
         
 
 }])
