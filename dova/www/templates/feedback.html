@@ -103,6 +103,12 @@
         <ion-radio  name="{{ d_question.id }}" ng-click="click(d_question, key)">{{ key }}</ion-radio>
       </ion-list>
     </div>
+
+<!-- small screens -->
+      <ion-list ng-repeat="key in keys" class="small-screen-radio">
+        <ion-radio name="{{ d_question.id }}" ng-click="click(d_question, key)">{{ key }}</ion-radio>
+      </ion-list>
+<!-- small screens -->
     <!-- text input -->
     <form id="quizPage-form12" class="list">
       <label class="item item-input" id="login-input5">
