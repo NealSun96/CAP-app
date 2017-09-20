@@ -29,7 +29,7 @@
           <i class="icon ion-ios-arrow-up" ng-show="!show_detail[{{$index}}]"></i>
         </ion-item>
 
-        <div class="group" ng-show="!show_detail[{{$index}}]">
+        <div class="group" id="detail-group-dash" ng-show="!show_detail[{{$index}}]">
 
          <ion-item class="item-icon-left item-icon-right" id="f" ng-click="enrollment.feedback_status == '未完成' && toFeedback(enrollment.id, enrollment.feedback_status == '未完成')"
                    ng-style="{ color: enrollment.feedback_status == '已完成' ? 'green' : enrollment.feedback_status == '未完成' ? 'red' : 'grey' }">
@@ -77,6 +77,9 @@
   .item-thumbnail-left{
     height: 180px;
     word-wrap: normal;
+  }
+  #detail-group-dash ion-item{
+    font-size: 11px;
   }
 }
 </style>
