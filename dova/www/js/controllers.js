@@ -419,6 +419,61 @@ angular.module('app.controllers', [])
         }
     }])
 
+.controller('change_passwordCtrl', ['$scope', '$stateParams', '$http', '$rootScope', '$state',
+    function ($scope, $stateParams, $http, $rootScope, $state) {
+        
+
+        $scope.changePassword = function(){
+            //check with server
+            if (offline_debug) {$state.go('login');}
+
+            data = {
+                "username": $scope.reg_username,
+                "first_name": $scope.reg_firstname,
+                "last_name": $scope.reg_lastname,
+                "password": $scope.reg_password,
+                "bu": $scope.selectedGroup
+            };
+            $http.post("http://106.14.154.226:8000/api/v1/changePassword/", data)
+            .then(function successCallback(response) {
+                $rootScope.passwordChanged = true;
+                $state.go('login');
+            }, function errorCallback(response) {
+                var changed = false;
+                $rootScope.checkConnection();
+
+                //get tags
+                var errorText = document.getElementById("error-text");
+                var oldPass = document.getElementById("old-pass-change-pass");
+                var newPass = document.getElementById("new-pass-change-pass");
+                var username = document.getElementById("email-change-pass");
+
+                errorText.innerHTML = "";//reset error text
+
+                //simple for new password length
+                if (newPass.value.length < 4){
+                    errorText.innerHTML += "New Password必须超过四个字符！";
+                    changed = true;
+                }
+
+                if(!changed) {
+                    errorText.innerHTML = response.data.error;
+                    if (errorText.innerHTML == "") errorText.innerHTML = "注册发生错误！";
+                }
+                $rootScope.passwordChanged = false;
+                
+                //show error box
+                var ERRelement = document.getElementById("signup_error_box");
+                ERRelement.style.visibility = "visible";
+                setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
+            });
+
+
+            //then go back to login
+        }
+
+}])
+
 .run(function($rootScope){
     //check connection to Internet
     $rootScope.checkConnection = function(){

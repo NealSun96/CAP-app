@@ -13,7 +13,7 @@
             <p style="white-space:normal;">{{ enrollment.teacher_name }}</p>
           </div>
 
-          <div class="detail-section" ng-show="show_detail[{{$index}}]">
+          <div style="float: right; font-size: 9px; width: 250px;" ng-show="show_detail[{{$index}}]">
             <div ng-style="{ color: enrollment.feedback_status == '已完成' ? 'green' : enrollment.feedback_status == '未完成' ? 'red' : 'grey' }">
             Feedback: {{ enrollment.feedback_status }}</div>
             <div ng-style="{ color: enrollment.action_plan_status == '已完成' ? 'green' : enrollment.action_plan_status == '未完成' ? 'red' : 'grey' }">
@@ -29,7 +29,7 @@
           <i class="icon ion-ios-arrow-up" ng-show="!show_detail[{{$index}}]"></i>
         </ion-item>
 
-        <div class="group" id="detail-group-dash" ng-show="!show_detail[{{$index}}]">
+        <div class="group" ng-show="!show_detail[{{$index}}]">
 
          <ion-item class="item-icon-left item-icon-right" id="f" ng-click="enrollment.feedback_status == '未完成' && toFeedback(enrollment.id, enrollment.feedback_status == '未完成')"
                    ng-style="{ color: enrollment.feedback_status == '已完成' ? 'green' : enrollment.feedback_status == '未完成' ? 'red' : 'grey' }">
@@ -53,35 +53,9 @@
     </ion-list>
     </ion-scroll>
 
-<form class="bottom-form">
-  <button nav-direction="back" class="button button-full logout-button" style="margin:0px;" ng-click="logout()" nav-direction="back">登出</button>
-</form>
-
 </ion-content>
 
-
-<style type="text/css">
-.detail-section{
-  float: right;
-  font-size: 9px;
-  width: 250px;
-}
-
-@media only screen and (max-width: 700px){
-  .detail-section{
-    padding-top: 90px;
-    /*width: auto;*/
-    position: absolute;
-    left: 20px;
-  }
-  .item-thumbnail-left{
-    height: 180px;
-    word-wrap: normal;
-  }
-  #detail-group-dash ion-item{
-    font-size: 11px;
-  }
-}
-</style>
-
+<form class="bottom-form" style="position: absolute;bottom: 0;left: 0;">
+  <button nav-direction="back" class="button button-full logout-button" style="margin:0px;" ng-click="logout()" nav-direction="back">登出</button>
+</form>
 </ion-view>
