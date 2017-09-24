@@ -13,7 +13,7 @@
             <p style="white-space:normal;">{{ enrollment.teacher_name }}</p>
           </div>
 
-          <div style="float: right; font-size: 9px; width: 250px;" ng-show="show_detail[{{$index}}]">
+          <div style="float: right; font-size: 9px; width: 250px;" ng-show="show_detail[{{$index}}]" class="detail-on-course">
             <div ng-style="{ color: enrollment.feedback_status == '已完成' ? 'green' : enrollment.feedback_status == '未完成' ? 'red' : 'grey' }">
             Feedback: {{ enrollment.feedback_status }}</div>
             <div ng-style="{ color: enrollment.action_plan_status == '已完成' ? 'green' : enrollment.action_plan_status == '未完成' ? 'red' : 'grey' }">
@@ -58,4 +58,13 @@
 <form class="bottom-form" style="position: absolute;bottom: 0;left: 0;">
   <button nav-direction="back" class="button button-full logout-button" style="margin:0px;" ng-click="logout()" nav-direction="back">登出</button>
 </form>
+
+<style type="text/css">
+  @media (max-width: 700px){
+    .detail-on-course{
+      padding-top: 40px;
+      padding-left: 10px;
+    }
+  }
+</style>
 </ion-view>
