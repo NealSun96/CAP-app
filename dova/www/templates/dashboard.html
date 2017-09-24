@@ -13,7 +13,7 @@
             <p style="white-space:normal;">{{ enrollment.teacher_name }}</p>
           </div>
 
-          <div style="float: right; font-size: 9px; width: 250px;" ng-show="show_detail[{{$index}}]">
+          <div style="float: right; font-size: 9px; width: 250px;" ng-show="show_detail[{{$index}}]" class="detail-on-course">
             <div ng-style="{ color: enrollment.feedback_status == '已完成' ? 'green' : enrollment.feedback_status == '未完成' ? 'red' : 'grey' }">
             Feedback: {{ enrollment.feedback_status }}</div>
             <div ng-style="{ color: enrollment.action_plan_status == '已完成' ? 'green' : enrollment.action_plan_status == '未完成' ? 'red' : 'grey' }">
@@ -31,20 +31,20 @@
 
         <div class="group" ng-show="!show_detail[{{$index}}]">
 
-         <ion-item class="item-icon-left item-icon-right" id="f" ng-click="enrollment.feedback_status == '未完成' && toFeedback(enrollment.id, enrollment.feedback_status == '未完成')"
+         <ion-item style="white-space: pre-line;" class="item-icon-left item-icon-right" id="f" ng-click="enrollment.feedback_status == '未完成' && toFeedback(enrollment.id, enrollment.feedback_status == '未完成')"
                    ng-style="{ color: enrollment.feedback_status == '已完成' ? 'green' : enrollment.feedback_status == '未完成' ? 'red' : 'grey' }">
            <i class="icon ion-information fixed-color"></i>Feedback: {{ enrollment.feedback_status }}
            <i class="icon ion-ios-arrow-right fixed-color" ng-show="enrollment.feedback_status == '未完成'"></i>
          </ion-item>
-         <ion-item class="item-icon-left item-icon-right" id="ap" ng-click="enrollment.action_plan_status == '未完成' && toActionPlan(enrollment.id)" ng-style="{ color: enrollment.action_plan_status == '已完成' ? 'green' : enrollment.action_plan_status == '未完成' ? 'red' : 'grey' }">
+         <ion-item style="white-space: pre-line;" class="item-icon-left item-icon-right" id="ap" ng-click="enrollment.action_plan_status == '未完成' && toActionPlan(enrollment.id)" ng-style="{ color: enrollment.action_plan_status == '已完成' ? 'green' : enrollment.action_plan_status == '未完成' ? 'red' : 'grey' }">
            <i class="icon ion-ionic fixed-color"></i>Action Plan: {{ enrollment.action_plan_status }}
            <i class="icon ion-ios-arrow-right fixed-color" ng-show="enrollment.action_plan_status == '未完成'"></i>
          </ion-item>
-         <ion-item class="item-icon-left item-icon-right" id="kt" ng-click="enrollment.knowledge_test_status == '未完成' && toKTest(enrollment.id)" ng-style="{ color: enrollment.knowledge_test_status == '已完成' ? 'green' : enrollment.knowledge_test_status == '未完成' ? 'red' : 'grey' }">
+         <ion-item style="white-space: pre-line;" class="item-icon-left item-icon-right" id="kt" ng-click="enrollment.knowledge_test_status == '未完成' && toKTest(enrollment.id)" ng-style="{ color: enrollment.knowledge_test_status == '已完成' ? 'green' : enrollment.knowledge_test_status == '未完成' ? 'red' : 'grey' }">
            <i class="icon ion-ios-list-outline fixed-color"></i>Knowledge Test: {{ enrollment.knowledge_test_status }}
            <i class="icon ion-ios-arrow-right fixed-color" ng-show="enrollment.knowledge_test_status == '未完成'"></i>
          </ion-item>
-         <ion-item class="item-icon-left item-icon-right" id="d" ng-click="enrollment.diagnosis_status == '未完成' && toDiagnosis(enrollment.id)" ng-style="{ color: enrollment.diagnosis_status == '已完成' ? 'green' : enrollment.diagnosis_status == '未完成' ? 'red' : 'grey' }">
+         <ion-item style="white-space: pre-line;" class="item-icon-left item-icon-right" id="d" ng-click="enrollment.diagnosis_status == '未完成' && toDiagnosis(enrollment.id)" ng-style="{ color: enrollment.diagnosis_status == '已完成' ? 'green' : enrollment.diagnosis_status == '未完成' ? 'red' : 'grey' }">
            <i class="icon ion-document fixed-color"></i>Diagnosis: {{ enrollment.diagnosis_status }}
            <i class="icon ion-ios-arrow-right fixed-color" ng-show="enrollment.diagnosis_status == '未完成'"></i>
          </ion-item>
@@ -55,7 +55,16 @@
 
 </ion-content>
 
-<form class="bottom-form">
+<form class="bottom-form" style="position: absolute;bottom: 0;left: 0;">
   <button nav-direction="back" class="button button-full logout-button" style="margin:0px;" ng-click="logout()" nav-direction="back">登出</button>
 </form>
+
+<style type="text/css">
+  @media (max-width: 700px){
+    .detail-on-course{
+      padding-top: 40px;
+      padding-left: 10px;
+    }
+  }
+</style>
 </ion-view>

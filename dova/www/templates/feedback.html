@@ -17,7 +17,7 @@
     <ion-list ng-repeat="q in a_questions">
       <div class="row">
 
-        <label class="col col-40">
+        <label class="col col40">
           <span class="label">{{ q.question }}</span>
         </label>
 
@@ -26,17 +26,17 @@
         </ion-list>
 
       </div>
-    </ion-list>
 
-    <style type="text/css">
-      .autoRadio{
-        width: 33.33%;
-      }
-    </style>
+<!-- small screens -->
+      <ion-list ng-repeat="key in keys" class="small-screen-radio">
+        <ion-radio name="{{ q.id }}" ng-click="click(q, key)">{{ key }}</ion-radio>
+      </ion-list>
+<!-- small screens -->  
+    </ion-list>
 
     <!-- top labels of chart -->
     <div class="row header">
-      <label class="col col-40">
+      <label class="col col40">
         <span class="label">培训讲师综合评价</span>
       </label>
     </div>
@@ -44,7 +44,7 @@
     <ion-list ng-repeat="q in b_questions">
       <!-- all other rows -->
       <div class="row">
-        <label class="col col-40">
+        <label class="col col40">
           <span class="label">{{ q.question }}</span>
         </label>
 
@@ -52,11 +52,17 @@
           <ion-radio  name="{{ q.id }}" ng-click="click(q, key)">{{ key }}</ion-radio>
         </ion-list>
       </div>
+
+<!-- small screens -->
+      <ion-list ng-repeat="key in keys" class="small-screen-radio">
+        <ion-radio name="{{ q.id }}" ng-click="click(q, key)">{{ key }}</ion-radio>
+      </ion-list>
+<!-- small screens -->  
     </ion-list>
 
     <!-- top labels of chart -->
     <div class="row header">
-      <label class="col col-40">
+      <label class="col col40">
         <span class="label">培训场地和组织综合评价</span>
       </label>
     </div>
@@ -64,7 +70,7 @@
     <ion-list ng-repeat="q in c_questions">
       <!-- all other rows -->
       <div class="row">
-        <label class=" col-40">
+        <label class=" col40">
           <span class="label">{{ q.question }}</span>
         </label>
 
@@ -72,18 +78,24 @@
           <ion-radio  name="{{ q.id }}" ng-click="click(q, key)">{{ key }}</ion-radio>
         </ion-list>
       </div>
+
+<!-- small screens -->
+      <ion-list ng-repeat="key in keys" class="small-screen-radio">
+        <ion-radio name="{{ q.id }}" ng-click="click(q, key)">{{ key }}</ion-radio>
+      </ion-list>
+<!-- small screens -->  
     </ion-list>
 
     <!-- top labels of chart -->
     <div class="row header">
-      <label class="col col-40">
+      <label class="col col40">
         <span class="label">总体评价</span>
       </label>
     </div>
 
 
     <div class="row" style="margin-top: 5px">
-      <label class="col col-40">
+      <label class="col col40">
         <span class="label">{{ d_question.question }}</span>
       </label>
 
@@ -91,6 +103,12 @@
         <ion-radio  name="{{ d_question.id }}" ng-click="click(d_question, key)">{{ key }}</ion-radio>
       </ion-list>
     </div>
+
+<!-- small screens -->
+      <ion-list ng-repeat="key in keys" class="small-screen-radio">
+        <ion-radio name="{{ d_question.id }}" ng-click="click(d_question, key)">{{ key }}</ion-radio>
+      </ion-list>
+<!-- small screens -->
     <!-- text input -->
     <form id="quizPage-form12" class="list">
       <label class="item item-input" id="login-input5">
@@ -107,6 +125,37 @@
     .header{
       background-color:lightgrey;
       height: 40px;
+    }
+    .autoRadio{
+      width: 33.33%;
+    }
+    .small-screen-radio{
+      display: none;
+    }
+    .col40{
+      -webkit-box-flex: 0;
+      -webkit-flex: 0 0 40%;
+      -moz-box-flex: 0;
+      -moz-flex: 0 0 40%;
+      -ms-flex: 0 0 40%;
+      flex: 0 0 40%;
+      max-width: 40%;
+    }
+    @media only screen and (max-width: 700px){
+      .small-screen-radio{
+        display: block;
+      }
+      .autoRadio{
+        display: none;
+      }
+      .col40{
+        -webkit-flex: 0 0 100%;
+        -moz-box-flex: 0;
+        -moz-flex: 0 0 100%;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+      }
     }
   </style>
 </ion-view>
