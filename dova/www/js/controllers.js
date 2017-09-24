@@ -101,8 +101,8 @@ angular.module('app.controllers', [])
 
                 //show error box
                 var ERRelement = document.getElementById("login_error_message");
-                ERRelement.style.visibility = "visible";
-                setTimeout(function() { ERRelement.style.visibility = "hidden"; }, 2500);
+                ERRelement.style.display = "block";
+                setTimeout(function() { ERRelement.style.display = "none"; }, 2500);
             });
     }
 
