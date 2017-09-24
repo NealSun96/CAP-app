@@ -19,13 +19,7 @@ angular.module('app.routes', [])
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
   })
-
-  // .state('courseOne', {
-  //   url: '/CourseOne',
-  //   templateUrl: 'templates/courseOne.html',
-  //   controller: 'courseOneCtrl'
-  // })
-
+  
   .state('dashboard', {
     url: '/dash',
     templateUrl: 'templates/dashboard.html',

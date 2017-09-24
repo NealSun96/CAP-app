@@ -9858,7 +9858,7 @@ a.button {
   /*knowledge_test css*/
 .knowledge-question{
   background-color: lightgrey;
-  height: 46px;
+  /*height: 46px;*/
   line-height: 40px;
   text-align: left;
 }

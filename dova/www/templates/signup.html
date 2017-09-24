@@ -53,12 +53,16 @@
     </form>
   </ion-content>
 <style type="text/css">
+@media (min-width: 700px) {
   .center-form{
-    
-  position: absolute;
-  top: 45vh;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    position: absolute;
+    top: 45vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+  .center-form{
  
     label{
         background-color: rgba(255,255,255,0.7);
@@ -77,6 +81,13 @@
         opacity:0.9;
     }
 }
+
+.center-form img{
+  position: relative;
+  left:50%;
+  transform: translateX(-50%);
+}
+
 
 .error-box{
     padding:10px;
