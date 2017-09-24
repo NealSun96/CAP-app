@@ -44,7 +44,7 @@
            <i class="icon ion-ios-list-outline fixed-color"></i>Knowledge Test: {{ enrollment.knowledge_test_status }}
            <i class="icon ion-ios-arrow-right fixed-color" ng-show="enrollment.knowledge_test_status == '未完成'"></i>
          </ion-item>
-         <ion-item class="item-icon-left item-icon-right" id="d" ng-click="enrollment.diagnosis_status == '未完成' && toDiagnosis(enrollment.id)" ng-style="{ color: enrollment.diagnosis_status == '已完成' ? 'green' : enrollment.diagnosis_status == '未完成' ? 'red' : 'grey' }">
+         <ion-item style="white-space: pre-line;" class="item-icon-left item-icon-right" id="d" ng-click="enrollment.diagnosis_status == '未完成' && toDiagnosis(enrollment.id)" ng-style="{ color: enrollment.diagnosis_status == '已完成' ? 'green' : enrollment.diagnosis_status == '未完成' ? 'red' : 'grey' }">
            <i class="icon ion-document fixed-color"></i>Diagnosis: {{ enrollment.diagnosis_status }}
            <i class="icon ion-ios-arrow-right fixed-color" ng-show="enrollment.diagnosis_status == '未完成'"></i>
          </ion-item>
