@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-
-from django.contrib.auth.models import User, Group
+from django.conf.urls import url
+from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 from django.db import IntegrityError
 from django.http import HttpResponse
 from tastypie import http
@@ -9,6 +10,7 @@ from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.models import ApiKey
 from tastypie.resources import ModelResource
 from tastypie.exceptions import BadRequest, ImmediateHttpResponse
+from tastypie.utils import trailing_slash, dict_strip_unicode_keys
 
 from employee_title.models import EmployeeTitle
 from .corsresource import CorsResourceBase
@@ -24,6 +26,12 @@ class LoginResource(CorsResourceBase, ModelResource):
         authentication = BasicAuthentication()
         always_return_data = True
 
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/change_password%s$" % (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('change_password'), name="api_change_password"),
+        ]
+
     def authorized_read_list(self, object_list, bundle):
         return object_list.filter(username=bundle.request.user.username)
 
@@ -36,13 +44,26 @@ class LoginResource(CorsResourceBase, ModelResource):
     def is_authenticated(self, request):
         ''' Overriding to delete www-authenticate, preventing browser popup '''
         auth_result = self._meta.authentication.is_authenticated(request)
-
         if isinstance(auth_result, HttpResponse):
             del auth_result['WWW-Authenticate']
             raise ImmediateHttpResponse(response=auth_result)
 
         if not auth_result is True:
             raise ImmediateHttpResponse(response=http.HttpUnauthorized())
+
+    def change_password(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+
+        deserialized = self.deserialize(request, request.body,
+                                        format=request.META.get('CONTENT_TYPE', 'application/json'))
+        deserialized = self.alter_deserialized_detail_data(request, deserialized)
+        bundle = self.build_bundle(data=dict_strip_unicode_keys(deserialized), request=request)
+
+        request.user.set_password(bundle.data.get('new_password'))
+        request.user.save()
+
+        return self.create_response(request, {})
 
 
 class RegisterResource(ModelResource):

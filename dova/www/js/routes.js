@@ -19,7 +19,7 @@ angular.module('app.routes', [])
     templateUrl: 'templates/login.html',
     controller: 'loginCtrl'
   })
-
+  
   .state('dashboard', {
     url: '/dash',
     templateUrl: 'templates/dashboard.html',
@@ -48,6 +48,12 @@ angular.module('app.routes', [])
     url: '/diagnosis',
     templateUrl: 'templates/diagnosis.html',
     controller: 'diagnosisCtrl'
+  })
+
+  .state('change_password', {
+    url: '/change_password',
+    templateUrl: 'templates/change_password.html',
+    controller: 'change_passwordCtrl'
   })
 
   .state('check_knowledge_test', {
