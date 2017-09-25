@@ -44,7 +44,6 @@ class LoginResource(CorsResourceBase, ModelResource):
     def is_authenticated(self, request):
         ''' Overriding to delete www-authenticate, preventing browser popup '''
         auth_result = self._meta.authentication.is_authenticated(request)
-        print auth_result
         if isinstance(auth_result, HttpResponse):
             del auth_result['WWW-Authenticate']
             raise ImmediateHttpResponse(response=auth_result)
@@ -53,7 +52,6 @@ class LoginResource(CorsResourceBase, ModelResource):
             raise ImmediateHttpResponse(response=http.HttpUnauthorized())
 
     def change_password(self, request, **kwargs):
-        print request
         self.method_check(request, allowed=['post'])
         self.is_authenticated(request)
 
