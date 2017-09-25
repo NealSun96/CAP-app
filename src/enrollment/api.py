@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf.urls import url
-from django.db.models import F
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.authorization import DjangoAuthorization
 from tastypie.exceptions import ImmediateHttpResponse
