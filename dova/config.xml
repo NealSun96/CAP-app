@@ -63,5 +63,5 @@
     <splash src="www/res/screen/android/drawable-port-xxxhdpi-screen.png" density="port-xxxhdpi"/>
   </platform>
   <icon src="resources/ios/icon/icon-small@3x.png"/>
-  <preference name="target-device" value="tablet"/>
+  <preference name="target-device" value="universal"/>
 </widget>
