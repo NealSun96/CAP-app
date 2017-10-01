@@ -90,9 +90,9 @@ angular.module('app.controllers', [])
             $scope.saveData();
             $state.go('dashboard');
         }, function errorCallback(response) {
-            alert(response);
-            alert(response.status);
-            alert(response.data);
+            // alert(response);
+            // alert(response.status);
+            // alert(response.data);
                 $rootScope.checkConnection();
 
                 var errorText = document.getElementById("error-text");
