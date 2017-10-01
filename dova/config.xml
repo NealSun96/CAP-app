@@ -9,7 +9,7 @@
         Apache Cordova Team
     </author>
   <preference name="orientation" value="portrait" />
-  <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+  <!-- <preference name="AndroidPersistentFileLocation" value="Compatibility" /> -->
   <content src="index.html"/>
   <access origin="*"/>
   <plugin name="cordova-plugin-battery-status" source="npm" spec="~1.1.1"/>
