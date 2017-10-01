@@ -91,6 +91,8 @@ angular.module('app.controllers', [])
             $state.go('dashboard');
         }, function errorCallback(response) {
             alert(response);
+            alert(response.status);
+            alert(response.data);
                 $rootScope.checkConnection();
 
                 var errorText = document.getElementById("error-text");
