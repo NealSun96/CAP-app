@@ -56,8 +56,6 @@
     <splash src="www/res/screen/android/splash-port-xhdpi.png" density="land-xhdpi"/>
     <splash src="www/res/screen/android/splash-port-xxhdpi.png" density="land-xxhdpi"/>
     <splash src="www/res/screen/android/splash-port-xxxhdpi.png.png" density="land-xxxhdpi"/>
-    <allow-intent href="market:*" />
-    <access origin="*" />
     <allow-intent href="*" />
     <allow-navigation href="*" />
   </platform>
