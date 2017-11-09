@@ -347,7 +347,6 @@ class CourseResource(CorsResourceBase, ModelResource):
         for title in EmployeeTitle.TITLES:
             data_list.append(self.calc_data(enrollments.filter(user__groups__name=title)))
 
-        data_list = [list(map(lambda n: "{0:.2f}".format(round(n, 2)) if not isinstance(n, str) and not isinstance(n, int) else n, data)) for data in data_list]
         object_list = {
             'objects': data_list
         }
@@ -375,8 +374,20 @@ class CourseResource(CorsResourceBase, ModelResource):
                 d_all_improve += 1 if (3, 3) in zip(self_diagnosis, other_diagnosis) else 0
                 d_count += 1
 
-        return [x / kt_count if kt_count > 0 else "N/A" for x in [kt_total_first_score, kt_total_final_score, kt_total_days, kt_total_time]]\
+        data = [x / kt_count if kt_count > 0 else "N/A" for x in [kt_total_first_score, kt_total_final_score, kt_total_days, kt_total_time]]\
                + [x / d_count if d_count > 0 else "N/A" for x in [d_self_improve * 100, d_all_improve * 100, d_total_days]]
+
+        if data[3] != "N/A":
+            kt_total_minutes = int(data[3]) / 60
+            data[3] %= 60
+            if kt_total_minutes > 0:
+                data[3] = "%s M %s S" % (kt_total_minutes, data[3])
+            else:
+                data[3] = "%s S" % data[3]
+
+        # universal parse
+        return list(map(lambda n: "{0:.2f}".format(round(n, 2)) if not isinstance(n, str) and not isinstance(n, int) else n,
+                data))
 
     def test_email(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
