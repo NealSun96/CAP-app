@@ -379,7 +379,7 @@ class CourseResource(CorsResourceBase, ModelResource):
 
         if data[3] != "N/A":
             kt_total_minutes = int(data[3]) / 60
-            data[3] %= 60
+            data[3] = "{0:.2f}".format(round(data[3] % 60, 2))
             if kt_total_minutes > 0:
                 data[3] = "%s M %s S" % (kt_total_minutes, data[3])
             else:
