@@ -24,6 +24,21 @@
                 <ion-radio name="{{ point.self_id }}" ng-click="click(point.id, point.self_id, option)">{{ option }}</ion-radio>
         </ion-list>
 
+
+        <div class="row">
+            <label class="col col-30">
+                <span class="input-label">共同诊断</span>
+            </label>
+            <ion-list ng-repeat="option in options" class="large-screens">
+                <ion-radio name="{{ point.other_id }}" ng-click="click(point.id, point.other_id, option)">{{ option }}</ion-radio>
+            </ion-list>
+        </div>
+        <!-- //for small screens -->
+        <ion-list ng-repeat="option in options" class="small-screens">
+            <ion-radio name="{{ point.other_id }}" ng-click="click(point.id, point.other_id, option)">{{ option }}</ion-radio>
+        </ion-list>
+    </ion-list>
+
     </ion-content>
 <style type="text/css">
 .small-screens{
