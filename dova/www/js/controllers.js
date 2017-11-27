@@ -16,7 +16,7 @@ angular.module('app.controllers', [])
                 "password": $scope.reg_password,
                 "bu": $scope.selectedGroup
             };
-            $http.post("3cdaa21f.ngrok.io/api/v1/register/", data).then(function successCallback(response) {
+            $http.post("http://106.14.154.226:8000/api/v1/register/", data).then(function successCallback(response) {
                 $rootScope.register_success = true;
                 $state.go('login');
             }, function errorCallback(response) {
@@ -85,7 +85,7 @@ angular.module('app.controllers', [])
             }
         };
 
-        $http.get("3cdaa21f.ngrok.io/api/v1/login/", config).then(function successCallback(response) {
+        $http.get("http://106.14.154.226:8000/api/v1/login/", config).then(function successCallback(response) {
             $rootScope.api_auth = $scope.username + ":" + response.data.objects[0].api_key;
             $scope.saveData();
             $state.go('dashboard');
@@ -133,7 +133,7 @@ angular.module('app.controllers', [])
         };
 
         $scope.show_detail = [];
-        $http.get("3cdaa21f.ngrok.io/api/v1/enrollment/enrollments/", config)
+        $http.get("http://106.14.154.226:8000/api/v1/enrollment/enrollments/", config)
         .then(function successCallback(response) {
             $rootScope.enrollments = response.data.objects;
             for (var i = 0; i < response.data.objects.length; i++) $scope.show_detail.push(true);
@@ -224,7 +224,7 @@ angular.module('app.controllers', [])
             answers.push($scope.feedback_page_text_area);
             var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
             var data = {"feedbacks": angular.toJson(answers)}
-            var url = "3cdaa21f.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/feedback/";
+            var url = "http://106.14.154.226:8000/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/feedback/";
             $http.post(url, data, config).then(function successCallback(response) {
                 $state.go('dashboard');
             }, function errorCallback(response) {
@@ -244,7 +244,7 @@ angular.module('app.controllers', [])
             }
         };
 
-        var url = "3cdaa21f.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/action_plan/";
+        var url = "http://106.14.154.226:8000/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/action_plan/";
         $http.get(url, config).then(function successCallback(response) {
             $scope.action_points = [];
             var action_points = response.data.objects[0].action_points;
@@ -272,7 +272,7 @@ angular.module('app.controllers', [])
         };
     var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
     var data = {"answers": angular.toJson(answers)}
-    var url = "3cdaa21f.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/action_plan/";
+    var url = "http://106.14.154.226:8000/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/action_plan/";
     $http.post(url, data, config).then(function successCallback(response) {
         $state.go('dashboard');
     }, function errorCallback(response) {
@@ -291,7 +291,7 @@ angular.module('app.controllers', [])
             }
         };
 
-        var url = "3cdaa21f.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
+        var url = "http://106.14.154.226:8000/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
         $http.get(url, config).then(function successCallback(response) {
             var questions = response.data.objects[0].questions;
             for (var i = 0; i < questions.length; i++) {
@@ -305,7 +305,7 @@ angular.module('app.controllers', [])
             $scope.questions = [];
         });
 
-        $http.post("3cdaa21f.ngrok.io/api/v1/enrollment/record_start/" + $rootScope.enrollment_in_handle + "/", {}, config).then(function successCallback(response) {
+        $http.post("http://106.14.154.226:8000/api/v1/enrollment/record_start/" + $rootScope.enrollment_in_handle + "/", {}, config).then(function successCallback(response) {
         }, function errorCallback(response) {});
     };
     init();
@@ -337,7 +337,7 @@ angular.module('app.controllers', [])
             }
         };
 
-        var url = "3cdaa21f.ngrok.io/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/diagnosis/";
+        var url = "http://106.14.154.226:8000/api/v1/enrollment/assignments/" + $rootScope.enrollment_in_handle + "/diagnosis/";
         $http.get(url, config).then(function successCallback(response) {
             $scope.diagnosis_points = [];
             var diagnosis_points = response.data.objects[0].diagnosis_points;
@@ -373,7 +373,7 @@ angular.module('app.controllers', [])
         if (offline_debug) {$state.go('dashboard');}
         var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
         var data = {"self_diagnosis": angular.toJson(self_diagnosis), "other_diagnosis": angular.toJson(other_diagnosis)}
-        var url = "3cdaa21f.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/diagnosis/";
+        var url = "http://106.14.154.226:8000/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/diagnosis/";
         $http.post(url, data, config).then(function successCallback(response) {
             $state.go('dashboard');
         }, function errorCallback(response) {
@@ -388,14 +388,14 @@ angular.module('app.controllers', [])
             $scope.score_message = "批改答卷中...";
             var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
             var data = {"answers": angular.toJson($rootScope.knowledge_test_answers)}
-            var url = "3cdaa21f.ngrok.io/api/v1/enrollment/check_mark/" + $rootScope.enrollment_in_handle + "/";
+            var url = "http://106.14.154.226:8000/api/v1/enrollment/check_mark/" + $rootScope.enrollment_in_handle + "/";
             $http.post(url, data, config).then(function successCallback(response) {
                 var score = response.data.objects[0];
                 var total_score = response.data.objects[1];
                 var passed = score * 1.0 / total_score >= response.data.objects[2];
 
                 data = {"first_score": score}
-                url = "3cdaa21f.ngrok.io/api/v1/enrollment/first_score/" + $rootScope.enrollment_in_handle + "/";
+                url = "http://106.14.154.226:8000/api/v1/enrollment/first_score/" + $rootScope.enrollment_in_handle + "/";
                 $http.post(url, data, config).then(function successCallback(response) {
                     $scope.score = score;
                     $scope.score_message = "你的得分是：" + score + "/" + total_score;
@@ -410,7 +410,7 @@ angular.module('app.controllers', [])
         $scope.submit = function() {
             var config = {headers:  {'Authorization': 'Apikey ' + $rootScope.api_auth}};
             var data = {"answers": angular.toJson($rootScope.knowledge_test_answers), "final_score": $scope.score}
-            var url = "3cdaa21f.ngrok.io/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
+            var url = "http://106.14.154.226:8000/api/v1/enrollment/upload/" + $rootScope.enrollment_in_handle + "/knowledge_test/";
             $http.post(url, data, config).then(function successCallback(response) {
                 $ionicViewSwitcher.nextDirection('back');
                 $state.go('dashboard');
@@ -430,7 +430,7 @@ angular.module('app.controllers', [])
             }};
             var data = {"new_password": $scope.newPassword};
 
-            $http.post("3cdaa21f.ngrok.io/api/v1/login/change_password/", data, config)
+            $http.post("http://106.14.154.226:8000/api/v1/login/change_password/", data, config)
             .then(function successCallback(response) {
                 $state.go('login');
             }, function errorCallback(response) {
