@@ -10,7 +10,7 @@ class EmployeeTitle(models.Model):
     TITLE_OTHERS = 'Others'
 
     TITLES = ["Cardio", "ENDO", "PION", "CRM", "EP", "Urology",
-              "Structural Hear", "HK&TW", "Emerging Marketing",
+              "Structural Heart", "HK&TW", "Emerging Marketing",
               TITLE_OTHERS]
 
     @staticmethod

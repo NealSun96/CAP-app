@@ -28,7 +28,7 @@ $(document).ready(function(){
     });
 
     var titles = ["全部学员", "Cardio", "ENDO", "PION", "CRM", "EP", "Urology",
-              "Structural Hear", "HK&TW", "Emerging Marketing", "Others"];
+              "Structural Heart", "HK&TW", "Emerging Marketing", "Others"];
     for (var i=0; i < 11; i++) {
         $("#dataRowTitle").append('<td class="cell header">'+titles[i]+'</td>');
   	    $('#dataTable tr').not($('#dataRowTitle')).append('<td class="cell" id="' + i + '"></td>');
