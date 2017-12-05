@@ -8,12 +8,16 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.conf.urls import url
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.authorization import DjangoAuthorization
 from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.http import HttpBadRequest, HttpNotFound
 from tastypie.resources import ModelResource
 from tastypie.utils import trailing_slash, dict_strip_unicode_keys
+
+import pandas as pd
+import xlsxwriter
 
 from .models import Course
 from employee_title.models import EmployeeTitle
@@ -45,6 +49,7 @@ class CourseResource(CorsResourceBase, ModelResource):
             url(r"^(?P<resource_name>%s)/get_enrolled/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_enrolled'), name="api_get_enrolled"),
             url(r"^(?P<resource_name>%s)/get_data/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_data'), name="api_get_data"),
             url(r"^(?P<resource_name>%s)/test_email%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('test_email'), name="api_test_email"),
+            url(r"^(?P<resource_name>%s)/download_data%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('download_data'), name="api_download_data"),
         ]
 
     def authorized_read_list(self, object_list, bundle):
@@ -405,3 +410,20 @@ class CourseResource(CorsResourceBase, ModelResource):
             [bundle.data.get('email')]
         ).send()
         return self.create_response(request, {})
+
+    def download_data(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        # self.is_authenticated(request)
+
+        df = pd.DataFrame({'Data': [10, 20, 30, 20, 15, 30, 45]})
+        writer = pd.ExcelWriter('pandas_simple.xlsx', engine='xlsxwriter')
+        df.to_excel(writer, sheet_name='Sheet1')
+        writer.save()
+
+        with open("pandas_simple.xlsx", "r") as excel:
+            data = excel.read()
+
+        response = HttpResponse(data,content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['X-Accel-Redirect'] = '/protected/pandas_simple.xlsx'
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format('pandas_simple.xlsx')
+        return self.add_cors_headers(response)
