@@ -2,12 +2,15 @@
 
 import json
 import base64
+import fnmatch
+import os
 
 from django.core.files.base import ContentFile
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMessage
 from django.conf.urls import url
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from tastypie.authentication import ApiKeyAuthentication
 from tastypie.authorization import DjangoAuthorization
 from tastypie.exceptions import ImmediateHttpResponse
@@ -17,6 +20,7 @@ from tastypie.utils import trailing_slash, dict_strip_unicode_keys
 
 from .models import Course
 from employee_title.models import EmployeeTitle
+from excel_helpers import generate_student_excel, generate_data_excel
 from enrollment.models import Enrollment
 from action_plan.models import ActionPlan
 from knowledge_test.models import KnowledgeTest
@@ -45,6 +49,7 @@ class CourseResource(CorsResourceBase, ModelResource):
             url(r"^(?P<resource_name>%s)/get_enrolled/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_enrolled'), name="api_get_enrolled"),
             url(r"^(?P<resource_name>%s)/get_data/(?P<id>\d+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_data'), name="api_get_data"),
             url(r"^(?P<resource_name>%s)/test_email%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('test_email'), name="api_test_email"),
+            url(r"^(?P<resource_name>%s)/download_data/(?P<type>\w+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('download_data'), name="api_download_data"),
         ]
 
     def authorized_read_list(self, object_list, bundle):
@@ -307,6 +312,8 @@ class CourseResource(CorsResourceBase, ModelResource):
         except ObjectDoesNotExist:
             raise ImmediateHttpResponse(HttpNotFound('无法找到课程'))
 
+        generate_student_excel(course)
+
         data = [[enroll.user.get_full_name(),
                  enroll.user.username,
                  enroll.user.groups.first().name if enroll.user.groups.first() else "N/A",
@@ -347,6 +354,7 @@ class CourseResource(CorsResourceBase, ModelResource):
         for title in EmployeeTitle.TITLES:
             data_list.append(self.calc_data(enrollments.filter(user__groups__name=title)))
 
+        generate_data_excel(course, data_list, EmployeeTitle.TITLES[:], start_time, end_time)
         object_list = {
             'objects': data_list
         }
@@ -386,8 +394,11 @@ class CourseResource(CorsResourceBase, ModelResource):
                 data[3] = "%s S" % data[3]
 
         # universal parse
-        return list(map(lambda n: "{0:.2f}".format(round(n, 2)) if not isinstance(n, str) and not isinstance(n, int) else n,
+        data = list(map(lambda n: "{0:.2f}".format(round(n, 2)) if not isinstance(n, str) and not isinstance(n, int) else n,
                 data))
+        data.insert(0, kt_count)
+        data.insert(5, d_count)
+        return data
 
     def test_email(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
@@ -405,3 +416,26 @@ class CourseResource(CorsResourceBase, ModelResource):
             [bundle.data.get('email')]
         ).send()
         return self.create_response(request, {})
+
+    def download_data(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        # self.is_authenticated(request)
+
+        data = ""
+        filename = ""
+        match = ""
+        if kwargs['type'] == "students":
+            match = "*_STUDENTS_*.xlsx"
+        elif kwargs['type'] == "data":
+            match = "*_DATA_*.xlsx"
+
+        for file in os.listdir('.'):
+            if fnmatch.fnmatch(file, match):
+                with open(file, "r") as excel:
+                    filename = file
+                    data = excel.read()
+
+        response = HttpResponse(data, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['X-Accel-Redirect'] = '/protected/%s' % filename
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+        return self.add_cors_headers(response)
