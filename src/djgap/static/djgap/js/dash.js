@@ -115,6 +115,14 @@ $(document).ready(function(){
     $("#calculateData").click(function(){
         calculateData();
     });
+
+    $("#downloadData").click(function(){
+        downloadData();
+    });
+
+    $("#downloadStudents").click(function(){
+        downloadStudents();
+    });
     
     $('#errorItem').click(function(){
         $('#errorItem').fadeOut(100);
@@ -319,6 +327,30 @@ function calculateData() {
         complete: function(){
         }
     })
+}
+
+function downloadData() {
+//    var endPoint = baseUrl + "/api/v1/course/download_data/data";
+    window.location=baseUrl + "/api/v1/course/download_data/data";
+//    $.ajax({
+//            type: "GET",
+//            url: endPoint,
+//            data: {},
+//            success: function(data){},
+//            error: function(data){
+//                error("下载失败");
+//            },
+//            beforeSend: function(xhr){
+//                xhr.setRequestHeader("Authorization", "Apikey " + auth);
+//                xhr.setRequestHeader("Content-Type", "application/json");
+//            },
+//            complete: function(){
+//            }
+//        })
+}
+
+function downloadStudents() {
+    window.location=baseUrl + "/api/v1/course/download_data/students";
 }
 
 
