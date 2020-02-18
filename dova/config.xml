@@ -60,5 +60,6 @@
     <allow-navigation href="*" />
   </platform>
   <icon src="resources/ios/icon/icon-small@3x.png"/>
+  <preference name="android-targetSdkVersion" value="28" />
   <preference name="target-device" value="universal"/>
 </widget>
